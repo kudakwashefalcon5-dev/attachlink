@@ -1,0 +1,190 @@
+/* Stage 10E: SCOPED enhancements. Does not replace Stitch utilities or theme. */
+#listing-page.al10e-detail-layout {
+  align-items: start;
+}
+#listing-page .al10e-application-card {
+  min-width: 0;
+  border: 1px solid rgba(13, 110, 105, .15);
+  border-top: 4px solid #08776f;
+  border-radius: 20px;
+  padding: clamp(22px, 3vw, 36px);
+  box-shadow: 0 10px 28px rgba(12, 54, 51, .065);
+  gap: 18px;
+}
+#listing-page .al10e-application-title {
+  font-size: clamp(22px, 2.2vw, 28px);
+  line-height: 1.25;
+  letter-spacing: -.02em;
+}
+#listing-page .al10e-info-card {
+  min-width: 0;
+  padding: clamp(20px, 2.25vw, 28px);
+}
+#listing-page .al10e-info-card p {
+  overflow-wrap: anywhere;
+}
+#listing-page .al10e-document-pack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: clamp(16px, 2.2vw, 24px);
+  border: 1px solid #cddfdc;
+  border-radius: 16px;
+  background: #f5faf9;
+}
+#listing-page .al10e-document-pack > h3 {
+  color: #005d58;
+  font-weight: 750;
+  font-size: 18px;
+  margin: 0;
+}
+#listing-page .al10e-document-pack > p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #566e6a;
+  margin: 0;
+}
+#listing-page .al10e-upload-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: white;
+  border: 1px solid #d7e9e5;
+  border-radius: 10px;
+  padding: 11px 13px;
+}
+#listing-page .al10e-progress-caption {
+  font-size: 12px;
+  font-weight: 700;
+  color: #375750;
+  font-variant-numeric: tabular-nums;
+}
+#listing-page .al10e-progress-track {
+  height: 6px;
+  border-radius: 100px;
+  background: #dbece8;
+  overflow: hidden;
+}
+#listing-page .al10e-progress-fill {
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: #008b7e;
+  transition: width .2s ease;
+}
+#listing-page .al10e-all-attached .al10e-progress-caption {color: #006b4c;}
+#listing-page .al10e-upload-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+#listing-page .al10e-upload-field {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid #d5e5e2;
+  border-radius: 12px;
+  transition: border-color .18s, box-shadow .18s;
+}
+#listing-page .al10e-upload-field:focus-within {
+  border-color: #008c81;
+  box-shadow: 0 0 0 3px rgba(0, 140, 129, .12);
+}
+#listing-page .al10e-upload-field.al10e-has-file {border-color:#62aea0;}
+#listing-page .al10e-upload-name {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #223f3c;
+  line-height: 1.5;
+}
+#listing-page .al10e-field-chip {
+  flex: 0 0 auto;
+  padding: 2px 7px;
+  background: #dff5ec;
+  color: #006a50;
+  border-radius: 100px;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: .015em;
+}
+#listing-page .al10e-optional-grid .al10e-field-chip {
+  background: #f0f3f8;
+  color: #62717e;
+}
+#listing-page .al10e-upload-field input[type='file'] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px dashed #b3cec9;
+  background: #f5faf9;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #55716a;
+}
+#listing-page .al10e-upload-field input[type='file']::file-selector-button {
+  border: 0;
+  border-radius: 7px;
+  padding: 8px 11px;
+  margin-right: 9px;
+  background: #076d66;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+#listing-page .al10e-file-state {
+  display: block;
+  min-width: 0;
+  font-size: 11px;
+  line-height: 1.35;
+  color: #485954;
+  overflow-wrap: anywhere;
+}
+#listing-page .al10e-has-file .al10e-file-state {color:#006d56;font-weight:700;}
+#listing-page .al10e-optional-area {
+  border-top: 1px solid #d8e7e3;
+  padding-top: 13px;
+}
+#listing-page .al10e-optional-area > summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  color: #00675e;
+  padding: 5px 0;
+}
+#listing-page .al10e-optional-area[open] > summary {margin-bottom: 12px;}
+#listing-page .al10e-cover-label {font-size: 14px;}
+#listing-page .al10e-cover-textarea {
+  min-height: 112px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+#listing-page #listing-apply {
+  min-height: 48px;
+  border-radius: 11px;
+  font-size: 15px;
+}
+#listing-page #application-feedback {
+  min-height: 16px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 740px) {
+  #listing-page .al10e-upload-grid {grid-template-columns: 1fr;}
+  #listing-page .al10e-application-card {padding: 18px;}
+  #listing-page .al10e-document-pack {padding: 14px;}
+}
+@media (prefers-reduced-motion: reduce) {
+  #listing-page .al10e-progress-fill,
+  #listing-page .al10e-upload-field {transition: none;}
+}

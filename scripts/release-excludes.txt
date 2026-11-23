@@ -1,0 +1,15 @@
+backend/.env
+backend/dev-router.php
+backend/install-check.php
+backend-test.html
+debug.log
+design-references/
+release/
+tests/
+test-results/
+designs/students/dashboard-backup.html
+designs/students/dashboard1.html
+README_START_HERE.txt
+CONNECT_SETUP.txt
+LAYOUT_INSTALL_README.txt
+STAGE_NEXT_PLACEMENTS.txt

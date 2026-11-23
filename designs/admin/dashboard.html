@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><link rel="stylesheet" href="../../assets/tailwind.min.css"><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/>
+
+<style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link rel="stylesheet" href="admin-stitch-offline.css?v=1"/><link rel="stylesheet" href="../../assets/attachlink-portal.css"><script src="../../assets/attachlink-overview.js"></script></head><body data-portal="admin" class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-gutter flex items-center gap-space-sm bg-surface-container-lowest"><img alt="AttachLink Logo" class="h-8 w-auto object-contain" src="../employers/attachlink-logo.svg"/><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface leading-tight truncate">AttachLink</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate uppercase tracking-wider">Industrial Liaison Office</span></div></div><div class="px-gutter py-space-sm"><div class="h-px w-full bg-surface-container"></div></div><nav class="px-gutter space-y-space-xs flex flex-col" data-active-classes="bg-primary-container text-on-primary-container font-headline-sm rounded-xl"><a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-headline-sm rounded-xl" data-path="overview" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span class="truncate">Overview</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all" data-path="verification" href="#"><div class="flex items-center gap-space-md min-w-0"><span class="material-symbols-outlined text-[20px]">verified_user</span><span class="truncate">Verification</span></div></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all" data-path="companies" href="#"><span class="material-symbols-outlined text-[20px]">apartment</span><span class="truncate">Companies</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all" data-path="attachees" href="#"><span class="material-symbols-outlined text-[20px]">school</span><span class="truncate">Attachees</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all" data-path="placements" href="#"><span class="material-symbols-outlined text-[20px]">work</span><span class="truncate">Placements</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all" data-path="settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="truncate">Settings</span></a><a data-path="messages" href="messages.html" class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all"><span class="material-symbols-outlined text-[20px]">chat</span><span class="truncate">Messages</span></a></nav></div><div class="p-gutter"><div class="bg-surface-container-low rounded-xl p-space-md flex flex-col gap-space-xs"><div class="flex items-center gap-space-xs text-primary font-label-md text-label-md"><span class="material-symbols-outlined text-[16px]">public</span><span>Zimbabwe Council</span></div><p class="font-body-sm text-body-sm text-on-surface-variant">Higher & Tertiary Education Liaison Network</p></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-gutter-desktop"><div class="flex items-center gap-gutter flex-1 max-w-2xl"><div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm select-none"><span class="material-symbols-outlined text-[18px]">home</span><span>/</span><span class="text-on-surface font-label-md text-label-md">Liaison Portal</span></div><div class="relative flex-1 max-w-md"><span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span><input class="w-full h-9 pl-10 pr-space-md bg-surface-container-low text-on-surface placeholder:text-on-surface-variant rounded-xl text-body-sm font-body-sm focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Search student ID, company or intake..." type="text"/></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs px-space-md py-1 bg-surface-container rounded-full"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wide">Intake 2024/2025 - Active</span></div><button aria-label="Notifications" class="relative p-space-xs rounded-xl hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span></button><div class="h-8 w-px bg-surface-container"></div><div class="flex items-center gap-space-md"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="../employers/attachlink-logo.svg"/><div class="flex flex-col text-left"><span class="font-label-md text-label-md text-on-surface leading-tight font-semibold">Eng. Tendai Moyo</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate">Chief Liaison Director · Harare</span></div></div></div></header><main class="relative pt-16 w-full min-h-screen bg-surface"><div class="flex flex-col w-full px-margin-desktop py-space-xl gap-space-xl">
+<!-- Executive Context Bar -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs text-primary font-label-sm uppercase tracking-widest">
+<span>ZIMCHE Regulated</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>National Liaison Network • Harare HQ</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight mt-0.5">
+        Industrial Liaison Directorate Overview
+      </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+        2024/2025 National Attachment Cycle Monitoring & Institutional Analytics
+      </p>
+</div>
+<!-- Quick Directorate Actions -->
+<div class="flex items-center gap-space-md self-start lg:self-auto">
+<button class="flex items-center gap-space-xs px-space-md py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-sm text-headline-sm transition-all shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">download_for_offline</span>
+<span>Export Directorate Report</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-lg py-2 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-headline-sm text-headline-sm transition-all shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">rule_folder</span>
+<span>Initiate Verification Batch</span>
+</button>
+</div>
+</div>
+<!-- Top Executive KPI Strip (5 Grid Columns) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-gutter">
+<!-- KPI 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Registered Attachees</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">group</span>
+</div>
+</div>
+<div class="my-space-sm">
+<div class="font-metric-kpi text-metric-kpi text-on-surface">3,842</div>
+</div>
+<div class="flex items-center gap-space-xs text-primary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+12.4%</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">vs last intake</span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Verified Hosts</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">domain_verification</span>
+</div>
+</div>
+<div class="my-space-sm">
+<div class="font-metric-kpi text-metric-kpi text-on-surface">418</div>
+</div>
+<div class="flex items-center gap-space-xs text-primary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span>+28</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">newly accredited</span>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Active Openings</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">hub</span>
+</div>
+</div>
+<div class="my-space-sm">
+<div class="font-metric-kpi text-metric-kpi text-on-surface">965</div>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">map</span>
+<span>Across 8 Provinces</span>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Confirmed Offers</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">task_alt</span>
+</div>
+</div>
+<div class="my-space-sm">
+<div class="font-metric-kpi text-metric-kpi text-on-surface">2,680</div>
+</div>
+<div class="flex items-center gap-space-xs text-primary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>98.2%</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">MOU matched</span>
+</div>
+</div>
+<!-- KPI 5: Placement Rate with Progress Graphic -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Placement Rate</span>
+<span class="px-space-xs py-0.5 rounded text-label-sm font-label-sm bg-surface-container text-primary font-semibold">Goal 75.0%</span>
+</div>
+<div class="flex items-center justify-between my-space-xs">
+<div class="font-metric-kpi text-metric-kpi text-on-surface">69.8%</div>
+<!-- Compact SVG Donut -->
+<div class="relative w-12 h-12 flex items-center justify-center">
+<svg class="w-12 h-12 -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="69.8, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute font-label-sm text-label-sm font-bold text-primary">69%</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[15px] text-secondary">timer</span>
+<span>Target: 30 Nov 2024</span>
+</div>
+</div>
+</div>
+<!-- Primary Analytics & Operations Grid (7/12 & 5/12) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop">
+<!-- LEFT COLUMN (7/12): Trends & Programme Metrics -->
+<div class="lg:col-span-7 flex flex-col gap-gutter-desktop min-w-0">
+<!-- Graph Card: Monthly Trends -->
+<div class="bg-surface-container-lowest rounded-xl p-gutter shadow-sm flex flex-col gap-space-lg">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Monthly Application & Verification Trends</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Liaison cycles across 2024 calendar intake (Jan - Oct)</p>
+</div>
+<div class="flex items-center gap-space-md font-label-sm text-label-sm">
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-3 rounded-sm bg-primary"></span>
+<span class="text-on-surface">Submitted Applications</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-3 rounded-sm bg-secondary-container"></span>
+<span class="text-on-surface">Placements Approved</span>
+</div>
+</div>
+</div>
+<!-- SVG Line Chart with Grid and Curved Tracks -->
+<div class="relative w-full h-64 bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between overflow-hidden">
+<!-- Background Axis Grid Lines -->
+<div class="absolute inset-x-space-md top-4 bottom-8 flex flex-col justify-between pointer-events-none opacity-40">
+<div class="w-full h-px bg-surface-container-highest"></div>
+<div class="w-full h-px bg-surface-container-highest"></div>
+<div class="w-full h-px bg-surface-container-highest"></div>
+<div class="w-full h-px bg-surface-container-highest"></div>
+</div>
+<!-- Scaled Responsive SVG Lines -->
+<svg class="w-full h-full pb-6 overflow-visible" preserveaspectratio="none" viewbox="0 0 900 200">
+<defs>
+<lineargradient id="primaryArea" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#0F766E" stop-opacity="0.22"></stop>
+<stop offset="100%" stop-color="#0F766E" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Teal Area Fill -->
+<path d="M 30,170 Q 110,150 190,120 T 350,90 T 510,60 T 670,45 T 830,25 L 830,195 L 30,195 Z" fill="url(#primaryArea)"></path>
+<!-- Line 1: Applications (Teal) -->
+<path d="M 30,170 Q 110,150 190,120 T 350,90 T 510,60 T 670,45 T 830,25" fill="none" stroke="#0F766E" stroke-linecap="round" stroke-width="3"></path>
+<!-- Line 2: Placements (Amber) -->
+<path d="M 30,185 Q 110,175 190,155 T 350,130 T 510,95 T 670,70 T 830,48" fill="none" stroke="#FEA619" stroke-dasharray="2 0" stroke-linecap="round" stroke-width="3"></path>
+<!-- Active Point Callout for October -->
+<circle cx="830" cy="25" fill="#005C55" r="5" stroke="#FFFFFF" stroke-width="2"></circle>
+<circle cx="830" cy="48" fill="#855300" r="5" stroke="#FFFFFF" stroke-width="2"></circle>
+</svg>
+<!-- Interactive Stat Indicator Overlay -->
+<div class="absolute right-6 top-6 bg-surface-container-lowest px-space-md py-space-xs rounded-lg shadow-md pointer-events-none">
+<span class="font-label-sm text-label-sm font-semibold text-primary">Oct: 820 Apps • 614 Placed</span>
+</div>
+<!-- Month Label Axis -->
+<div class="flex justify-between items-center px-space-sm text-on-surface-variant font-label-sm text-label-sm select-none">
+<span>Jan</span>
+<span>Feb</span>
+<span>Mar</span>
+<span>Apr</span>
+<span>May</span>
+<span>Jun</span>
+<span>Jul</span>
+<span>Aug</span>
+<span>Sep</span>
+<span class="font-bold text-primary">Oct</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm pt-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary">insights</span>
+<span>Cycle peak reached in August-September industrial intake window.</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Average Processing: 4.2 Days</span>
+</div>
+</div>
+<!-- Horizontal Bar Chart: Placements by Degree Programme -->
+<div class="bg-surface-container-lowest rounded-xl p-gutter shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Placements by Faculty & Degree Programme</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Host absorption rate across top 5 enrolled qualifications</p>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Placement / Total</span>
+</div>
+<div class="flex flex-col gap-space-md mt-space-xs">
+<!-- Item 1: Software Engineering -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center font-body-md text-body-md">
+<span class="text-on-surface font-semibold truncate">B.Eng Software Engineering</span>
+<span class="font-label-md text-label-md text-on-surface font-mono">420 / 510 <span class="text-primary font-bold">(82.4%)</span></span>
+</div>
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 82.4%;"></div>
+</div>
+</div>
+<!-- Item 2: Computer Science -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center font-body-md text-body-md">
+<span class="text-on-surface font-semibold truncate">B.Sc Computer Science</span>
+<span class="font-label-md text-label-md text-on-surface font-mono">380 / 440 <span class="text-primary font-bold">(86.4%)</span></span>
+</div>
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 86.4%;"></div>
+</div>
+</div>
+<!-- Item 3: Accounting & Finance -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center font-body-md text-body-md">
+<span class="text-on-surface font-semibold truncate">B.Com Accounting & Finance</span>
+<span class="font-label-md text-label-md text-on-surface font-mono">310 / 490 <span class="text-secondary font-bold">(63.3%)</span></span>
+</div>
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 63.3%;"></div>
+</div>
+</div>
+<!-- Item 4: Mechanical Engineering -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center font-body-md text-body-md">
+<span class="text-on-surface font-semibold truncate">B.Eng Mechanical Engineering</span>
+<span class="font-label-md text-label-md text-on-surface font-mono">295 / 360 <span class="text-primary font-bold">(81.9%)</span></span>
+</div>
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 81.9%;"></div>
+</div>
+</div>
+<!-- Item 5: Agricultural Sciences -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center font-body-md text-body-md">
+<span class="text-on-surface font-semibold truncate">B.Sc Agricultural Sciences</span>
+<span class="font-label-md text-label-md text-on-surface font-mono">215 / 320 <span class="text-secondary font-bold">(67.2%)</span></span>
+</div>
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 67.2%;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN (5/12): Operational Review Queue & Geo Distribution -->
+<div class="lg:col-span-5 flex flex-col gap-gutter-desktop min-w-0">
+<!-- Verification Action Queue -->
+<div class="bg-surface-container-lowest rounded-xl p-gutter shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<h2 class="font-headline-md text-headline-md text-on-surface">Directorate Review Queue</h2>
+<span class="px-space-xs py-0.5 rounded text-[11px] font-label-sm bg-secondary-container text-on-secondary-container font-bold">14 Actionable</span>
+</div>
+<button class="text-primary hover:text-on-surface font-label-md text-label-md transition-colors" type="button">View All</button>
+</div>
+<!-- Filter Tab Buttons -->
+<div class="flex items-center gap-space-xs p-1 bg-surface-container-low rounded-lg font-label-sm text-label-sm">
+<button class="flex-1 py-1.5 rounded-md bg-surface-container-lowest shadow-sm text-on-surface font-semibold text-center" type="button">All (14)</button>
+<button class="flex-1 py-1.5 rounded-md hover:bg-surface-container text-on-surface-variant text-center transition-colors" type="button">Hosts (6)</button>
+<button class="flex-1 py-1.5 rounded-md hover:bg-surface-container text-on-surface-variant text-center transition-colors" type="button">Students (8)</button>
+</div>
+<!-- List Entries -->
+<div class="flex flex-col gap-space-sm divide-y-0">
+<!-- Item 1: Econet -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex items-center justify-between gap-space-md hover:bg-surface-container transition-colors">
+<div class="flex items-start gap-space-sm min-w-0">
+<div class="w-8 h-8 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">apartment</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Econet Wireless Zimbabwe</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Harare • MOU & Workstation Clearance</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium mt-0.5">Submitted 2h ago</span>
+</div>
+</div>
+<button class="px-space-md py-1.5 rounded bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md font-semibold transition-colors shrink-0" type="button">
+              Review
+            </button>
+</div>
+<!-- Item 2: Delta Beverages -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex items-center justify-between gap-space-md hover:bg-surface-container transition-colors">
+<div class="flex items-start gap-space-sm min-w-0">
+<div class="w-8 h-8 rounded-lg bg-surface-container text-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">factory</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Delta Beverages</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Southerton • Quota Expansion (+15 Slots)</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium mt-0.5">Submitted 4h ago</span>
+</div>
+</div>
+<button class="px-space-md py-1.5 rounded bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md font-semibold transition-colors shrink-0" type="button">
+              Review
+            </button>
+</div>
+<!-- Item 3: Kudzai Mutasa -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex items-center justify-between gap-space-md hover:bg-surface-container transition-colors">
+<div class="flex items-start gap-space-sm min-w-0">
+<div class="w-8 h-8 rounded-lg bg-surface-container text-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">badge</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Kudzai T. Mutasa</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">R214901B • B.Eng Electrical • ZISCO Kwekwe</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Offer Letter Verification</span>
+</div>
+</div>
+<button class="px-space-md py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors shrink-0" type="button">
+              Verify
+            </button>
+</div>
+<!-- Item 4: Ruvimbo Chidzero -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex items-center justify-between gap-space-md hover:bg-surface-container transition-colors">
+<div class="flex items-start gap-space-sm min-w-0">
+<div class="w-8 h-8 rounded-lg bg-surface-container text-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Ruvimbo Chidzero</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">R218843J • B.Sc Biotech • Gweru Vet Labs</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Logbook & Indemnity Pack</span>
+</div>
+</div>
+<button class="px-space-md py-1.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors shrink-0" type="button">
+              Verify
+            </button>
+</div>
+<!-- Item 5: Mimosa Mining -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex items-center justify-between gap-space-md hover:bg-surface-container transition-colors">
+<div class="flex items-start gap-space-sm min-w-0">
+<div class="w-8 h-8 rounded-lg bg-surface-container text-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">engineering</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Mimosa Mining Co</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Zvishavane • Underground Hazard Audit</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Compliance Clearance</span>
+</div>
+</div>
+<button class="px-space-md py-1.5 rounded bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md font-semibold transition-colors shrink-0" type="button">
+              Review
+            </button>
+</div>
+</div>
+</div>
+<!-- Provincial Placement Distribution -->
+<div class="bg-surface-container-lowest rounded-xl p-gutter shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Provincial Allocation Hubs</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Regional spread across industrial clusters</p>
+</div>
+<span class="material-symbols-outlined text-primary text-[20px]">pin_drop</span>
+</div>
+<div class="space-y-space-sm">
+<!-- Harare -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-space-sm">
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="font-body-md text-body-md text-on-surface font-medium">Harare Metropolitan</span>
+</div>
+<div class="flex items-center gap-space-xs font-mono font-semibold text-on-surface text-body-md">
+<span>1,420</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm font-normal">(53.0%)</span>
+</div>
+</div>
+<!-- Bulawayo -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-space-sm">
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="font-body-md text-body-md text-on-surface font-medium">Bulawayo Industrial</span>
+</div>
+<div class="flex items-center gap-space-xs font-mono font-semibold text-on-surface text-body-md">
+<span>580</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm font-normal">(21.6%)</span>
+</div>
+</div>
+<!-- Midlands -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-space-sm">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary-container"></span>
+<span class="font-body-md text-body-md text-on-surface font-medium">Midlands (Gweru & Kwekwe)</span>
+</div>
+<div class="flex items-center gap-space-xs font-mono font-semibold text-on-surface text-body-md">
+<span>390</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm font-normal">(14.5%)</span>
+</div>
+</div>
+<!-- Manicaland -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-space-sm">
+<span class="w-2.5 h-2.5 rounded-full bg-surface-container-highest"></span>
+<span class="font-body-md text-body-md text-on-surface font-medium">Manicaland (Mutare / Agro)</span>
+</div>
+<div class="flex items-center gap-space-xs font-mono font-semibold text-on-surface text-body-md">
+<span>180</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm font-normal">(6.7%)</span>
+</div>
+</div>
+<!-- Mashonaland West -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-space-sm">
+<span class="w-2.5 h-2.5 rounded-full bg-surface-container-highest"></span>
+<span class="font-body-md text-body-md text-on-surface font-medium">Mashonaland West (Chinhoyi)</span>
+</div>
+<div class="flex items-center gap-space-xs font-mono font-semibold text-on-surface text-body-md">
+<span>110</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm font-normal">(4.1%)</span>
+</div>
+</div>
+</div>
+<!-- Provincial Footnote -->
+<div class="p-space-sm rounded-lg bg-surface-container flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span>Stipend Median: <strong>USD $250.00 / mo</strong></span>
+<span class="font-label-sm text-label-sm font-semibold text-primary">Live ZIMRA Monitored</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Regulatory Notice Footer Strip -->
+<div class="flex flex-col sm:flex-row items-center justify-between p-space-md bg-surface-container-lowest rounded-xl shadow-sm gap-space-sm text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[18px] text-primary">policy</span>
+<span>Operating under Zimbabwe Council for Higher Education (ZIMCHE) Act 25:27 Attachment Directives.</span>
+</div>
+<div class="flex items-center gap-space-md text-on-surface font-label-sm text-label-sm">
+<span>Official Liaison Contact: +263 (242) 791-641</span>
+<span>•</span>
+<span class="font-semibold text-primary">Directorate Node 01 - Harare</span>
+</div>
+</div>
+</div></main></div><script src="app.js?v=1" defer></script>
+<script src="admin-stitch-icons.js?v=1" defer></script>
+<script src="../../assets/attachlink-brand.js?v=14" data-logo-ext=".png"></script>
+<script src="../../assets/attachlink-connect.js?v=3" defer></script>
+</body></html>

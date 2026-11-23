@@ -1,0 +1,76 @@
+CREATE DATABASE IF NOT EXISTS `attachlink_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `attachlink_db`;
+CREATE TABLE IF NOT EXISTS companies (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, name VARCHAR(180) NOT NULL, description TEXT NULL,
+ website VARCHAR(255) NULL, industry VARCHAR(100) NULL, city VARCHAR(120) NULL,
+ verification_status ENUM('pending','verified','rejected') NOT NULL DEFAULT 'pending',
+ verified_by BIGINT UNSIGNED NULL, verified_at DATETIME NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ KEY ix_companies_status (verification_status)
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS users (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, role ENUM('student','employer','admin') NOT NULL,
+ company_id BIGINT UNSIGNED NULL, first_name VARCHAR(100) NOT NULL,last_name VARCHAR(100) NOT NULL,
+ email VARCHAR(190) NOT NULL UNIQUE, phone VARCHAR(30) NULL UNIQUE,
+ password_hash VARCHAR(255) NOT NULL,is_active TINYINT(1) NOT NULL DEFAULT 1,
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ CONSTRAINT fk_user_company FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE SET NULL,
+ INDEX ix_user_role (role)
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS student_profiles (
+ user_id BIGINT UNSIGNED PRIMARY KEY, date_of_birth DATE NULL, gender VARCHAR(40) NULL,
+ institution VARCHAR(180) NULL, programme VARCHAR(180) NULL, study_level VARCHAR(100) NULL,
+ city VARCHAR(120) NULL, bio TEXT NULL, skills TEXT NULL,
+ FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS openings (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, company_id BIGINT UNSIGNED NOT NULL,
+ title VARCHAR(180) NOT NULL, department VARCHAR(140) NULL, city VARCHAR(120) NULL,
+ work_mode ENUM('onsite','hybrid','remote') DEFAULT 'onsite', description TEXT NOT NULL,
+ requirements TEXT NULL, deadline DATE NULL, status ENUM('draft','published','closed') NOT NULL DEFAULT 'draft',
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ FOREIGN KEY(company_id) REFERENCES companies(id) ON DELETE CASCADE, INDEX ix_openings_status(status,deadline)
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS applications (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, opening_id BIGINT UNSIGNED NOT NULL, student_id BIGINT UNSIGNED NOT NULL,
+ cover_letter TEXT NULL, status ENUM('submitted','reviewing','accepted','rejected','withdrawn') NOT NULL DEFAULT 'submitted',
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ UNIQUE KEY uq_application (opening_id,student_id),
+ FOREIGN KEY(opening_id) REFERENCES openings(id) ON DELETE CASCADE,
+ FOREIGN KEY(student_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS application_documents (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, application_id BIGINT UNSIGNED NOT NULL,
+ document_type ENUM('attachment_letter','cv','id','transcript','o_level','a_level','other_certificate') NOT NULL,
+ original_name VARCHAR(255) NOT NULL, stored_name VARCHAR(120) NOT NULL,mime_type VARCHAR(80) NOT NULL,
+ uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ FOREIGN KEY(application_id) REFERENCES applications(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS saved_openings (
+ student_id BIGINT UNSIGNED NOT NULL,opening_id BIGINT UNSIGNED NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY(student_id,opening_id), FOREIGN KEY(student_id) REFERENCES users(id) ON DELETE CASCADE,
+ FOREIGN KEY(opening_id) REFERENCES openings(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS notifications (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,user_id BIGINT UNSIGNED NOT NULL, title VARCHAR(180) NOT NULL,
+ message TEXT NOT NULL,type VARCHAR(40) NOT NULL DEFAULT 'info',is_read TINYINT(1) DEFAULT 0,
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+ INDEX ix_notification_user(user_id,is_read)
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS messages (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,sender_id BIGINT UNSIGNED NOT NULL,recipient_id BIGINT UNSIGNED NOT NULL,
+ body TEXT NOT NULL,is_read TINYINT(1) DEFAULT 0,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ FOREIGN KEY(sender_id) REFERENCES users(id) ON DELETE CASCADE,
+ FOREIGN KEY(recipient_id) REFERENCES users(id) ON DELETE CASCADE,INDEX ix_message_inbox(recipient_id,sender_id,created_at)
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS placements (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,application_id BIGINT UNSIGNED NOT NULL UNIQUE,
+ start_date DATE NULL,end_date DATE NULL,notes TEXT NULL,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ FOREIGN KEY(application_id) REFERENCES applications(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS student_cvs (
+ student_id BIGINT UNSIGNED NOT NULL PRIMARY KEY,full_name VARCHAR(200) NULL,email VARCHAR(190) NULL,
+ phone VARCHAR(40) NULL,location VARCHAR(180) NULL,summary TEXT NULL,education TEXT NULL,
+ skills TEXT NULL,experience TEXT NULL,projects TEXT NULL,awards TEXT NULL,
+ updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ FOREIGN KEY(student_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;

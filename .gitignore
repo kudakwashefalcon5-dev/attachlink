@@ -1,0 +1,27 @@
+/node_modules/
+/vendor/
+/test-results/
+/playwright-report/
+/backend/.env
+/dist/
+
+# Local configuration, secrets, and runtime data
+.env
+.env.*
+!backend/.env.example
+/backend/storage/**
+!/backend/storage/.htaccess
+*.age
+*.pem
+*.key
+/attachlink-db-*.sql
+/attachlink-files-*.tar
+/attachlink-files-*.zip
+/backups/
+*.log
+.staging-qa-path
+/.config-qa-path
+/.followup-qa-path
+/.phase3-qa-path
+__pycache__/
+*.pyc

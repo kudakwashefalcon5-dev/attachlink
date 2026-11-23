@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/>
+<style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><title>Attachment Details | AttachLink</title><link rel="stylesheet" href="../../assets/tailwind.min.css"><link href="attachlink-common.css" rel="stylesheet"/><script src="attachlink-common.js"></script><link href="stitch-local.css" rel="stylesheet"/><script defer="" src="stitch-local-icons.js"></script><link rel="stylesheet" href="stage14-balanced-header.css?v=14">
+<link rel="stylesheet" href="../../assets/attachlink-portal.css"><script defer src="company-logo.js"></script></head>
+<body class="bg-surface font-body-md text-body-md text-on-surface">
+<header class="al-header"><div class="al-top"><a class="al-brand" href="dashboard.html"><img src="../employers/attachlink-logo.svg" alt="AttachLink" width="56" height="44"></a><nav aria-label="Student navigation" class="al-links"><a aria-current="page" class="al-link" href="dashboard.html">Find Openings</a><a class="al-link" href="my-applications.html">My Applications<span class="al-count" data-al-app-count="">0</span></a><a class="al-link" href="messages.html">Messages</a><a class="al-link" href="saved-openings.html">Saved Openings<span class="al-count" data-al-save-count="">0</span></a><a class="al-tools-nav" href="career-tools.html">Career Tools</a></nav><div class="al-right"><a class="al-iconlink" href="notifications.html">Alerts <span class="al-dot" data-al-unread="" hidden="">0</span></a><a class="al-iconlink" href="profile.html">● <span data-al-name="">My Profile</span></a></div></div><nav aria-label="Mobile student navigation" class="al-mobile"><a aria-current="page" class="al-link" href="dashboard.html">Find Openings</a><a class="al-link" href="my-applications.html">My Applications<span class="al-count" data-al-app-count="">0</span></a><a class="al-link" href="messages.html">Messages</a><a class="al-link" href="saved-openings.html">Saved Openings<span class="al-count" data-al-save-count="">0</span></a><a class="al-link" href="notifications.html">Notifications</a><a class="al-link" href="career-tools.html">Career Tools</a></nav></header>
+<main class="w-full bg-surface min-h-screen">
+<div class="al-demo-note" role="note">Review the requirements before submitting your application.</div>
+ <div class="max-w-7xl mx-auto px-6 lg:px-12 py-8">
+  <nav aria-label="Breadcrumb" class="flex flex-wrap items-center gap-2 mb-6 text-on-surface-variant font-body-sm text-body-sm">
+   <a href="dashboard.html" class="hover:text-primary transition-colors">Find Openings</a>
+   <span aria-hidden="true">/</span><span id="crumb-org">Organization</span>
+   <span aria-hidden="true">/</span><span id="crumb-title" class="text-primary font-semibold">Attachment Details</span>
+  </nav>
+  <div id="listing-feedback" role="status" aria-live="polite" class="bg-surface-container-low rounded-xl p-4 text-on-surface mb-6">Loading opening details…</div>
+  <div id="listing-page" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start" style="display:none" hidden>
+   <section class="lg:col-span-8 flex flex-col gap-6">
+    <article class="bg-surface-container-lowest rounded-xl p-8 shadow-sm flex flex-col gap-6 relative overflow-hidden">
+     <div class="absolute -right-12 -top-12 w-48 h-48 bg-primary-fixed/30 rounded-full blur-2xl pointer-events-none"></div>
+     <div class="flex flex-col sm:flex-row items-start justify-between gap-5 relative z-10">
+      <div class="flex items-start gap-4">
+       <div id="org-monogram" class="w-16 h-16 rounded-xl bg-primary text-on-primary font-headline-md text-headline-md flex items-center justify-center font-bold shadow-md shadow-primary/20 shrink-0" aria-hidden="true">AL</div>
+       <div class="flex flex-col gap-2">
+        <div class="flex flex-wrap items-center gap-2">
+         <span id="org-name" class="font-title-md text-title-md text-on-surface font-semibold">Organization</span>
+         <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-caps text-label-caps">DEMO / TEST SYSTEM</span>
+        </div>
+        <h1 id="listing-title" class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Attachment opening</h1>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Opening details are loading.</p>
+        <div class="flex flex-wrap items-center gap-2 mt-2">
+         <button type="button" id="listing-save" data-save-db="" disabled class="px-4 py-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md font-semibold transition-colors" aria-label="Save this opening">☆ Save Opening</button>
+         <button type="button" id="share-listing" class="px-4 py-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md font-semibold transition-colors inline-flex items-center gap-2" aria-label="Share opening"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 13.5 6.6 4M15.3 6.5l-6.6 4"/></svg><span>Share Opening</span></button>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-5 bg-surface-container-low/60 rounded-lg p-4">
+      <div class="flex flex-col"><span class="font-body-sm text-body-sm text-outline">Location</span><span id="listing-city" class="font-label-md text-label-md text-on-surface mt-0.5">—</span></div>
+      <div class="flex flex-col"><span class="font-body-sm text-body-sm text-outline">Stipend</span><span id="listing-stipend" class="font-label-md text-label-md text-on-surface mt-0.5">—</span></div>
+      <div class="flex flex-col"><span class="font-body-sm text-body-sm text-outline">Reference ID</span><span id="listing-reference" class="font-label-md text-label-md text-on-surface mt-0.5">—</span></div>
+      <div class="flex flex-col"><span class="font-body-sm text-body-sm text-outline">Closing date</span><span id="listing-deadline" class="font-label-md text-label-md text-on-surface mt-0.5">—</span></div>
+     </div>
+    </article>
+
+    <article class="bg-surface-container-lowest rounded-xl p-8 shadow-sm flex flex-col gap-5">
+     <div class="flex items-center gap-2.5"><div class="w-8 h-8 rounded-lg bg-primary-fixed flex items-center justify-center text-on-primary-fixed"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m8 17-5-5 5-5M16 7l5 5-5 5"/></svg></div><h2 class="font-headline-sm text-headline-sm text-on-surface">Role Overview &amp; Scope</h2></div>
+     <p id="listing-description" class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed" style="white-space:pre-line">—</p>
+    </article>
+
+    <article class="bg-surface-container-lowest rounded-xl p-8 shadow-sm flex flex-col gap-5">
+     <div class="flex items-center gap-2.5"><div class="w-8 h-8 rounded-lg bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div><h2 class="font-headline-sm text-headline-sm text-on-surface">Requirements &amp; Eligibility</h2></div>
+     <p id="listing-requirements" class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed" style="white-space:pre-line">—</p>
+     <div class="rounded-lg bg-surface-container-low p-4 font-body-sm text-body-sm text-on-surface-variant">Only students eligible under the Stage 6 institution rules can access and apply to this vacancy. Additional requirements should be confirmed before real-world deployment.</div>
+    </article>
+
+    <article class="bg-surface-container-lowest rounded-xl p-8 shadow-sm flex flex-col gap-5">
+     <h2 class="font-headline-sm text-headline-sm text-on-surface">About the Organization</h2>
+     <p id="org-description" class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed" style="white-space:pre-line">—</p>
+     <p class="font-body-sm text-body-sm text-outline">This organization is part of the development demonstration. Organization verification is not a real-world endorsement.</p>
+    </article>
+   </section>
+
+   <aside class="lg:col-span-4 flex flex-col gap-6">
+    <section class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col gap-4">
+     <h2 class="font-headline-sm text-headline-sm text-on-surface">Apply for this Attachment</h2>
+     
+     <label for="listing-cover-letter" class="font-label-md text-label-md text-on-surface font-semibold">Cover letter (optional)</label>
+     <textarea id="listing-cover-letter" rows="5" maxlength="4000" class="w-full rounded-xl bg-surface-container-low border border-outline-variant p-3 text-on-surface focus:outline-none" placeholder="Write a short message about your interest in this test attachment…"></textarea>
+     <button type="button" id="listing-apply" class="w-full py-3 rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg font-semibold hover:bg-primary transition-colors">Submit Test Application</button>
+     <p id="application-feedback" role="status" aria-live="polite" class="font-body-sm text-body-sm text-on-surface-variant"></p>
+     <a href="my-applications.html" class="font-label-md text-label-md text-primary text-center hover:underline">My Applications</a>
+    </section>
+    <section class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col gap-4">
+     <h2 class="font-headline-sm text-headline-sm text-on-surface">Opportunity at a Glance</h2>
+     <div class="rounded-lg bg-surface-container-low p-4"><p class="font-body-sm text-body-sm text-outline">Organization</p><p id="quick-org" class="font-title-md text-title-md font-semibold">—</p></div>
+     <div class="rounded-lg bg-surface-container-low p-4"><p class="font-body-sm text-body-sm text-outline">Organization location</p><p id="quick-org-location" class="font-label-md text-label-md">—</p></div>
+     <div class="rounded-lg bg-surface-container-low p-4"><p class="font-body-sm text-body-sm text-outline">Listed</p><p id="quick-created" class="font-label-md text-label-md">—</p></div>
+     <a href="dashboard.html" class="w-full py-2.5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md text-center">Back to Attachments</a>
+    </section>
+   </aside>
+  </div>
+ </div>
+</main>
+<footer class="w-full bg-surface-container-low mt-space-xl"><div class="max-w-7xl mx-auto px-6 lg:px-12 py-space-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-space-lg"><div class="flex flex-col gap-1"><div class="flex items-center gap-2"><span class="font-headline-sm text-headline-sm text-primary">AttachLink</span><span class="px-1.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-label-caps text-label-caps">ZW</span></div><p class="font-body-sm text-body-sm text-outline max-w-sm">Connecting Zimbabwean university students with premier industrial attachments and liaison coordinators nationwide.</p></div><div class="flex flex-wrap gap-space-lg font-label-md text-label-md text-on-surface-variant"><a class="hover:text-primary transition-colors" data-path="find-openings" href="dashboard.html">Browse Attachments</a><a class="hover:text-primary transition-colors" href="profile.html">Privacy &amp; Terms</a></div></div><div class="max-w-7xl mx-auto px-6 lg:px-12 pb-space-lg pt-space-sm flex flex-col sm:flex-row justify-between items-center font-body-sm text-body-sm text-outline gap-2"><p>© 2025 AttachLink Zimbabwe. Ministry of Higher &amp; Tertiary Education Alignment.</p><div class="flex items-center gap-4"><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary"></span>System Operational</span><span>Harare • Bulawayo • Mutare • Gweru</span></div></div></footer>
+<script src="bookmarks.js?v=1"></script>
+<script defer src="openings.js"></script>
+
+<script src="application-layout.js?v=2"></script>
+<script src="../../assets/attachlink-brand.js?v=14" data-logo-ext=".png"></script>
+
+</body></html>

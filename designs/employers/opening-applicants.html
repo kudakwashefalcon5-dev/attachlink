@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+
+<html data-theme="portal-2" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/>
+
+<style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><title>AttachLink Employer | Opening Applicants</title><link rel="stylesheet" href="../../assets/tailwind.min.css"><style>body:not(.s8-ready) main{visibility:hidden} .s8-alert{padding:14px 18px;border-radius:12px;background:#e9f3f2;color:#005f56;border:1px solid #c6dedb;margin-bottom:16px;font-size:14px} .s8-alert.error{background:#fff1ed;border-color:#ffd4c6;color:#8b2e17} .s8-action{border-radius:9px;background:#06695f;color:#fff;padding:10px 15px;font-weight:700;font-size:13px;cursor:pointer} .s8-action:disabled{opacity:.45;cursor:not-allowed} .s8-action-soft{border-radius:9px;background:#e8efef;color:#075c53;padding:10px 15px;font-size:13px;font-weight:700;cursor:pointer} .s8-action-soft:disabled{opacity:.45;cursor:not-allowed} .s8-table{width:100%;border-collapse:collapse;font-size:13px} .s8-table th,.s8-table td{padding:12px 8px;border-bottom:1px solid #e5e9ea;text-align:left;vertical-align:middle} .s8-table th{color:#667777;text-transform:uppercase;font-size:11px;letter-spacing:.04em} .s8-table a{color:#006b61;font-weight:700;text-decoration:underline} .s8-status{display:inline-block;border-radius:999px;padding:5px 9px;background:#eaf6f4;color:#00685f;font-weight:650;font-size:12px} .s8-note{color:#687b7b;font-size:13px} .s8-field{width:100%;padding:10px 13px;border:1px solid #d2dfdf;border-radius:9px;background:white;font-size:14px;color:#12232a} .s8-field:focus{outline:2px solid #0b8e81;outline-offset:2px} .s8-card{background:white;border-radius:14px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,.05)} .s8-card h2{font-size:20px;font-weight:750;margin:0 0 12px} .s8-card h3{font-weight:700} .s8-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);gap:22px} .s8-flex{display:flex;gap:12px;align-items:center;flex-wrap:wrap} .s8-muted{color:#6f8282;font-size:13px} @media(max-width:950px){.s8-grid{grid-template-columns:1fr}}</style><link rel="stylesheet" href="../../assets/attachlink-portal.css"></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-20 px-space-lg flex items-center gap-space-sm bg-surface-container-lowest"><img alt="AttachLink Logo" class="h-8 w-auto object-contain" src="attachlink-logo.svg"/><div class="flex flex-col"><span class="font-title-md text-title-md text-primary tracking-tight">AttachLink</span><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Corporate Portal</span></div></div><div class="mx-space-md my-space-sm p-space-sm bg-surface-container-low rounded-lg flex items-center gap-space-sm"><div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary shrink-0"><span class="material-symbols-outlined text-xl">business</span></div><div class="flex flex-col min-w-0 flex-1"><span class="font-label-md text-label-md text-on-surface truncate">Econet Wireless Zimbabwe</span><span class="font-body-sm text-body-sm text-on-surface-variant truncate">Harare HQ • Tech &amp; Telecoms</span></div></div><nav class="px-space-md py-space-sm space-y-1" data-active-classes="bg-primary-container text-on-primary font-label-lg rounded-lg shadow-sm"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-lg">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="openings" href="#"><span class="material-symbols-outlined text-lg">work_outline</span><span>Openings</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-colors bg-primary-container text-on-primary font-label-lg rounded-lg shadow-sm" data-path="applicants" href="#"><span class="material-symbols-outlined text-lg">groups</span><span>Applicants</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="messages" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">chat_bubble_outline</span><span>Messages</span></div><span class="w-5 h-5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm flex items-center justify-center">3</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="company-profile" href="#"><span class="material-symbols-outlined text-lg">domain</span><span>Company Profile</span></a></nav></div><div class="p-space-md space-y-space-sm bg-surface-container-lowest"><div class="p-space-sm bg-surface-container-low rounded-lg flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-base">verified</span><span class="font-label-sm text-label-sm text-on-surface-variant">Accredited Employer</span></div><span class="font-label-sm text-label-sm text-primary">Tier 1</span></div><div class="pt-space-xs flex items-center justify-between text-on-surface-variant font-label-md text-label-md px-space-xs"><a class="flex items-center gap-space-xs hover:text-primary transition-colors" data-path="help-support" href="#"><span class="material-symbols-outlined text-base">help_outline</span><span>Help &amp; Support</span></a><span class="font-code-sm text-code-sm text-outline">ZW • 2025</span></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-20 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl"><div class="flex items-center gap-space-lg flex-1 max-w-xl"><div class="relative w-full"><span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-on-surface-variant text-lg pointer-events-none">search</span><input class="w-full h-10 pl-10 pr-space-md bg-surface-container-low rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest transition-colors" placeholder="Search students, degree programmes, or openings (⌘K)..." type="search"/></div></div><div class="flex items-center gap-space-lg"><div class="hidden xl:flex items-center gap-space-xs px-space-md py-1.5 bg-surface-container-low rounded-full"><span class="material-symbols-outlined text-primary text-base">calendar_month</span><span class="font-label-sm text-label-sm text-on-surface">Aug – Dec 2025 Attachment Intake</span></div><button aria-label="Notifications" class="relative w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-xl">notifications</span><span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-error ring-2 ring-surface-container-lowest"></span></button><div class="flex items-center gap-space-sm pl-space-sm"><div class="flex flex-col text-right hidden sm:flex"><span class="font-label-md text-label-md text-on-surface leading-tight">Tadiwa Moyo</span><span class="font-body-sm text-body-sm text-on-surface-variant leading-tight">Talent Acquisition Lead</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="../employers/attachlink-logo.svg"/></div></div></header><main class="relative pt-20 w-full px-space-xl bg-surface pb-space-2xl"><div class="flex flex-col w-full">
+<!-- Subtle decorative ambient background blur (contained) -->
+<div class="relative w-full">
+
+
+<!-- Breadcrumb & Opening Top Bar -->
+<div class="flex flex-col gap-space-md mb-space-lg">
+<div class="flex flex-wrap items-center justify-between gap-space-md">
+<nav aria-label="Breadcrumb" class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface-variant">
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-base">work_outline</span>
+<span>Openings</span>
+</a>
+<span class="text-outline">/</span>
+<span class="hover:text-primary transition-colors cursor-pointer">Software Engineering</span>
+<span class="text-outline">/</span>
+<span class="text-on-surface font-semibold bg-surface-container-high px-2 py-0.5 rounded-full text-label-sm font-label-sm">
+            Applicants (48 Total)
+          </span>
+</nav>
+<div class="flex items-center gap-space-sm">
+<button class="h-10 px-space-md bg-surface-container-lowest text-on-surface hover:bg-surface-container rounded-lg font-label-lg text-label-lg shadow-sm flex items-center gap-space-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-lg">tune</span>
+<span>Pipeline Settings</span>
+</button>
+<button class="h-10 px-space-md bg-primary text-on-primary hover:bg-primary-container rounded-lg font-label-lg text-label-lg shadow-sm flex items-center gap-space-xs transition-all" type="button">
+<span class="material-symbols-outlined text-lg">person_add</span>
+<span>Invite Candidates</span>
+</button>
+</div>
+</div>
+<!-- Opening Summary Bento Hero Strip -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col xl:flex-row xl:items-center justify-between gap-space-lg">
+<div class="flex flex-col gap-space-xs min-w-0">
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm uppercase tracking-wider">
+              REQ-2025-ZW-084
+            </span>
+<span class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-sm">bolt</span> Priority Intake
+            </span>
+<span class="text-on-surface-variant font-code-sm text-code-sm">Updated 4h ago</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface tracking-tight truncate">
+            Industrial Attachee — Software Engineering
+          </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            EcoCash &amp; Digital Banking Platforms Directorate • Borrowdale Office Park, Harare
+          </p>
+</div>
+<!-- Badges & Cohort Quick Pulse -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="flex items-center gap-space-xs px-space-md py-2 bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-secondary text-xl">event_busy</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline uppercase">Deadline</span>
+<span class="font-label-md text-label-md text-on-surface">31 Jul 2025</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-2 bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-primary text-xl">location_on</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline uppercase">Location</span>
+<span class="font-label-md text-label-md text-on-surface">Harare - Borrowdale</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-2 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary text-xl">groups_2</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-primary uppercase font-bold">Quota</span>
+<span class="font-label-md text-label-md text-primary font-bold">4 Open Slots</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-2 bg-secondary-fixed/50 rounded-lg">
+<span class="material-symbols-outlined text-secondary text-xl">record_voice_over</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-secondary-fixed-variant uppercase">Interviewed</span>
+<span class="font-label-md text-label-md text-on-secondary-fixed-variant font-bold">12 Candidates</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Filters + Search Bar Toolbar -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm mb-space-md space-y-space-md">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-space-sm items-center">
+<!-- Search Field (Span 4) -->
+<div class="xl:col-span-4 relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg pointer-events-none">search</span>
+<input class="w-full h-10 pl-10 pr-10 bg-surface-container-low rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest transition-colors shadow-inner" id="candidateSearchInput" placeholder="Search applicants by name, student ID, university..." type="search"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 font-code-sm text-code-sm text-outline pointer-events-none">⌘K</span>
+</div>
+<!-- Filter 1: Course (Span 2) -->
+<div class="xl:col-span-2 relative">
+<select class="w-full h-10 pl-3 pr-8 bg-surface-container-low rounded-lg font-label-md text-label-md text-on-surface appearance-none focus:outline-none cursor-pointer">
+<option value="">All Courses</option>
+<option value="cs">BSc Computer Science</option>
+<option value="se">Software Engineering</option>
+<option value="it">BTech Information Tech</option>
+<option value="tel">Telecoms &amp; Electronics</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-outline text-base pointer-events-none">expand_more</span>
+</div>
+<!-- Filter 2: Institution (Span 2) -->
+<div class="xl:col-span-2 relative">
+<select class="w-full h-10 pl-3 pr-8 bg-surface-container-low rounded-lg font-label-md text-label-md text-on-surface appearance-none focus:outline-none cursor-pointer">
+<option value="">All Universities</option>
+<option value="uz">UZ (Univ of Zimbabwe)</option>
+<option value="nust">NUST Bulawayo</option>
+<option value="msu">MSU Gweru</option>
+<option value="hit">HIT Harare</option>
+<option value="cut">Chinhoyi CUT</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-outline text-base pointer-events-none">school</span>
+</div>
+<!-- Filter 3: Match Score (Span 2) -->
+<div class="xl:col-span-2 relative">
+<select class="w-full h-10 pl-3 pr-8 bg-surface-container-low rounded-lg font-label-md text-label-md text-on-surface appearance-none focus:outline-none cursor-pointer">
+<option value="">Match Score</option>
+<option value="90">Min 90% Match</option>
+<option value="80">Min 80% Match</option>
+<option value="70">Min 70% Match</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-outline text-base pointer-events-none">auto_awesome</span>
+</div>
+<!-- Filter 4: Pipeline Status (Span 2) -->
+<div class="xl:col-span-2 relative">
+<select class="w-full h-10 pl-3 pr-8 bg-surface-container-low rounded-lg font-label-md text-label-md text-on-surface appearance-none focus:outline-none cursor-pointer">
+<option value="">All Statuses</option>
+<option value="applied">Applied (18)</option>
+<option value="shortlisted">Shortlisted (14)</option>
+<option value="offered">Offered (6)</option>
+<option value="accepted">Accepted (3)</option>
+<option value="rejected">Rejected (7)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-outline text-base pointer-events-none">filter_list</span>
+</div>
+</div>
+<!-- Quick Filter Chips & Table View Controls -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-xs text-on-surface-variant font-label-sm text-label-sm">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="text-outline uppercase tracking-wider font-semibold">Active Pipeline:</span>
+<button class="px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium hover:bg-primary/20 transition-colors flex items-center gap-1" type="button">
+            Min 80% AI Match <span class="material-symbols-outlined text-sm">close</span>
+</button>
+<button class="px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors flex items-center gap-1" type="button">
+            3rd Year Attachees Only <span class="material-symbols-outlined text-sm">close</span>
+</button>
+<button class="text-primary hover:underline ml-1" type="button">Clear all filters</button>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="text-outline font-code-sm text-code-sm">Showing 6 prioritized records</span>
+<div class="flex items-center gap-1 bg-surface-container-low rounded-lg p-0.5">
+<button aria-label="Table View" class="p-1 rounded bg-surface-container-lowest text-primary shadow-xs" type="button">
+<span class="material-symbols-outlined text-lg leading-none">format_list_bulleted</span>
+</button>
+<button aria-label="Kanban Board View" class="p-1 rounded text-outline hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-lg leading-none">view_kanban</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating / Contextual Bulk Action Bar (Visible dynamically or shown here initialized with 3 selected) -->
+<div class="bg-surface-container-highest rounded-xl p-space-md shadow-md mb-space-md flex flex-wrap items-center justify-between gap-space-md transition-all" id="bulkToolbar">
+<div class="flex items-center gap-space-sm">
+<span class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-label-md font-label-md">3</span>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface">3 Applicants Selected</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Eligible for batch processing &amp; compliance dispatch</span>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-space-xs">
+<button class="h-9 px-space-md bg-secondary-container text-on-secondary-container rounded-lg font-label-md text-label-md font-semibold hover:opacity-90 flex items-center gap-1 shadow-sm transition-opacity" type="button">
+<span class="material-symbols-outlined text-base">star</span>
+<span>Bulk Shortlist</span>
+</button>
+<button class="h-9 px-space-md bg-surface-container-lowest text-on-surface hover:bg-surface-container rounded-lg font-label-md text-label-md flex items-center gap-1 shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-base">folder_zip</span>
+<span>Export CVs (ZIP)</span>
+</button>
+<button class="h-9 px-space-md bg-surface-container-lowest text-on-surface hover:bg-surface-container rounded-lg font-label-md text-label-md flex items-center gap-1 shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-base">forum</span>
+<span>Send Group Message</span>
+</button>
+<button class="h-9 px-space-md bg-error text-on-error rounded-lg font-label-md text-label-md hover:opacity-90 flex items-center gap-1 shadow-sm transition-opacity" type="button">
+<span class="material-symbols-outlined text-base">cancel</span>
+<span>Bulk Reject</span>
+</button>
+<button class="h-9 w-9 text-outline hover:text-on-surface rounded-lg flex items-center justify-center hover:bg-surface-container transition-colors" id="deselectAllBtn" title="Clear selection" type="button">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+</div>
+<!-- Candidate Data Table Module -->
+<div class="bg-surface-container-lowest rounded-xl shadow-md overflow-hidden mb-space-lg">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider h-11">
+<th class="w-12 px-4 text-center" scope="col">
+<input aria-label="Select all applicants" checked="" class="w-4 h-4 rounded text-primary accent-primary cursor-pointer" type="checkbox"/>
+</th>
+<th class="px-space-md py-2" scope="col">Student Candidate</th>
+<th class="px-space-md py-2" scope="col">Institution &amp; Year</th>
+<th class="px-space-md py-2" scope="col">Degree Programme</th>
+<th class="px-space-md py-2" scope="col">AI Match Score</th>
+<th class="px-space-md py-2" scope="col">Status</th>
+<th class="px-space-md py-2" scope="col">Attached Docs</th>
+<th class="px-4 py-2 text-right" scope="col">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface font-body-sm text-body-sm">
+<!-- Row 1: Kudzai Musarurwa (Selected) -->
+<tr class="bg-primary/5 hover:bg-surface-container-low transition-colors h-16 group">
+<td class="w-12 px-4 text-center">
+<input checked="" class="applicant-checkbox w-4 h-4 rounded accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="relative shrink-0">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm ring-2 ring-primary-fixed" data-alt="Professional studio portrait of Kudzai Musarurwa, a young African male software engineering student in modern business casual attire against a clean neutral studio background, high contrast, warm lighting, natural confidence." src="../employers/attachlink-logo.svg"/>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-primary flex items-center justify-center text-on-primary" title="Verified Attachee Candidate">
+<span class="material-symbols-outlined text-[10px]">check</span>
+</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Kudzai Musarurwa</span>
+<span class="text-primary material-symbols-outlined text-sm" title="Institution Verified">verified</span>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant truncate">+263 77 412 8991 • Harare (Belvedere)</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-1 font-label-md text-label-md text-on-surface">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span>University of Zimbabwe</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">3rd Year Attachee • Sept '25 Cohort</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm font-label-md text-label-md">
+<span class="text-on-surface">BSc Computer Science (Hons)</span>
+<span class="block font-code-sm text-code-sm text-outline">GPA: 2.1 First Class Track</span>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="relative w-8 h-8 flex items-center justify-center">
+<svg class="w-8 h-8 transform -rotate-90" viewbox="0 0 36 36">
+<circle class="text-surface-container" cx="18" cy="18" fill="none" r="14" stroke="currentColor" stroke-width="3"></circle>
+<circle class="text-primary" cx="18" cy="18" fill="none" r="14" stroke="currentColor" stroke-dasharray="88, 100" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<span class="absolute font-code-sm text-[10px] font-bold text-primary">96</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold text-primary">96% Excellent</span>
+<span class="font-code-sm text-[10px] text-outline">Golang, React, Docker</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>Shortlisted</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-primary" title="Curriculum Vitae (PDF)" type="button">
+<span class="material-symbols-outlined text-base">description</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-tertiary" title="Institutional Dean Recommendation" type="button">
+<span class="material-symbols-outlined text-base">history_edu</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant" title="Academic Transcript (Verified)" type="button">
+<span class="material-symbols-outlined text-base">receipt_long</span>
+</button>
+</div>
+</td>
+<td class="px-4 py-space-sm text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="h-8 px-3 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-sm text-label-sm font-semibold transition-colors" type="button">
+                    Review
+                  </button>
+<button class="w-8 h-8 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-base">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Nyasha Chitepo (Selected) -->
+<tr class="bg-primary/5 hover:bg-surface-container-low transition-colors h-16 group">
+<td class="w-12 px-4 text-center">
+<input checked="" class="applicant-checkbox w-4 h-4 rounded accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="relative shrink-0">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm ring-2 ring-primary-fixed" data-alt="Close-up professional portrait of Nyasha Chitepo, a young Zimbabwean female university student with braided hair smiling confidently in a modern tech lab, natural soft lighting, corporate technology atmosphere." src="../employers/attachlink-logo.svg"/>
+<span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[10px]">check</span>
+</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Nyasha Chitepo</span>
+<span class="text-primary material-symbols-outlined text-sm" title="Institution Verified">verified</span>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant truncate">+263 71 883 1002 • Harare (Relocating)</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-1 font-label-md text-label-md text-on-surface">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span>NUST Bulawayo</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Part III Industrial Year • 2025</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm font-label-md text-label-md">
+<span class="text-on-surface">BEng Electronic &amp; Computer Eng</span>
+<span class="block font-code-sm text-code-sm text-outline">Dean's Honor List • Embedded/IoT</span>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="relative w-8 h-8 flex items-center justify-center">
+<svg class="w-8 h-8 transform -rotate-90" viewbox="0 0 36 36">
+<circle class="text-surface-container" cx="18" cy="18" fill="none" r="14" stroke="currentColor" stroke-width="3"></circle>
+<circle class="text-primary" cx="18" cy="18" fill="none" r="14" stroke="currentColor" stroke-dasharray="82, 100" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<span class="absolute font-code-sm text-[10px] font-bold text-primary">93</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold text-primary">93% High Match</span>
+<span class="font-code-sm text-[10px] text-outline">Python, C++, Cloud</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span>Applied</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-primary" title="Curriculum Vitae (PDF)" type="button">
+<span class="material-symbols-outlined text-base">description</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-tertiary" title="Institutional Dean Recommendation" type="button">
+<span class="material-symbols-outlined text-base">history_edu</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant" title="Academic Transcript" type="button">
+<span class="material-symbols-outlined text-base">receipt_long</span>
+</button>
+</div>
+</td>
+<td class="px-4 py-space-sm text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="h-8 px-3 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm font-semibold transition-colors" type="button">
+                    Review
+                  </button>
+<button class="w-8 h-8 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-base">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Tafadzwa Ndlovu (Selected) -->
+<tr class="bg-primary/5 hover:bg-surface-container-low transition-colors h-16 group">
+<td class="w-12 px-4 text-center">
+<input checked="" class="applicant-checkbox w-4 h-4 rounded accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="relative shrink-0">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm ring-2 ring-primary-fixed" data-alt="Editorial portrait of Tafadzwa Ndlovu, a focused young male Zimbabwean programmer in an open plan Harare corporate tech office, laptop visible, contemporary teal color accents in setting." src="../employers/attachlink-logo.svg"/>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Tafadzwa Ndlovu</span>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant truncate">+263 77 905 3341 • Harare (Mabelreign)</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-1 font-label-md text-label-md text-on-surface">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>HIT (Harare Institute of Tech)</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">3rd Year Industrial Internship</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm font-label-md text-label-md">
+<span class="text-on-surface">BTech Software Engineering</span>
+<span class="block font-code-sm text-code-sm text-outline">Full Stack • PostgreSQL, FastAPI</span>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="relative w-8 h-8 flex items-center justify-center">
+<svg class="w-8 h-8 transform -rotate-90" viewbox="0 0 36 36">
+<circle class="text-surface-container" cx="18" cy="18" fill="none" r="14" stroke="currentColor" stroke-width="3"></circle>
+<circle class="text-primary" cx="18" cy="18" fill="none" r="14" stroke="currentColor" stroke-dasharray="78, 100" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<span class="absolute font-code-sm text-[10px] font-bold text-primary">89</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold text-primary">89% Match</span>
+<span class="font-code-sm text-[10px] text-outline">FastAPI, Flutter</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<!-- Offered Status (Purple styling) -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span>Offered (Letter Sent)</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-primary" title="Curriculum Vitae (PDF)" type="button">
+<span class="material-symbols-outlined text-base">description</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-tertiary" title="Institutional Letter" type="button">
+<span class="material-symbols-outlined text-base">history_edu</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant" title="Academic Transcript" type="button">
+<span class="material-symbols-outlined text-base">receipt_long</span>
+</button>
+</div>
+</td>
+<td class="px-4 py-space-sm text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="h-8 px-3 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm font-semibold transition-colors" type="button">
+                    Review
+                  </button>
+<button class="w-8 h-8 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-base">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Farai Gumbo (Unchecked) -->
+<tr class="hover:bg-surface-container-low transition-colors h-16 group">
+<td class="w-12 px-4 text-center">
+<input class="applicant-checkbox w-4 h-4 rounded accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center font-bold text-on-surface-variant shrink-0">
+                    FG
+                  </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Farai Gumbo</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant truncate">+263 78 214 7741 • Gweru (Midlands)</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-1 font-label-md text-label-md text-on-surface">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span>MSU (Midlands State Univ)</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Level 3.1 Attachment</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm font-label-md text-label-md">
+<span class="text-on-surface">BSc Information Systems</span>
+<span class="block font-code-sm text-code-sm text-outline">Database Admin &amp; Web Technologies</span>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="relative w-8 h-8 flex items-center justify-center">
+<svg class="w-8 h-8 transform -rotate-90" viewbox="0 0 36 36">
+<circle class="text-surface-container" cx="18" cy="18" fill="none" r="14" stroke="currentColor" stroke-width="3"></circle>
+<circle class="text-secondary" cx="18" cy="18" fill="none" r="14" stroke="currentColor" stroke-dasharray="72, 100" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<span class="absolute font-code-sm text-[10px] font-bold text-secondary">84</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold text-secondary">84% Match</span>
+<span class="font-code-sm text-[10px] text-outline">SQL, Java, Spring</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span>Applied</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-primary" title="Curriculum Vitae (PDF)" type="button">
+<span class="material-symbols-outlined text-base">description</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-tertiary" title="Institutional Letter" type="button">
+<span class="material-symbols-outlined text-base">history_edu</span>
+</button>
+</div>
+</td>
+<td class="px-4 py-space-sm text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="h-8 px-3 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm font-semibold transition-colors" type="button">
+                    Review
+                  </button>
+<button class="w-8 h-8 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-base">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: Ruvimbo Makoni (Unchecked) -->
+<tr class="hover:bg-surface-container-low transition-colors h-16 group">
+<td class="w-12 px-4 text-center">
+<input class="applicant-checkbox w-4 h-4 rounded accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="relative shrink-0">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="Modern candid headshot of Ruvimbo Makoni, an energetic female software engineering student in Zimbabwe sitting by an outdoor university courtyard with tablet, natural daylight, confident presentation." src="../employers/attachlink-logo.svg"/>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Ruvimbo Makoni</span>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant truncate">+263 77 622 9010 • Chinhoyi</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-1 font-label-md text-label-md text-on-surface">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span>CUT (Chinhoyi Univ of Tech)</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">3rd Year Attachee</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm font-label-md text-label-md">
+<span class="text-on-surface">BSc Computer Science</span>
+<span class="block font-code-sm text-code-sm text-outline">Frontend &amp; UI Systems Track</span>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="relative w-8 h-8 flex items-center justify-center">
+<svg class="w-8 h-8 transform -rotate-90" viewbox="0 0 36 36">
+<circle class="text-surface-container" cx="18" cy="18" fill="none" r="14" stroke="currentColor" stroke-width="3"></circle>
+<circle class="text-outline" cx="18" cy="18" fill="none" r="14" stroke="currentColor" stroke-dasharray="64, 100" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<span class="absolute font-code-sm text-[10px] font-bold text-outline">78</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold text-outline">78% Match</span>
+<span class="font-code-sm text-[10px] text-outline">Vue.js, Tailwind, Git</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>Shortlisted</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-primary" title="Curriculum Vitae (PDF)" type="button">
+<span class="material-symbols-outlined text-base">description</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-tertiary" title="Institutional Letter" type="button">
+<span class="material-symbols-outlined text-base">history_edu</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant" title="Academic Transcript" type="button">
+<span class="material-symbols-outlined text-base">receipt_long</span>
+</button>
+</div>
+</td>
+<td class="px-4 py-space-sm text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="h-8 px-3 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm font-semibold transition-colors" type="button">
+                    Review
+                  </button>
+<button class="w-8 h-8 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-base">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6: Simbarashe Zhou (Unchecked) -->
+<tr class="hover:bg-surface-container-low transition-colors h-16 group">
+<td class="w-12 px-4 text-center">
+<input class="applicant-checkbox w-4 h-4 rounded accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center font-bold text-on-primary-fixed shrink-0">
+                    SZ
+                  </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold truncate">Simbarashe Zhou</span>
+<span class="text-primary material-symbols-outlined text-sm" title="Institution Verified">verified</span>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant truncate">+263 73 349 2011 • Kwekwe</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-1 font-label-md text-label-md text-on-surface">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span>University of Zimbabwe</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">3rd Year Electrical &amp; Computer</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm font-label-md text-label-md">
+<span class="text-on-surface">BSc Electronic Engineering</span>
+<span class="block font-code-sm text-code-sm text-outline">Systems Architecture &amp; Networking</span>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="relative w-8 h-8 flex items-center justify-center">
+<svg class="w-8 h-8 transform -rotate-90" viewbox="0 0 36 36">
+<circle class="text-surface-container" cx="18" cy="18" fill="none" r="14" stroke="currentColor" stroke-width="3"></circle>
+<circle class="text-primary" cx="18" cy="18" fill="none" r="14" stroke="currentColor" stroke-dasharray="80, 100" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+<span class="absolute font-code-sm text-[10px] font-bold text-primary">91</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold text-primary">91% High Match</span>
+<span class="font-code-sm text-[10px] text-outline">Rust, Linux, Networks</span>
+</div>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<!-- Accepted Status (Green styling) -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span>Accepted (Contract Signed)</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm">
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-primary" title="Curriculum Vitae (PDF)" type="button">
+<span class="material-symbols-outlined text-base">description</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-tertiary" title="Dean Letter" type="button">
+<span class="material-symbols-outlined text-base">history_edu</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant" title="Academic Transcript" type="button">
+<span class="material-symbols-outlined text-base">receipt_long</span>
+</button>
+</div>
+</td>
+<td class="px-4 py-space-sm text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="h-8 px-3 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm font-semibold transition-colors" type="button">
+                    Review
+                  </button>
+<button class="w-8 h-8 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-base">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination and Batch Statistics Footer -->
+<div class="h-16 px-space-md bg-surface-container-lowest border-t-0 flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm font-body-sm text-body-sm text-on-surface-variant">
+<span>Showing <strong class="text-on-surface font-semibold">1–10</strong> of <strong class="text-on-surface font-semibold">48</strong> applicants</span>
+<span class="hidden md:inline text-outline">•</span>
+<span class="hidden md:inline font-code-sm text-code-sm text-outline">Industrial Year 2025/2026 Registry</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="h-9 px-3 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container disabled:opacity-40 font-label-md text-label-md flex items-center gap-1 transition-colors" disabled="" type="button">
+<span class="material-symbols-outlined text-base">chevron_left</span>
+<span>Previous</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-semibold flex items-center justify-center shadow-xs" type="button">
+            1
+          </button>
+<button class="w-9 h-9 rounded-lg text-on-surface-variant hover:bg-surface-container font-label-md text-label-md flex items-center justify-center transition-colors" type="button">
+            2
+          </button>
+<button class="w-9 h-9 rounded-lg text-on-surface-variant hover:bg-surface-container font-label-md text-label-md flex items-center justify-center transition-colors" type="button">
+            3
+          </button>
+<span class="px-1 text-outline font-label-sm text-label-sm">…</span>
+<button class="w-9 h-9 rounded-lg text-on-surface-variant hover:bg-surface-container font-label-md text-label-md flex items-center justify-center transition-colors" type="button">
+            5
+          </button>
+<button class="h-9 px-3 rounded-lg text-on-surface hover:bg-surface-container font-label-md text-label-md flex items-center gap-1 transition-colors" type="button">
+<span>Next</span>
+<span class="material-symbols-outlined text-base">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Intake Compliance and Institutional Verification Notice (Bento Footer Note) -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-2xl">verified_user</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Institutional Attachment Protocol Compliance</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            All shortlisted applicants have verified academic records validated through the Zimbabwe Ministry of Higher and Tertiary Education (MHTESTD) API gateway.
+          </p>
+</div>
+</div>
+<button class="px-space-md py-2 bg-surface-container-lowest text-primary hover:bg-surface-container-high rounded-lg font-label-sm text-label-sm font-semibold shadow-xs whitespace-nowrap transition-colors" type="button">
+        Audit Institutional Seals
+      </button>
+</div>
+</div>
+</div>
+</main></div><script defer src="app.js"></script><script src="employer-message-links.js?v=1" defer></script><script defer src="employer-help-admin.js?v=10d"></script><script src="../../assets/attachlink-brand.js?v=14" data-logo-ext=".png"></script>
+
+
+</body></html>

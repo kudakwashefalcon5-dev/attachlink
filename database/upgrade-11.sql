@@ -1,0 +1,15 @@
+ALTER TABLE users
+ ADD COLUMN IF NOT EXISTS consent_at DATETIME NULL,
+ ADD COLUMN IF NOT EXISTS consent_version VARCHAR(32) NULL;
+
+CREATE TABLE IF NOT EXISTS document_purge_queue (
+ storage_kind ENUM('document','avatar') NOT NULL,
+ stored_name VARCHAR(120) NOT NULL,
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY (storage_kind,stored_name)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS schema_migrations (
+ version VARCHAR(32) CHARACTER SET ascii PRIMARY KEY,
+ applied_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;

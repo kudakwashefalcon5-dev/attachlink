@@ -1,0 +1,65 @@
+/* AttachLink Stage 17B — visual state of existing Profile preferences.
+   Supports both versions of the original Stitch markup:
+   <input ...> <div class="track"> and <input ...> <label><div class="track"></div></label>.
+   Does not enable SMS or recruiter discovery services. */
+#visibility-toggle + div,
+#sms-toggle + div,
+#visibility-toggle + label > div,
+#sms-toggle + label > div {
+  position: relative !important;
+  display: block !important;
+  box-sizing: border-box !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 24px !important;
+  border-radius: 999px !important;
+  background-color: #e5e9f7 !important;
+  cursor: pointer !important;
+  transition: background-color .18s ease !important;
+}
+#visibility-toggle + label,
+#sms-toggle + label {
+  display: inline-block !important;
+  width: 44px !important;
+  height: 24px !important;
+  cursor: pointer !important;
+}
+#visibility-toggle + div::after,
+#sms-toggle + div::after,
+#visibility-toggle + label > div::after,
+#sms-toggle + label > div::after {
+  content: "" !important;
+  position: absolute !important;
+  display: block !important;
+  top: 2px !important;
+  left: 2px !important;
+  width: 20px !important;
+  height: 20px !important;
+  box-sizing: border-box !important;
+  border-radius: 999px !important;
+  background: #ffffff !important;
+  border: 1px solid #bfc9d6 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .16) !important;
+  transform: translateX(0) !important;
+  transition: transform .18s ease, border-color .18s ease !important;
+}
+#visibility-toggle:checked + div,
+#sms-toggle:checked + div,
+#visibility-toggle:checked + label > div,
+#sms-toggle:checked + label > div {
+  background-color: #0b766e !important;
+}
+#visibility-toggle:checked + div::after,
+#sms-toggle:checked + div::after,
+#visibility-toggle:checked + label > div::after,
+#sms-toggle:checked + label > div::after {
+  transform: translateX(20px) !important;
+  border-color: #ffffff !important;
+}
+#visibility-toggle:focus-visible + div,
+#sms-toggle:focus-visible + div,
+#visibility-toggle:focus-visible + label > div,
+#sms-toggle:focus-visible + label > div {
+  outline: 2px solid #0b766e !important;
+  outline-offset: 3px !important;
+}

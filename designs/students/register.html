@@ -1,0 +1,372 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Student Account | AttachLink</title><link rel="stylesheet" href="../../assets/tailwind.min.css">
+
+    
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+    </style>
+<link rel="stylesheet" href="stage14-balanced-header.css?v=14">
+<link rel="stylesheet" href="../../assets/attachlink-auth.css"></head>
+
+<body class="al-auth al-student-register bg-gray-100 min-h-screen py-8 px-4">
+
+    <main class="max-w-2xl mx-auto w-full">
+
+        <!-- Brand Header -->
+        <div class="text-center mb-6">
+            <div class="inline-flex items-center justify-center
+                        w-16 h-16 bg-teal-800 text-white
+                        rounded-xl text-2xl font-bold mb-3">
+                AL
+            </div>
+
+            <h1 class="text-3xl font-bold text-gray-900">
+                AttachLink
+            </h1>
+
+            <p class="text-gray-600 mt-2">
+                Create your student account
+            </p>
+        </div>
+
+        <!-- Registration Form Container -->
+        <div class="bg-white rounded-xl shadow-md p-6 md:p-8">
+
+            <h2 class="text-xl font-bold text-gray-800 mb-2">
+                Student Registration
+            </h2>
+
+            <p class="text-sm text-gray-500 mb-6">
+                Complete your details to create your student account.
+            </p>
+
+            <!-- Registration Form -->
+            <form method="post" id="registrationForm" class="space-y-5">
+
+                <!-- Personal Information -->
+                <h3 class="font-semibold text-teal-800 border-b pb-2">
+                    Personal Information
+                </h3>
+
+                <div>
+                    <label for="fullName"
+                           class="block text-sm font-medium mb-1">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="fullName" autocomplete="name"
+                        required
+                        placeholder="Enter your full name"
+                        class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-600">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <div>
+                        <label for="dateOfBirth"
+                               class="block text-sm font-medium mb-1">
+                            Date of Birth
+                        </label>
+
+                        <input
+                            type="date"
+                            id="dateOfBirth"
+                            required
+                            class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-600">
+                    </div>
+
+                    <div>
+                        <label for="gender"
+                               class="block text-sm font-medium mb-1">
+                            Gender
+                        </label>
+
+                        <select
+                            id="gender"
+                            required
+                            class="w-full border rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-teal-600">
+
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Prefer not to say">
+                                Prefer not to say
+                            </option>
+
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- Contact Information -->
+                <h3 class="font-semibold text-teal-800 border-b pb-2 pt-3">
+                    Contact Information
+                </h3>
+
+                <div>
+                    <label for="phone"
+                           class="block text-sm font-medium mb-1">
+                        Mobile Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone" autocomplete="tel"
+                        required
+                        placeholder="0771234567"
+                        class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-600">
+                </div>
+
+                <div>
+                    <label for="email"
+                           class="block text-sm font-medium mb-1">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email" autocomplete="email"
+                        required
+                        placeholder="example@email.com"
+                        class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-600">
+                </div>
+
+                <!-- Academic Information -->
+                <h3 class="font-semibold text-teal-800 border-b pb-2 pt-3">
+                    Academic Information
+                </h3>
+
+                <div>
+                    <label for="institution"
+                           class="block text-sm font-medium mb-1">
+                        Institution
+                    </label>
+
+                    <input
+                        type="text"
+                        id="institution"
+                        required
+                        placeholder="Enter your college or university"
+                        class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-600">
+                </div>
+
+                <div>
+                    <label for="programme"
+                           class="block text-sm font-medium mb-1">
+                        Programme of Study
+                    </label>
+
+                    <input
+                        type="text"
+                        id="programme"
+                        required
+                        placeholder="e.g. Computer Systems"
+                        class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-600">
+                </div>
+
+                <div>
+                    <label for="academicLevel"
+                           class="block text-sm font-medium mb-1">
+                        Academic Level
+                    </label>
+
+                    <select
+                        id="academicLevel"
+                        required
+                        class="w-full border rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-teal-600">
+
+                        <option value="">Select your level</option>
+                        <option value="Certificate">Certificate</option>
+                        <option value="Diploma">Diploma</option>
+                        <option value="Degree">Degree</option>
+                        <option value="Other">Other</option>
+
+                    </select>
+                </div>
+
+                <label class="block"><input type="checkbox" id="registrationConsent" required> I accept the <a class="underline" href="../../privacy.html">Privacy Notice</a> and <a class="underline" href="../../terms.html">Terms of Use</a>.</label>
+                <!-- Account Security -->
+                <h3 class="font-semibold text-teal-800 border-b pb-2 pt-3">
+                    Account Security
+                </h3>
+
+                <div>
+                    <label for="password"
+                           class="block text-sm font-medium mb-1">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password" autocomplete="new-password"
+                        required
+                        minlength="10"
+                        placeholder="Create a password (minimum 10 characters)"
+                        class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-600">
+                </div>
+
+                <div>
+                    <label for="confirmPassword"
+                           class="block text-sm font-medium mb-1">
+                        Confirm Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirmPassword" autocomplete="new-password"
+                        required
+                        minlength="10"
+                        placeholder="Re-enter your password"
+                        class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-teal-600">
+                </div>
+
+                <!-- Feedback Message -->
+                <div
+                    id="registrationMessage"
+                    class="hidden p-3 rounded-lg text-sm text-center"
+                    role="status">
+                </div>
+
+                <!-- Register Button -->
+                <button
+                    type="submit"
+                    class="w-full bg-teal-800 hover:bg-teal-900
+                           text-white font-bold py-3 rounded-lg
+                           transition-colors">
+
+                    Create Student Account
+
+                </button>
+
+            </form>
+            <!-- End Registration Form -->
+
+            <!-- Sign In Link: Outside the Form -->
+            <p class="text-center text-sm text-gray-600 mt-5">
+                Already have an account?
+
+                <a
+                    href="./login.html"
+                    class="text-teal-800 font-semibold hover:underline">
+
+                    Sign In
+
+                </a>
+            </p>
+
+        </div>
+
+        <!-- Footer -->
+        <p class="text-center text-xs text-gray-500 mt-6">
+            AttachLink - Connecting Students with Opportunities.
+        </p>
+
+    </main>
+
+    <!-- Registration Validation -->
+    <script>
+// ATTACHLINK-STAGE4-REGISTRATION: database-connected student form.
+// Do not reintroduce the old frontend-only success handler.
+const REGISTER_AUTH_API = '../../backend/api/auth/';
+const registrationForm = document.getElementById('registrationForm');
+let registrationBusy = false;
+function registrationFeedback(text, success = false) {
+  const message = document.getElementById('registrationMessage');
+  message.textContent = text;
+  message.className = 'p-3 rounded-lg text-sm text-center ' +
+    (success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800');
+}
+async function registerStudent(payload) {
+  const tokenResponse = await fetch(REGISTER_AUTH_API + 'csrf.php', {
+    credentials: 'same-origin', cache: 'no-store'
+  });
+  if (!tokenResponse.ok) throw new Error('Registration is temporarily unavailable. Try again.');
+  const token = await tokenResponse.json();
+  if (!token.ok || !token.csrf_token) throw new Error('Could not get a security token. Refresh and try again.');
+  const response = await fetch(REGISTER_AUTH_API + 'register.php', {
+    method: 'POST', credentials: 'same-origin', cache: 'no-store',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({...payload, csrf_token: token.csrf_token})
+  });
+  let result;
+  try { result = await response.json(); }
+  catch { throw new Error('Registration is temporarily unavailable. Please try again later.'); }
+  if (!response.ok || !result.ok) throw new Error(result.message || 'Account could not be created.');
+  return result;
+}
+registrationForm.addEventListener('submit', async event => {
+  event.preventDefault();
+  if (registrationBusy) return;
+  const read = id => document.getElementById(id).value.trim();
+  const name = read('fullName').replace(/\s+/g, ' ');
+  const segments = name.split(' ').filter(Boolean);
+  if (segments.length < 2) {
+    registrationFeedback('Enter both your first name and surname.');
+    document.getElementById('fullName').focus();
+    return;
+  }
+  const phone = read('phone').replace(/[\s()-]/g, '');
+  if (!/^(07[1378]\d{7}|\+2637[1378]\d{7})$/.test(phone)) {
+    registrationFeedback('Enter a valid Zimbabwean number such as 0771234567 or +263771234567.');
+    return;
+  }
+  const password = document.getElementById('password').value;
+  if (new TextEncoder().encode(password).length < 10 || new TextEncoder().encode(password).length > 72) {
+    registrationFeedback('Password must be between 10 and 72 bytes long.');
+    return;
+  }
+  if (password !== document.getElementById('confirmPassword').value) {
+    registrationFeedback('The two passwords do not match.');
+    return;
+  }
+  if (!registrationForm.reportValidity()) return;
+  const payload = {
+    role: 'student',
+    consent: document.getElementById('registrationConsent').checked,
+    consent_version: 'pilot-2026-11',
+    first_name: segments[0],
+    last_name: segments.slice(1).join(' '),
+    date_of_birth: read('dateOfBirth'),
+    gender: read('gender'),
+    phone,
+    email: read('email').toLowerCase(),
+    institution: read('institution'),
+    programme: read('programme'),
+    study_level: read('academicLevel'),
+    password
+  };
+  registrationBusy = true;
+  const submit = registrationForm.querySelector('button[type="submit"]');
+  submit.disabled = true;
+  submit.classList.add('opacity-60');
+  registrationFeedback('Creating student account...', true);
+  try {
+    const result = await registerStudent(payload);
+    registrationFeedback(result.message + ' You can now use Sign In below.', true);
+    document.getElementById('password').value = '';
+    document.getElementById('confirmPassword').value = '';
+    const signInLink = document.querySelector('a[href="./login.html"]');
+    if (signInLink) signInLink.focus();
+  } catch (error) {
+    registrationFeedback(error.message || 'Registration failed. Please retry.');
+  } finally {
+    registrationBusy = false;
+    submit.disabled = false;
+    submit.classList.remove('opacity-60');
+  }
+});
+</script>
+
+<script src="../../assets/attachlink-brand.js?v=14" data-logo-ext=".png"></script>
+</body>
+</html>

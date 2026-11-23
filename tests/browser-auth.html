@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>AttachLink browser checks</title></head>
+<body><pre id="results" data-state="pending"></pre>
+<script>
+(async () => {
+  const results = document.getElementById('results');
+  function check(condition, name) {
+    if (!condition) throw new Error(name);
+    results.textContent += 'PASS ' + name + '\n';
+  }
+  function open(path, width) {
+    return new Promise(resolve => {
+      const frame = document.createElement('iframe');
+      frame.style.cssText = 'width:' + width + 'px;height:900px;display:block;border:0';
+      frame.addEventListener('load', () => resolve(frame), {once: true});
+      frame.src = '../designs/' + path;
+      document.body.append(frame);
+    });
+  }
+  function choose(doc, role) {
+    doc.querySelector('input[name="role"][value="' + role + '"]').click();
+    return doc.getElementById('register-link');
+  }
+  try {
+    for (const width of [1200, 768, 375]) {
+      const frame = await open('students/login.html', width);
+      const doc = frame.contentDocument;
+      const link = choose(doc, 'student');
+      check(link.textContent === 'Create Student Account' && new URL(link.href).pathname.endsWith('/students/register.html'), 'Student registration at ' + width);
+      choose(doc, 'employer');
+      check(link.textContent === 'Create Company Account' && new URL(link.href).pathname.endsWith('/employers/register.html'), 'Company registration at ' + width);
+      choose(doc, 'admin');
+      check(link.hidden && !link.hasAttribute('href'), 'Administrator registration hidden at ' + width);
+      check(doc.documentElement.scrollWidth <= width, 'No horizontal overflow at ' + width);
+      doc.getElementById('reveal-password').click();
+      check(doc.getElementById('password').type === 'text', 'Reveal password at ' + width);
+      frame.remove();
+    }
+    for (const [portal, role] of [['students','student'],['employers','employer'],['admin','admin']]) {
+      const frame = await open(portal + '/dashboard.html', 768);
+      check(frame.contentDocument.querySelector('input[name="role"]:checked')?.value === role, 'Protected ' + portal + ' dashboard redirects to its sign-in role');
+      frame.remove();
+    }
+    results.dataset.state = 'passed';
+  } catch (error) {
+    results.dataset.state = 'failed';
+    results.textContent += 'FAIL ' + error.message;
+  }
+})();
+</script></body></html>

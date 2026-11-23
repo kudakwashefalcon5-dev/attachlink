@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>My Database Account | AttachLink</title><link rel="stylesheet" href="../../assets/tailwind.min.css">
+  
+  <style>
+    :root{--teal:#005c55;--teal2:#0f766e;--ink:#131b2e;--muted:#5c6979;--bg:#faf8ff;--border:#e2e8ef;--pale:#e9f6f4}
+    *{box-sizing:border-box}body{margin:0;font:15px/1.55 Inter,Arial,sans-serif;color:var(--ink);background:var(--bg)}a{color:var(--teal)}
+    .top{background:#fff;border-bottom:1px solid var(--border);padding:15px max(20px,calc((100vw - 1100px)/2));display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+    .brand{font-size:23px;font-weight:800;letter-spacing:-.7px;text-decoration:none;color:var(--teal)}.brand small{background:#a3faef;padding:3px 6px;border-radius:5px;vertical-align:middle;font-size:11px;letter-spacing:0}
+    nav{display:flex;flex-wrap:wrap;gap:15px;align-items:center}nav a{text-decoration:none;font-weight:600;color:#465963;font-size:13px}nav a[aria-current="page"]{color:var(--teal)}
+    .container{max-width:1100px;margin:30px auto 60px;padding:0 20px}.banner{background:#fff7df;border:1px solid #ead99e;color:#795600;padding:14px 18px;border-radius:10px;margin-bottom:22px}
+    .hero{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:22px}.hero h1{margin:0 0 5px;font-size:30px;letter-spacing:-.8px}.hero p{margin:0;color:var(--muted)}
+    .pill{background:var(--pale);color:var(--teal);font-weight:700;padding:7px 12px;border-radius:10px;font-size:12px;align-self:center}
+    .columns{display:grid;grid-template-columns:minmax(0,2fr) minmax(240px,1fr);gap:22px}.panel{background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:0 5px 22px #0b26300a}
+    .panel h2{margin:0 0 15px;font-size:19px}.panel h3{font-size:15px;margin:22px 0 12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:flex;flex-direction:column;gap:7px;margin-bottom:13px;font-weight:600;font-size:13px}
+    .field input,.field select{font:inherit;width:100%;padding:11px 12px;border:1px solid #bdc9c6;border-radius:9px;background:#fff;color:var(--ink);outline-offset:2px}.field input:focus,.field select:focus{outline:2px solid #8fd3cc}.field input[readonly]{background:#f4f6f8;color:#596579}
+    .hint{font-weight:400;color:#6f7886;font-size:12px}.actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:13px}.btn{border:0;background:var(--teal);color:#fff;border-radius:9px;padding:12px 21px;font:700 14px Inter,Arial,sans-serif;cursor:pointer}.btn:disabled{cursor:not-allowed;opacity:.55}.secondary{display:inline-block;background:#eef3f4;color:var(--teal);padding:10px 14px;border-radius:9px;text-decoration:none;font-weight:700}
+    .notice{margin:14px 0 0;padding:12px 15px;border-radius:9px;background:#eff6ff;color:#17416f}.notice.ok{background:#dcf6e9;color:#006a3b}.notice.err{background:#ffe5e1;color:#942b25}.notice[hidden]{display:none}
+    .info{padding:13px 0;border-bottom:1px solid var(--border)}.info:last-child{border:0}.info b{display:block;font-size:13px}.info span{display:block;color:var(--muted);font-size:13px;margin-top:4px;overflow-wrap:anywhere}
+    .foot{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+    @media(max-width:750px){.columns{grid-template-columns:1fr}.top{padding:13px 16px}.grid{grid-template-columns:1fr}.panel{padding:17px}.hero h1{font-size:25px}}
+  </style>
+<link rel="stylesheet" href="stage14-balanced-header.css?v=14">
+<link rel="stylesheet" href="../../assets/attachlink-portal.css"></head>
+<body>
+<header class="top"><a class="brand" href="dashboard.html">AttachLink <small>ZW</small></a>
+  <nav aria-label="Student navigation"><a href="dashboard.html">Find Openings</a><a href="my-applications.html">My Applications</a><a href="profile.html">Demo Profile</a><a href="career-tools.html">Career Tools</a><a href="account.html" aria-current="page">My Account</a></nav>
+</header>
+<main class="container">
+  <div class="hero"><div><h1>My Account</h1><p>Manage your registered student identity and study information.</p></div><span class="pill">Protected student session</span></div>
+  <div class="columns">
+    <section class="panel" aria-labelledby="form-heading">
+      <h2 id="form-heading">Registered account information</h2>
+      <div id="load-status" class="notice" role="status">Checking your PHP session and loading your account…</div>
+      <form id="account-form" hidden>
+        <div class="grid">
+          <label class="field">First name<input id="first_name" required maxlength="100" autocomplete="given-name"></label>
+          <label class="field">Last name<input id="last_name" required maxlength="100" autocomplete="family-name"></label>
+        </div>
+        <label class="field">Email address <span class="hint">Your sign-in email address.</span><input id="email" type="email" autocomplete="email" maxlength="190" required></label>
+        <div class="grid">
+          <label class="field">Phone number <span class="hint">Zimbabwe numbers: 077…, 77…, +26377…</span><input id="phone" type="tel" maxlength="30" placeholder="0771234567" autocomplete="tel"></label>
+          <label class="field">City / Location<input id="city" maxlength="120" placeholder="e.g. Kwekwe"></label>
+        </div>
+        <label class="field">Current password <span class="hint">Required when you change your email address or phone number.</span><input id="current_password" type="password" autocomplete="current-password" placeholder="Enter password if changing your contact details"></label>
+        
+        <h3>Academic details</h3>
+        <label class="field">College or University<input id="institution" maxlength="190" placeholder="e.g. Kwekwe Polytechnic"></label>
+        <label class="field">Programme<input id="programme" maxlength="190" placeholder="e.g. Computer Systems"></label>
+        <div class="grid">
+          <label class="field">Academic level<input id="study_level" maxlength="80" placeholder="Certificate / Diploma / Degree"></label>
+          <label class="field">Date of birth<input id="date_of_birth" type="date"></label>
+        </div>
+        <label class="field">Gender<select id="gender"><option value="">Not specified</option><option>Male</option><option>Female</option><option>Prefer not to say</option></select></label>
+        <div class="actions"><button class="btn" id="save" type="submit">Save changes</button><a class="secondary" href="profile.html">Back to Profile</a></div>
+        <div id="save-status" class="notice" role="status" aria-live="polite" hidden></div>
+        <label class="field">Biography<textarea id="bio" maxlength="4000" rows="4"></textarea></label>
+      </form>
+    </section>
+    <aside class="panel" aria-label="Account status">
+      <h2>Account Status</h2>
+      <div class="info"><b>Signed in as</b><span id="summary-name">Loading…</span></div>
+      <div class="info"><b>Registered email</b><span id="summary-email">—</span></div>
+      <div class="info"><b>Student record number</b><span id="summary-id">—</span></div>
+      
+      <p><a href="my-applications.html">View applications</a></p>
+      <p><a href="dashboard.html">Return to dashboard</a></p>
+    </aside>
+  </div>
+<p class="p-4"><a class="underline" href="../../account-recovery.php?action=settings">Email settings</a></p><section class="panel"><h2>Delete account and data</h2>
+<form id="delete-account"><label class="field">Current password <input type="password" name="current_password" autocomplete="current-password" required></label>
+<label><input type="checkbox" name="confirm" required> Permanently delete my account, applications and uploaded files.</label>
+<button class="btn" type="submit">Delete my account</button><p role="status"></p></form></section>
+<script defer src="delete-account.js"></script></main>
+<footer class="foot">AttachLink Zimbabwe</footer>
+<script>
+(() => {
+  'use strict';
+  const authRoot='../../backend/api/auth/';
+  const accountEndpoint='../../backend/api/student/account.php';
+  const fields=['first_name','last_name','email','phone','city','institution','programme','study_level','date_of_birth','gender','bio'];
+  const form=document.getElementById('account-form');
+  const loadStatus=document.getElementById('load-status');
+  const saveStatus=document.getElementById('save-status');
+  const saveButton=document.getElementById('save');
+  function status(el,message,type='') {el.hidden=false;el.textContent=message;el.className='notice'+(type?' '+type:'');}
+  function populate(a) {
+    for (const key of fields) document.getElementById(key).value=a[key] ?? '';
+    document.getElementById('summary-name').textContent=[a.first_name,a.last_name].filter(Boolean).join(' ') || 'Student';
+    document.getElementById('summary-email').textContent=a.email || '—';
+    document.getElementById('summary-id').textContent=String(a.id || '—');
+    form.hidden=false;
+  }
+  async function request(url,options={}) {
+    const response=await fetch(url,{credentials:'same-origin',cache:'no-store',...options});
+    const result=await response.json();
+    if (response.status===401) {window.location.replace('login.html?auth=required');throw Error('Please sign in.');}
+    if (!response.ok || !result.ok) throw Error(result.message || `Request failed (${response.status}).`);
+    return result;
+  }
+  async function init() {
+    try {
+      const result=await request(accountEndpoint);
+      loadStatus.hidden=true;
+      populate(result.account);
+    } catch(e) {status(loadStatus,(e&&e.message)||'Could not load account.','err');}
+  }
+  form.addEventListener('submit',async event => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    saveButton.disabled=true;
+    saveButton.textContent='Saving…';
+    saveStatus.hidden=true;
+    try {
+      const csrf=await request(authRoot+'csrf.php');
+      const body={csrf_token:csrf.csrf_token};
+      for (const key of fields) body[key]=document.getElementById(key).value.trim();
+      body.current_password=document.getElementById('current_password').value;
+      const response=await request(accountEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      populate(response.account);
+      document.getElementById('current_password').value='';
+      status(saveStatus,'Your account details were saved.','ok');
+    } catch(e) {
+      status(saveStatus,(e&&e.message)||'Could not save your account.','err');
+    } finally {saveButton.disabled=false;saveButton.textContent='Save changes';}
+  });
+  init();
+})();
+</script>
+<script src="../../assets/attachlink-brand.js?v=14" data-logo-ext=".png"></script>
+<script src="../../assets/attachlink-connect.js?v=3" defer></script>
+</body>
+</html>

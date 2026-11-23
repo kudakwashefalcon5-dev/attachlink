@@ -1,0 +1,39 @@
+/* AttachLink Stage 16 — local styling for a single Student Profile section. */
+.al-attachment-activity{--al-green:#00655e;--al-ink:#131b2e;--al-slate:#607170;--al-panel:#f2f3ff;display:flex;flex-direction:column;gap:20px;border:1px solid #e8ecef;border-radius:18px;padding:28px;background:#fff;color:var(--al-ink);box-shadow:0 3px 15px rgba(15,40,48,.035)}
+.al-activity-header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.al-activity-title{font:700 23px/1.3 Inter,system-ui,sans-serif;letter-spacing:-.02em;margin:0;color:#0c1a2c}
+.al-activity-subtitle{font:400 13px/1.5 Inter,system-ui,sans-serif;color:#687879;margin:7px 0 0}
+.al-activity-badge{font:700 11px/1.3 Inter,system-ui,sans-serif;letter-spacing:.025em;color:#00564f;background:#b1eee7;border-radius:40px;padding:8px 12px;white-space:nowrap}
+.al-activity-status{font:500 12px/1.5 Inter,system-ui,sans-serif;color:#5c7070;margin:-3px 0 0}
+.al-activity-status--error{padding:13px 15px;background:#fff4ee;color:#9b3c24;border-radius:10px}
+.al-activity-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.al-activity-metric{background:#f3f4ff;border-radius:13px;min-width:0;padding:16px 14px;display:flex;flex-direction:column;gap:5px}
+.al-activity-metric-label{font:700 11px/1.45 Inter,system-ui,sans-serif;letter-spacing:.03em;text-transform:uppercase;color:#617270}
+.al-activity-metric-number{font:750 28px/1.2 Inter,system-ui,sans-serif;color:var(--al-green);font-variant-numeric:tabular-nums}
+.al-activity-metric-note{font:400 11px/1.5 Inter,system-ui,sans-serif;color:#627274}
+.al-activity-recent{display:flex;flex-direction:column;gap:11px}
+.al-activity-recent-title{font:700 16px/1.4 Inter,system-ui,sans-serif;margin:0;color:#122c33}
+.al-activity-list{border:1px solid #e2e9ec;border-radius:14px;overflow:hidden}
+.al-activity-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 15px;background:#fff}
+.al-activity-row+.al-activity-row{border-top:1px solid #e9edf0}
+.al-activity-row-info{display:flex;flex-direction:column;gap:5px;min-width:0}
+.al-activity-row-title{font:700 13px/1.45 Inter,system-ui,sans-serif;color:#17243a;overflow-wrap:anywhere}
+.al-activity-row-detail{font:400 11px/1.5 Inter,system-ui,sans-serif;color:#5e6f70;overflow-wrap:anywhere}
+.al-activity-pill{font:700 11px/1.25 Inter,system-ui,sans-serif;border-radius:30px;padding:7px 10px;white-space:nowrap}
+.al-activity-pill--positive{background:#d8f6e8;color:#10684a}
+.al-activity-pill--highlight{background:#e7eaff;color:#414f91}
+.al-activity-pill--pending{background:#fff2d4;color:#80551a}
+.al-activity-pill--muted{background:#eceef0;color:#526069}
+.al-activity-empty{border:1px dashed #c7d7d5;border-radius:13px;background:#f8fafb;padding:20px;display:flex;flex-direction:column;gap:5px}
+.al-activity-empty strong{font:700 14px/1.4 Inter,system-ui,sans-serif;color:#143e40}
+.al-activity-empty p{font:400 12px/1.5 Inter,system-ui,sans-serif;color:#687778;margin:0}
+.al-activity-next{font:400 12px/1.5 Inter,system-ui,sans-serif;color:#526767;margin:2px 0 0}
+.al-activity-actions{display:flex;flex-wrap:wrap;align-items:center;gap:9px}
+.al-activity-primary,.al-activity-secondary,.al-activity-refresh{font:700 12px/1.4 Inter,system-ui,sans-serif;border-radius:10px;padding:11px 15px;text-decoration:none;cursor:pointer;border:0}
+.al-activity-primary{background:#08776f;color:#fff}
+.al-activity-secondary{background:#eff1ff;color:#005950}
+.al-activity-refresh{margin-left:auto;background:transparent;color:#00655e;border:1px solid #c9d6d4}
+.al-activity-refresh:disabled{opacity:.55;cursor:wait}
+.al-activity-primary:focus-visible,.al-activity-secondary:focus-visible,.al-activity-refresh:focus-visible{outline:3px solid #0da898;outline-offset:2px}
+@media(max-width:920px){.al-activity-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){.al-attachment-activity{padding:18px;gap:16px}.al-activity-title{font-size:20px}.al-activity-metric{padding:12px}.al-activity-row{align-items:flex-start;flex-direction:column}.al-activity-refresh{margin-left:0}}

@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^(attachees\-directory|dashboard|messages|placements\-registry|system\-settings|verification\-queue)\.html$ auth-gate.php?page=$1 [QSA,L]
+</IfModule>
+<IfModule !mod_rewrite.c>
+<FilesMatch "\.html$">
+Require all denied
+</FilesMatch>
+</IfModule>

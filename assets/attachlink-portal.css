@@ -1,0 +1,80 @@
+:root{--al-surface:#fff;--al-text:#163734;--al-soft:#4d6964;--al-border:#dce8e4;--al-accent:#096b5e}
+body{accent-color:var(--al-accent)}
+:is(main,header,nav,aside) :is(a,button,input,textarea,select):focus-visible{outline:2px solid #399681;outline-offset:3px}
+main :is(input:not([type=checkbox],[type=radio],[type=file]),textarea,select){border-radius:.65rem}
+main :is(input,textarea,select)::placeholder{color:#607772}
+main :is(.al-panel,.al-api-panel,.s8-card,.al-api-card){border:1px solid var(--al-border);border-radius:1rem;box-shadow:0 2px 10px #152e2610}
+main :is(.al-btn,.al-api-btn,.s8-action){border-radius:.65rem}
+.al-overview{margin:1.25rem 0 1.75rem;font-family:Inter,"Segoe UI",sans-serif;color:var(--al-text)}
+.al-overview h2{margin:0 0 1rem;font-size:1.35rem;line-height:1.3;font-weight:720;letter-spacing:-.02em}
+.al-metric-grid{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,12.25rem),1fr))!important;gap:.8rem}
+.al-metric{min-width:0;display:grid;grid-template-columns:auto 1fr;gap:.55rem .75rem;align-items:center;padding:1rem;background:var(--al-surface);border:1px solid var(--al-border);border-radius:.95rem;box-shadow:0 2px 8px #173d3110}
+.al-metric-icon{grid-row:span 2;align-self:start;border-radius:.65rem;padding:.45rem;background:#e8f5ef;color:var(--al-accent);font-size:1.35rem;line-height:1}
+.al-metric-label{font-size:.86rem;color:var(--al-soft);font-weight:650}
+.al-metric-value{font-size:1.8rem;font-weight:750;line-height:1.05;letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.al-activity{background:white;border:1px solid var(--al-border);border-radius:.95rem;margin-top:.8rem;padding:1rem}
+.al-activity ul{margin:0;padding:0;list-style:none}
+.al-activity li{display:flex;flex-wrap:wrap;gap:.3rem .8rem;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--al-border)}
+.al-activity li span,.al-overview p{color:var(--al-soft);font-size:.9rem}
+.al-overview-actions{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:.85rem}
+.al-overview-actions a{padding:.48rem .8rem;border:1px solid var(--al-border);border-radius:.6rem;color:var(--al-accent);font-size:.88rem;font-weight:650;text-decoration:none}
+.al-overview-actions a:first-child{background:var(--al-accent);border-color:var(--al-accent);color:white}
+.al-overview-actions a:hover{filter:brightness(.94)}
+@media(max-width:850px){
+ body>aside.fixed{position:relative!important;width:100%!important;height:auto!important;min-height:0!important}
+ body>aside.fixed nav{display:flex!important;flex-wrap:wrap;align-items:center;gap:.35rem;padding:.55rem .85rem}
+ body>aside.fixed nav>a{margin:0!important}
+ body>aside.fixed+div:is([class~="pl-64"],[class~="pl-72"]){padding-left:0!important;min-width:0}
+ body>aside.fixed+div>header.fixed{position:relative!important;inset:auto!important;min-width:0}
+ body>aside.fixed+div>header.fixed+main{padding-top:1rem!important}
+}
+
+/* Keep the administrator header inside the viewport when its groups wrap. */
+@media (max-width: 850px) {
+  body[data-portal="admin"] > aside.fixed + div > header.fixed {
+    height: auto !important;
+    flex-wrap: wrap;
+    gap: .5rem;
+    padding: .75rem 1rem;
+  }
+  body[data-portal="admin"] > aside.fixed + div > header.fixed > div {
+    flex: 0 1 auto;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+}
+
+/* Readable secondary text across the three portal palettes. */
+.text-outline, .s8-muted, .s8-note, .al-ai-note, .al-iv-weekday, .al-iv-nodata,
+.al-iv-tip, .al-iv-day.is-outside, .al-message-muted, .al-message-contact small {
+  color: #485954 !important;
+}
+#listing-page .al10e-file-state, #account-form .hint { color: #485954; }
+body[data-portal="admin"] .muted { color: #485954; }
+
+@media (max-width: 850px) {
+  .s8-card, .s8-grid > *, #s8-content, #attachment-form { min-width: 0; }
+  .s8-card input[type="file"], #attachment-form input, #attachment-form select,
+  #attachment-form textarea { max-width: 100%; min-width: 0; }
+  #s8-content .s8-table { width: 100%; }
+  #s8-content .s8-card:has(.s8-table), main :has(> .s8-table) { min-width: 0; overflow-x: auto; }
+}
+
+.s8-ready aside nav a.bg-primary-container { color: #fff !important; background: #005c55 !important; }
+.line-through.font-body-sm { color: #35433d !important; }
+
+#message-list, #al-chat-messages { min-width: 0; overflow-wrap: anywhere; }
+
+/* Let user-supplied names, organization names and messages wrap at narrow widths. */
+body { overflow-wrap: anywhere; }
+.al-right, .al-right > .al-iconlink:has([data-al-name]) { min-width: 0; }
+.al-iconlink [data-al-name] {
+  display: inline-block;
+  max-inline-size: clamp(5rem, 19vw, 11rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  white-space: nowrap;
+}
+#message-list .al-muted, .al-message-bubble small { color: #3b534b !important; }
+.al-link[aria-current="page"] .al-count { color: #143b34 !important; background: #d6eeea !important; }

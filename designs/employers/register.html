@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Company registration | AttachLink</title><link rel="stylesheet" href="../../assets/tailwind.min.css">
+<link rel="stylesheet" href="../../assets/attachlink-auth.css"></head>
+<body class="al-auth">
+<main class="al-auth-card al-register">
+  <a href="../students/login.html?role=employer"><img class="al-register-brand" src="attachlink-logo.svg" alt="AttachLink sign in"></a>
+  <h1>Create Company Account</h1>
+  <p class="al-auth-copy">An administrator verifies your company before you can publish openings.</p>
+  <form method="post" id="company-registration" class="al-register-grid">
+    <label class="full">Company name<input name="company_name" required maxlength="180" autocomplete="organization"></label>
+    <label>Representative first name<input name="first_name" required maxlength="100" autocomplete="given-name"></label>
+    <label>Representative surname<input name="last_name" required maxlength="100" autocomplete="family-name"></label>
+    <label>Email<input type="email" name="email" required maxlength="190" autocomplete="email"></label>
+    <label>Phone number<input type="tel" name="phone" required maxlength="30" autocomplete="tel"></label>
+    <label>City<input name="city" autocomplete="address-level2"></label>
+    <label>Industry<input name="industry"></label>
+    <label class="full">Password<input type="password" name="password" minlength="10" required autocomplete="new-password"></label>
+    <label class="full"><span><input type="checkbox" name="consent" required> I accept the <a href="../../privacy.html">Privacy Notice</a> and <a href="../../terms.html">Terms of Use</a>.</span></label>
+    <p class="full al-auth-copy" id="company-status" role="status">Use a password with at least 10 characters.</p>
+    <button class="full al-auth-primary" type="submit">Create Company Account</button>
+    <a class="full al-auth-secondary" href="../students/login.html?role=employer">Sign in</a>
+  </form>
+</main>
+<script>
+document.getElementById('company-registration').addEventListener('submit', async event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const button = event.submitter;
+  const status = document.getElementById('company-status');
+  const fields = Object.fromEntries(new FormData(form));
+  button.disabled = true;
+  status.textContent = 'Creating company account...';
+  try {
+    const root = '../../backend/api/auth/';
+    const session = await fetch(root + 'csrf.php', {cache: 'no-store'});
+    const token = await session.json();
+    if (!session.ok || !token.ok) throw new Error('Unable to start registration.');
+    const response = await fetch(root + 'register.php', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({...fields, consent: fields.consent === 'on', consent_version: 'pilot-2026-11', role: 'employer', csrf_token: token.csrf_token})});
+    const result = await response.json();
+    if (!response.ok || !result.ok) throw new Error(result.message || 'Could not create the account.');
+    status.textContent = result.message;
+    form.reset();
+  } catch (error) {
+    status.textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+});
+</script>
+</body></html>

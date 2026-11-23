@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><link rel="stylesheet" href="../../assets/tailwind.min.css"><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/>
+
+<style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link rel="stylesheet" href="admin-stitch-offline.css?v=1"/><link rel="stylesheet" href="../../assets/attachlink-portal.css"></head><body data-portal="admin" class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-gutter flex items-center gap-space-sm bg-surface-container-lowest"><img alt="AttachLink Logo" class="h-8 w-auto object-contain" src="../employers/attachlink-logo.svg"/><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface leading-tight truncate">AttachLink</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate uppercase tracking-wider">Industrial Liaison Office</span></div></div><div class="px-gutter py-space-sm"><div class="h-px w-full bg-surface-container"></div></div><nav class="px-gutter space-y-space-xs flex flex-col" data-active-classes="bg-primary-container text-on-primary-container font-headline-sm rounded-xl"><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all" data-path="overview" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span class="truncate">Overview</span></a><a aria-current="page" class="flex items-center justify-between px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-headline-sm rounded-xl" data-path="verification" href="#"><div class="flex items-center gap-space-md min-w-0"><span class="material-symbols-outlined text-[20px]">verified_user</span><span class="truncate">Verification</span></div></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all" data-path="companies" href="#"><span class="material-symbols-outlined text-[20px]">apartment</span><span class="truncate">Companies</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all" data-path="attachees" href="#"><span class="material-symbols-outlined text-[20px]">school</span><span class="truncate">Attachees</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all" data-path="placements" href="#"><span class="material-symbols-outlined text-[20px]">work</span><span class="truncate">Placements</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all" data-path="settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="truncate">Settings</span></a><a data-path="messages" href="messages.html" class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all"><span class="material-symbols-outlined text-[20px]">chat</span><span class="truncate">Messages</span></a></nav></div><div class="p-gutter"><div class="bg-surface-container-low rounded-xl p-space-md flex flex-col gap-space-xs"><div class="flex items-center gap-space-xs text-primary font-label-md text-label-md"><span class="material-symbols-outlined text-[16px]">public</span><span>Zimbabwe Council</span></div><p class="font-body-sm text-body-sm text-on-surface-variant">Higher & Tertiary Education Liaison Network</p></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-gutter-desktop"><div class="flex items-center gap-gutter flex-1 max-w-2xl"><div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm select-none"><span class="material-symbols-outlined text-[18px]">home</span><span>/</span><span class="text-on-surface font-label-md text-label-md">Liaison Portal</span></div><div class="relative flex-1 max-w-md"><span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span><input class="w-full h-9 pl-10 pr-space-md bg-surface-container-low text-on-surface placeholder:text-on-surface-variant rounded-xl text-body-sm font-body-sm focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Search student ID, company or intake..." type="text"/></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs px-space-md py-1 bg-surface-container rounded-full"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wide">Intake 2024/2025 - Active</span></div><button aria-label="Notifications" class="relative p-space-xs rounded-xl hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span></button><div class="h-8 w-px bg-surface-container"></div><div class="flex items-center gap-space-md"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="../employers/attachlink-logo.svg"/><div class="flex flex-col text-left"><span class="font-label-md text-label-md text-on-surface leading-tight font-semibold">Eng. Tendai Moyo</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate">Chief Liaison Director · Harare</span></div></div></div></header><main class="relative pt-16 w-full min-h-screen bg-surface"><div class="flex flex-col w-full">
+<div class="px-margin-desktop py-space-lg flex flex-col gap-space-lg max-w-[1600px] mx-auto w-full">
+<!-- Top Action & Context Header -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm flex-wrap">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Company verification</h1>
+<div class="flex items-center gap-1.5 px-space-sm py-0.5 bg-secondary-container/20 text-on-secondary-container rounded font-label-sm text-label-sm font-bold uppercase tracking-wider">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+<span>14 Documents Pending Review</span>
+</div>
+<span class="text-on-surface-variant font-label-md text-label-md hidden sm:inline">•</span>
+<span class="text-on-surface-variant font-label-md text-label-md">Cycle: 2024/2025 National Placement Audits</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-3xl">
+          Statutory clearance under the Zimbabwe Council for Higher Education (ZIMCHE) industrial placement framework. Endorse tripartite agreements, risk indemnities, and company host quotas.
+        </p>
+</div>
+<!-- Quick Metrics Strip -->
+<div class="flex items-center gap-space-md self-start lg:self-auto">
+<div class="bg-surface-container-lowest shadow-sm rounded-xl px-space-md py-space-xs flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">Cleared Today</span>
+<span class="font-metric-kpi text-[18px] text-on-surface leading-tight">28 Docs</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest shadow-sm rounded-xl px-space-md py-space-xs flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">timer</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant">Avg Turnaround</span>
+<span class="font-metric-kpi text-[18px] text-on-surface leading-tight">4.2 Hrs</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Filter Bar & Segmented Navigation -->
+<div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md">
+<!-- Tabs -->
+<div class="flex items-center bg-surface-container-low p-1 rounded-xl self-start">
+<button class="tab-btn px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm transition-all text-on-surface bg-surface-container-lowest shadow-sm" id="tab-all" onclick="filterCategory('all')">
+          All Pending (14)
+        </button>
+<button class="tab-btn px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm transition-all text-on-surface-variant hover:text-on-surface" id="tab-company" onclick="filterCategory('company')">
+          Companies (6 Pending)
+        </button>
+<button class="tab-btn px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm transition-all text-on-surface-variant hover:text-on-surface" id="tab-student" onclick="filterCategory('student')">
+          Attachees & Students (8 Pending)
+        </button>
+</div>
+<!-- Search and Secondary Filters -->
+<div class="flex items-center gap-space-sm flex-wrap sm:flex-nowrap">
+<div class="relative flex-1 sm:w-64">
+<span class="material-symbols-outlined absolute left-space-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">filter_list</span>
+<select class="w-full h-9 pl-8 pr-8 bg-surface-container-lowest text-on-surface rounded-xl text-body-sm font-body-sm focus:outline-none shadow-sm cursor-pointer appearance-none" id="urgency-filter" aria-label="Filter by urgency" onchange="filterUrgency(this.value)">
+<option value="all">All Urgency Tiers</option>
+<option value="high">High Priority (Within 24h)</option>
+<option value="regular">Standard Queue</option>
+</select>
+<span class="material-symbols-outlined absolute right-space-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">expand_more</span>
+</div>
+<div class="relative flex-1 sm:w-72">
+<span class="material-symbols-outlined absolute left-space-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full h-9 pl-8 pr-space-md bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant rounded-xl text-body-sm font-body-sm focus:outline-none shadow-sm" id="queue-search" oninput="searchQueue(this.value)" placeholder="Search reg number, firm, or province..." type="text"/>
+</div>
+<button class="h-9 px-space-sm bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant hover:text-on-surface rounded-xl shadow-sm flex items-center justify-center transition-colors" onclick="batchExportQueue()" title="Export Verification Ledger">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+<!-- Split-Pane Workspace: Left Queue (60%) / Right Inspection Sheet (40%) -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+<!-- Left Queue: Verification List (7 Cols) -->
+<div class="xl:col-span-7 flex flex-col bg-surface-container-lowest shadow-sm rounded-xl overflow-hidden">
+<!-- Table Column Headers -->
+<div class="grid grid-cols-12 px-space-md py-space-sm bg-surface-container-low font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">
+<div class="col-span-5 flex items-center gap-1">
+<span>Entity / Subject</span>
+</div>
+<div class="col-span-4 flex items-center gap-1">
+<span>Instrument Document</span>
+</div>
+<div class="col-span-3 text-right">
+<span>Status / Timestamp</span>
+</div>
+</div>
+<!-- Submissions Roster -->
+<div class="divide-y divide-surface-container overflow-y-auto max-h-[820px]" id="submissions-container">
+<!-- Row 1: ZimPlats (Company) -->
+<div class="submission-row group grid grid-cols-12 px-space-md py-space-md cursor-pointer transition-all hover:bg-surface-container-low items-center" data-type="company" data-urgency="regular" id="item-zimplats" onclick="selectSubmission('zimplats')">
+<div class="col-span-5 flex items-start gap-space-sm min-w-0 pr-space-xs">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">factory</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-md font-semibold text-on-surface truncate">ZimPlats Processing Div.</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Selous, Mashonaland West</span>
+<span class="font-label-sm text-[11px] text-primary font-bold">ACC-HOST-ZW/771</span>
+</div>
+</div>
+<div class="col-span-4 flex flex-col min-w-0 pr-space-xs">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">Safety & Liability MOU</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant truncate">SHEQ Compliance Cert #409</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant">Capacity: 40 Engineers</span>
+</div>
+<div class="col-span-3 flex flex-col items-end gap-1">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-sm uppercase font-bold bg-secondary-container/20 text-on-secondary-container">
+                Pending
+              </span>
+<span class="font-label-sm text-[11px] text-on-surface-variant">Today, 08:30</span>
+</div>
+</div>
+<!-- Row 2: Farai Sithole (Student) - Active / Selected Initially -->
+<div class="submission-row active-row group grid grid-cols-12 px-space-md py-space-md cursor-pointer transition-all bg-primary/5 items-center" data-type="student" data-urgency="high" id="item-farai" onclick="selectSubmission('farai')">
+<div class="col-span-5 flex items-start gap-space-sm min-w-0 pr-space-xs">
+<div class="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">badge</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1">
+<span class="font-headline-sm text-body-md font-semibold text-primary truncate">Farai N. Sithole</span>
+<span class="w-2 h-2 rounded-full bg-secondary-container" title="High Urgency"></span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface truncate">Reg: R213304M · B.Eng Mining</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant">Kwekwe Poly Jurisdiction</span>
+</div>
+</div>
+<div class="col-span-4 flex flex-col min-w-0 pr-space-xs">
+<span class="font-body-sm text-body-sm text-on-surface font-semibold truncate">Attachment Offer Letter</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant truncate">Mimosa Mining Zvishavane</span>
+<span class="font-label-sm text-[11px] text-primary font-medium">$450/mo Stipend Disclosed</span>
+</div>
+<div class="col-span-3 flex flex-col items-end gap-1">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-sm uppercase font-bold bg-secondary-container/20 text-on-secondary-container">
+                Pending
+              </span>
+<span class="font-label-sm text-[11px] text-on-surface-variant">Yesterday, 16:42</span>
+</div>
+</div>
+<!-- Row 3: Cassava Smartech (Company) -->
+<div class="submission-row group grid grid-cols-12 px-space-md py-space-md cursor-pointer transition-all hover:bg-surface-container-low items-center" data-type="company" data-urgency="regular" id="item-cassava" onclick="selectSubmission('cassava')">
+<div class="col-span-5 flex items-start gap-space-sm min-w-0 pr-space-xs">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">corporate_fare</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-md font-semibold text-on-surface truncate">Cassava / EcoCash Hld.</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Borrowdale, Harare</span>
+<span class="font-label-sm text-[11px] text-primary font-bold">ACC-HOST-ZW/012</span>
+</div>
+</div>
+<div class="col-span-4 flex flex-col min-w-0 pr-space-xs">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">Mentor Accreditation Roster</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant truncate">15 Fintech Developer Slots</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant">Lead Mentor: C. Chikwanha</span>
+</div>
+<div class="col-span-3 flex flex-col items-end gap-1">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-sm uppercase font-bold bg-tertiary-fixed text-on-tertiary-fixed-variant">
+                Liaison Review
+              </span>
+<span class="font-label-sm text-[11px] text-on-surface-variant">14 Oct, 11:15</span>
+</div>
+</div>
+<!-- Row 4: Nyasha Moyo (Student) -->
+<div class="submission-row group grid grid-cols-12 px-space-md py-space-md cursor-pointer transition-all hover:bg-surface-container-low items-center" data-type="student" data-urgency="high" id="item-nyasha" onclick="selectSubmission('nyasha')">
+<div class="col-span-5 flex items-start gap-space-sm min-w-0 pr-space-xs">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">school</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-md font-semibold text-on-surface truncate">Nyasha Tariro Moyo</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Reg: R219902X · B.Sc CompSci</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant">Univ. of Zimbabwe (UZ)</span>
+</div>
+</div>
+<div class="col-span-4 flex flex-col min-w-0 pr-space-xs">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">Host Employer Agreement</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant truncate">Innscor Africa (Workstation Risk)</span>
+<span class="font-label-sm text-[11px] text-primary font-medium">$320/mo Stipend</span>
+</div>
+<div class="col-span-3 flex flex-col items-end gap-1">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-sm uppercase font-bold bg-secondary-container/20 text-on-secondary-container">
+                Pending
+              </span>
+<span class="font-label-sm text-[11px] text-on-surface-variant">13 Oct, 14:02</span>
+</div>
+</div>
+<!-- Row 5: Dairibord (Company) -->
+<div class="submission-row group grid grid-cols-12 px-space-md py-space-md cursor-pointer transition-all hover:bg-surface-container-low items-center" data-type="company" data-urgency="regular" id="item-dairibord" onclick="selectSubmission('dairibord')">
+<div class="col-span-5 flex items-start gap-space-sm min-w-0 pr-space-xs">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">domain</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-md font-semibold text-on-surface truncate">Dairibord Zimbabwe Ltd</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Gweru Plant, Midlands</span>
+<span class="font-label-sm text-[11px] text-primary font-bold">ACC-HOST-ZW/149</span>
+</div>
+</div>
+<div class="col-span-4 flex flex-col min-w-0 pr-space-xs">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">Factory Hygiene & Indemnity</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant truncate">Food Technology Laboratory</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant">6 Attachee Positions</span>
+</div>
+<div class="col-span-3 flex flex-col items-end gap-1">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-sm uppercase font-bold bg-secondary-container/20 text-on-secondary-container">
+                Pending
+              </span>
+<span class="font-label-sm text-[11px] text-on-surface-variant">12 Oct, 09:40</span>
+</div>
+</div>
+<!-- Row 6: Blessing Zhou (Student) -->
+<div class="submission-row group grid grid-cols-12 px-space-md py-space-md cursor-pointer transition-all hover:bg-surface-container-low items-center" data-type="student" data-urgency="regular" id="item-blessing" onclick="selectSubmission('blessing')">
+<div class="col-span-5 flex items-start gap-space-sm min-w-0 pr-space-xs">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">school</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-md font-semibold text-on-surface truncate">Blessing M. Zhou</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Reg: R215578P · B.Eng Metallurgy</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant">Kwekwe Polytechnic</span>
+</div>
+</div>
+<div class="col-span-4 flex flex-col min-w-0 pr-space-xs">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">Medical Clearance & Logbook</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant truncate">Zimasco Smelter Services</span>
+<span class="font-label-sm text-[11px] text-primary font-medium">Audiometric Pass Confirmed</span>
+</div>
+<div class="col-span-3 flex flex-col items-end gap-1">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-sm uppercase font-bold bg-secondary-container/20 text-on-secondary-container">
+                Pending
+              </span>
+<span class="font-label-sm text-[11px] text-on-surface-variant">11 Oct, 15:20</span>
+</div>
+</div>
+</div>
+<!-- Table Footer Pagination -->
+<div class="p-space-sm px-space-md bg-surface-container-low flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Showing 6 of 14 submissions in active cycle</span>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-sm py-1 bg-surface-container-lowest rounded hover:bg-surface-container transition-colors disabled:opacity-50" disabled="">Previous</button>
+<span class="px-2 font-bold text-on-surface">Page 1 of 3</span>
+<button class="px-space-sm py-1 bg-surface-container-lowest rounded hover:bg-surface-container transition-colors">Next</button>
+</div>
+</div>
+</div>
+<!-- Right Pane: Real-time Document Inspection & Decision Action (5 Cols) -->
+<div class="xl:col-span-5 flex flex-col gap-space-md">
+<!-- Inspection Panel Container -->
+<div class="bg-surface-container-lowest shadow-sm rounded-xl p-space-md flex flex-col gap-space-md">
+<!-- Inspection Header -->
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="px-1.5 py-0.5 bg-primary/10 text-primary rounded font-label-sm text-label-sm font-bold uppercase">Candidate Audit</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm font-mono" id="doc-id">DOC-IND-2024-8891</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface tracking-tight mt-1 truncate" id="inspect-title">
+                Farai N. Sithole
+              </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate" id="inspect-subtitle">
+                Mimosa Mining Offer Letter & Tripartite Indemnity
+              </span>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" onclick="zoomDocumentModal()" title="Expand Document Fullscreen">
+<span class="material-symbols-outlined text-[18px]">fullscreen</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" onclick="downloadOriginalDoc()" title="Download PDF Copy">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+</button>
+</div>
+</div>
+<!-- Academic & Liaison Dossier Metadata Grid -->
+<div class="grid grid-cols-2 gap-space-xs p-space-sm bg-surface-container-low rounded-xl">
+<div class="flex flex-col">
+<span class="font-label-sm text-[10px] uppercase text-on-surface-variant font-semibold">Institutional Programme</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface truncate" id="meta-degree">B.Eng (Hons) Mining Eng.</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-[10px] uppercase text-on-surface-variant font-semibold">Academic Progression</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface" id="meta-gpa">3rd Year · GPA 3.82 / 4.0</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-[10px] uppercase text-on-surface-variant font-semibold">Candidate Direct Mobile</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface font-mono truncate" id="meta-phone">+263 77 241 8902</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-[10px] uppercase text-on-surface-variant font-semibold">Host Organization</span>
+<span class="font-body-sm text-body-sm font-medium text-primary font-semibold truncate" id="meta-host">Mimosa Mining Co. (Pvt) Ltd</span>
+</div>
+</div>
+<!-- High-Fidelity Official Document Preview Card (Sheet Mockup) -->
+<div class="relative bg-surface-container-lowest shadow-md rounded-xl p-space-md overflow-hidden min-h-[300px] flex flex-col justify-between select-none">
+<!-- Zimbabwe Institutional Watermark Stamp Overlay -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.06] rotate-[-18deg]">
+<div class="flex flex-col items-center justify-center p-8 rounded-full">
+<span class="material-symbols-outlined text-[130px]">verified</span>
+<span class="font-metric-kpi text-[18px] uppercase tracking-widest text-center mt-2">ZIMBABWE COUNCIL FOR HIGHER EDUCATION<br/>INDUSTRIAL LIAISON AUDIT</span>
+</div>
+</div>
+<!-- Letterhead Mock -->
+<div class="flex items-start justify-between gap-space-sm relative z-10 pb-space-sm bg-surface-container-low/40 p-space-sm rounded-lg">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded bg-surface-container-highest flex items-center justify-center text-primary font-bold font-headline-sm">
+                  MMC
+                </div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-md font-bold text-on-surface leading-snug">MIMOSA MINING COMPANY</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">Great Dyke Operations · Zvishavane Complex</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-[10px] uppercase text-on-surface-variant font-semibold">Date of Letter</span>
+<div class="font-label-md text-label-md font-bold text-on-surface">11 OCT 2024</div>
+</div>
+</div>
+<!-- Content Extract Inside Document -->
+<div class="space-y-space-xs py-space-sm relative z-10 font-body-sm text-on-surface leading-relaxed text-[12px]">
+<div class="font-semibold text-on-surface">RE: CONDITIONAL INDUSTRIAL ATTACHMENT OFFER (2024/25)</div>
+<p class="text-on-surface-variant line-clamp-3">
+                We are pleased to confirm an attachment position for Mr. Farai N. Sithole in the Underground Ventilation & Ground Control Department, Mimosa Mine Operations, commencing 01 November 2024.
+              </p>
+<!-- Key Financial & Operational Verification Stipulations -->
+<div class="grid grid-cols-2 gap-space-xs mt-space-xs">
+<div class="p-space-xs bg-surface-container-low rounded">
+<span class="font-label-sm text-[10px] text-on-surface-variant block uppercase">Monthly Subvention Stipend</span>
+<span class="font-headline-sm text-body-md text-primary font-bold font-mono">$450.00 USD / Month</span>
+</div>
+<div class="p-space-xs bg-surface-container-low rounded">
+<span class="font-label-sm text-[10px] text-on-surface-variant block uppercase">Compulsory Mining Medical</span>
+<span class="font-headline-sm text-body-md text-on-surface font-semibold">Red Ticket Certified (Zvishavane)</span>
+</div>
+</div>
+</div>
+<!-- Signature & Stamp Section of Letter -->
+<div class="pt-space-xs flex items-center justify-between relative z-10">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-6 flex items-center justify-center font-display-lg italic text-[14px] text-primary/80 select-none">
+                  K. Murwira
+                </div>
+<div class="flex flex-col">
+<span class="font-label-sm text-[11px] font-bold text-on-surface">Dr. K. Murwira, Pr.Eng</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">General Manager - HR & Learning</span>
+</div>
+</div>
+<!-- Verified Host Digital Seal Badge -->
+<div class="flex items-center gap-1 text-primary bg-primary/10 px-space-xs py-1 rounded">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span class="font-label-sm text-[10px] uppercase font-bold tracking-wide">Seal Verified</span>
+</div>
+</div>
+</div>
+<!-- Liaison Regulatory Decision Box -->
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md font-semibold text-on-surface flex items-center gap-1" for="liaison-endorsement-notes">
+<span class="material-symbols-outlined text-[16px] text-primary">rate_review</span>
+<span>Liaison Endorsement Notes & Directives</span>
+</label>
+<span class="font-label-sm text-[11px] text-on-surface-variant">Auditor: Eng. Tendai Moyo</span>
+</div>
+<!-- Endorsement Textarea -->
+<textarea class="w-full p-space-sm bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant text-body-sm font-body-sm rounded-lg focus:outline-none shadow-sm resize-none" id="liaison-endorsement-notes" placeholder="Specify approval notes, statutory work permit caveats, or detailed rejection grounds for student resubmission..." rows="3"></textarea>
+<!-- Quick Selection Compliance Tags -->
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-[10px] uppercase font-semibold text-on-surface-variant tracking-wider">Audit Check Shortcuts:</span>
+<div class="flex flex-wrap gap-1.5" id="preset-chips">
+<button class="tag-chip text-[11px] font-label-sm px-space-xs py-0.5 bg-surface-container-lowest hover:bg-surface-container text-on-surface rounded font-medium transition-all shadow-sm" onclick="insertTag('Valid Official Stamp')" type="button">
+                  + Valid Official Stamp
+                </button>
+<button class="tag-chip text-[11px] font-label-sm px-space-xs py-0.5 bg-surface-container-lowest hover:bg-surface-container text-on-surface rounded font-medium transition-all shadow-sm" onclick="insertTag('Stipend Compliant ($450)')" type="button">
+                  + Stipend Compliant
+                </button>
+<button class="tag-chip text-[11px] font-label-sm px-space-xs py-0.5 bg-surface-container-lowest hover:bg-surface-container text-error rounded font-medium transition-all shadow-sm" onclick="insertTag('Missing HOD Signature')" type="button">
+                  + Missing HOD Sig
+                </button>
+<button class="tag-chip text-[11px] font-label-sm px-space-xs py-0.5 bg-surface-container-lowest hover:bg-surface-container text-secondary rounded font-medium transition-all shadow-sm" onclick="insertTag('Incorrect Intake Period')" type="button">
+                  + Incorrect Intake Period
+                </button>
+</div>
+</div>
+<!-- Action Buttons Hierarchy -->
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-space-sm pt-space-xs">
+<!-- Left Action Group: Reject or Correction -->
+<div class="flex items-center gap-space-xs flex-1">
+<button class="flex-1 sm:flex-initial h-9 px-space-md rounded-lg font-headline-sm text-body-md font-semibold bg-surface-container-lowest hover:bg-error/10 text-error transition-all shadow-sm flex items-center justify-center gap-1" onclick="triggerDecision('reject')" type="button">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+<span>Reject</span>
+</button>
+<button class="flex-1 sm:flex-initial h-9 px-space-md rounded-lg font-headline-sm text-body-md font-semibold bg-surface-container-lowest hover:bg-secondary-container/20 text-secondary transition-all shadow-sm flex items-center justify-center gap-1" onclick="triggerDecision('request_correction')" type="button">
+<span class="material-symbols-outlined text-[18px]">edit_note</span>
+<span>Correction</span>
+</button>
+</div>
+<!-- Right Primary Action: Solid Deep Teal -->
+<button class="h-9 px-space-lg rounded-lg font-headline-sm text-body-md font-semibold bg-primary hover:bg-primary-container text-on-primary transition-all shadow-sm flex items-center justify-center gap-1.5" onclick="triggerDecision('approve')" type="button">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Approve & Issue Permit</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Statutory Regulatory Notice Card -->
+<div class="bg-surface-container-lowest shadow-sm rounded-xl p-space-md flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">gavel</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-sm font-bold text-on-surface">Statutory Instrument 133 Compliance</span>
+<p class="font-body-sm text-[12px] text-on-surface-variant leading-relaxed">
+              Industrial attachment approval binds the tertiary institution, employer host, and Ministry of Higher Education under the National Social Security Authority (NSSA) student safety indemnity.
+            </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Data Store for Submissions
+  const submissionsData = {
+    farai: {
+      id: "DOC-IND-2024-8891",
+      name: "Farai N. Sithole",
+      subtitle: "Mimosa Mining Offer Letter & Tripartite Indemnity",
+      degree: "B.Eng (Hons) Mining Eng.",
+      gpa: "3rd Year · GPA 3.82 / 4.0",
+      phone: "+263 77 241 8902",
+      host: "Mimosa Mining Co. (Pvt) Ltd",
+      tag: "Valid Official Stamp"
+    },
+    zimplats: {
+      id: "DOC-ORG-2024-4091",
+      name: "ZimPlats Processing Division",
+      subtitle: "Industrial Safety & Liability MOU (Selous Complex)",
+      degree: "Institutional Host Facility",
+      gpa: "Capacity: 40 Engineers",
+      phone: "+263 67 211 4000",
+      host: "Zimplats Holdings Limited",
+      tag: "Valid Official Stamp"
+    },
+    cassava: {
+      id: "DOC-ORG-2024-0129",
+      name: "Cassava Smartech / EcoCash",
+      subtitle: "Workplace Mentor Accreditation & Intake Roster",
+      degree: "Host Intake Authorization",
+      gpa: "15 Technology Attachments",
+      phone: "+263 24 277 1111",
+      host: "EcoCash Holdings Zimbabwe",
+      tag: "Stipend Compliant"
+    },
+    nyasha: {
+      id: "DOC-IND-2024-9122",
+      name: "Nyasha Tariro Moyo",
+      subtitle: "Host Employer Agreement & Workstation Risk Waiver",
+      degree: "B.Sc Computer Science",
+      gpa: "3rd Year · GPA 3.91 / 4.0",
+      phone: "+263 78 301 4452",
+      host: "Innscor Africa Corporate",
+      tag: "Stipend Compliant ($320)"
+    },
+    dairibord: {
+      id: "DOC-ORG-2024-7741",
+      name: "Dairibord Zimbabwe Ltd",
+      subtitle: "Factory Hygiene & Indemnity Protocol (Gweru)",
+      degree: "Industrial Host Facility",
+      gpa: "Capacity: 6 Food Scientists",
+      phone: "+263 54 222 1980",
+      host: "Dairibord Holdings Limited",
+      tag: "Valid Official Stamp"
+    },
+    blessing: {
+      id: "DOC-IND-2024-3401",
+      name: "Blessing M. Zhou",
+      subtitle: "Student Medical Clearance & Logbook Registration",
+      degree: "B.Eng Metallurgy",
+      gpa: "3rd Year · GPA 3.45 / 4.0",
+      phone: "+263 71 899 2210",
+      host: "Zimasco Smelters Kwekwe",
+      tag: "Valid Official Stamp"
+    }
+  };
+
+  function selectSubmission(key) {
+    const data = submissionsData[key];
+    if (!data) return;
+
+    // Update active highlight classes on rows
+    document.querySelectorAll('.submission-row').forEach(row => {
+      row.classList.remove('bg-primary/5', 'active-row');
+    });
+
+    const activeRow = document.getElementById(`item-${key}`);
+    if (activeRow) {
+      activeRow.classList.add('bg-primary/5', 'active-row');
+    }
+
+    // Populate Right Inspection Pane
+    document.getElementById('doc-id').textContent = data.id;
+    document.getElementById('inspect-title').textContent = data.name;
+    document.getElementById('inspect-subtitle').textContent = data.subtitle;
+    document.getElementById('meta-degree').textContent = data.degree;
+    document.getElementById('meta-gpa').textContent = data.gpa;
+    document.getElementById('meta-phone').textContent = data.phone;
+    document.getElementById('meta-host').textContent = data.host;
+    
+    // Clear textarea for new inspection
+    const noteArea = document.getElementById('liaison-endorsement-notes');
+    noteArea.value = `Verified under cycle 2024/25. Host verified with accreditation code.`;
+  }
+
+  function insertTag(tagText) {
+    const noteArea = document.getElementById('liaison-endorsement-notes');
+    if (!noteArea) return;
+    if (noteArea.value.trim() === '') {
+      noteArea.value = `[${tagText}]`;
+    } else {
+      noteArea.value += ` • [${tagText}]`;
+    }
+    noteArea.focus();
+  }
+
+  function filterCategory(cat) {
+    // Style active tab
+    const tabs = ['tab-all', 'tab-company', 'tab-student'];
+    tabs.forEach(t => {
+      const tabEl = document.getElementById(t);
+      if (tabEl) {
+        tabEl.className = 'tab-btn px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm transition-all text-on-surface-variant hover:text-on-surface';
+      }
+    });
+
+    const currentTab = document.getElementById(`tab-${cat}`);
+    if (currentTab) {
+      currentTab.className = 'tab-btn px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm transition-all text-on-surface bg-surface-container-lowest shadow-sm';
+    }
+
+    // Filter queue list
+    const rows = document.querySelectorAll('.submission-row');
+    rows.forEach(r => {
+      const type = r.getAttribute('data-type');
+      if (cat === 'all' || type === cat) {
+        r.style.display = 'grid';
+      } else {
+        r.style.display = 'none';
+      }
+    });
+  }
+
+  function filterUrgency(urgency) {
+    const rows = document.querySelectorAll('.submission-row');
+    rows.forEach(r => {
+      const rowUrgency = r.getAttribute('data-urgency');
+      if (urgency === 'all' || rowUrgency === urgency) {
+        r.style.display = 'grid';
+      } else {
+        r.style.display = 'none';
+      }
+    });
+  }
+
+  function searchQueue(query) {
+    const term = query.toLowerCase().trim();
+    const rows = document.querySelectorAll('.submission-row');
+    rows.forEach(r => {
+      const text = r.innerText.toLowerCase();
+      if (text.includes(term)) {
+        r.style.display = 'grid';
+      } else {
+        r.style.display = 'none';
+      }
+    });
+  }
+
+  function triggerDecision(decisionType) {
+    const name = document.getElementById('inspect-title').textContent.trim();
+    const notes = document.getElementById('liaison-endorsement-notes').value.trim();
+
+    if (decisionType === 'approve') {
+      alert(`Approval Confirmed: Placement Permit Generated for "${name}". Student & host employer notified via SMS/Email gateway.`);
+    } else if (decisionType === 'request_correction') {
+      if (!notes) {
+        alert("Please provide correction instructions in the Endorsement Notes before requesting resubmission.");
+        document.getElementById('liaison-endorsement-notes').focus();
+        return;
+      }
+      alert(`Correction dispatched to "${name}". Reason logged: ${notes}`);
+    } else if (decisionType === 'reject') {
+      if (!notes) {
+        alert("A regulatory rejection reason is required.");
+        document.getElementById('liaison-endorsement-notes').focus();
+        return;
+      }
+      alert(`Document formally rejected for "${name}". Record filed in non-compliant ledger.`);
+    }
+  }
+
+  function zoomDocumentModal() {
+    alert("Displaying full resolution certified high-definition PDF scan with vector seal inspection.");
+  }
+
+  function downloadOriginalDoc() {
+    alert("Downloading official encrypted PDF submission package with ZIMCHE liaison watermark.");
+  }
+
+  function batchExportQueue() {
+    alert("Exporting current 14 verification items into Government Liaison CSV Audit Sheet.");
+  }
+</script></main></div><script src="app.js?v=1" defer></script>
+<script src="admin-stitch-icons.js?v=1" defer></script>
+<script src="../../assets/attachlink-brand.js?v=14" data-logo-ext=".png"></script>
+<script src="../../assets/attachlink-connect.js?v=3" defer></script>
+</body></html>

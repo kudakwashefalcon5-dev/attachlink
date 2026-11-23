@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+
+<html data-theme="portal-2" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/>
+
+<style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><title>AttachLink Employer | Employer Dashboard</title><link rel="stylesheet" href="../../assets/tailwind.min.css"><style>body:not(.s8-ready) main{visibility:hidden} .s8-alert{padding:14px 18px;border-radius:12px;background:#e9f3f2;color:#005f56;border:1px solid #c6dedb;margin-bottom:16px;font-size:14px} .s8-alert.error{background:#fff1ed;border-color:#ffd4c6;color:#8b2e17} .s8-action{border-radius:9px;background:#06695f;color:#fff;padding:10px 15px;font-weight:700;font-size:13px;cursor:pointer} .s8-action:disabled{opacity:.45;cursor:not-allowed} .s8-action-soft{border-radius:9px;background:#e8efef;color:#075c53;padding:10px 15px;font-size:13px;font-weight:700;cursor:pointer} .s8-action-soft:disabled{opacity:.45;cursor:not-allowed} .s8-table{width:100%;border-collapse:collapse;font-size:13px} .s8-table th,.s8-table td{padding:12px 8px;border-bottom:1px solid #e5e9ea;text-align:left;vertical-align:middle} .s8-table th{color:#667777;text-transform:uppercase;font-size:11px;letter-spacing:.04em} .s8-table a{color:#006b61;font-weight:700;text-decoration:underline} .s8-status{display:inline-block;border-radius:999px;padding:5px 9px;background:#eaf6f4;color:#00685f;font-weight:650;font-size:12px} .s8-note{color:#687b7b;font-size:13px} .s8-field{width:100%;padding:10px 13px;border:1px solid #d2dfdf;border-radius:9px;background:white;font-size:14px;color:#12232a} .s8-field:focus{outline:2px solid #0b8e81;outline-offset:2px} .s8-card{background:white;border-radius:14px;padding:22px;box-shadow:0 2px 8px rgba(0,0,0,.05)} .s8-card h2{font-size:20px;font-weight:750;margin:0 0 12px} .s8-card h3{font-weight:700} .s8-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);gap:22px} .s8-flex{display:flex;gap:12px;align-items:center;flex-wrap:wrap} .s8-muted{color:#6f8282;font-size:13px} @media(max-width:950px){.s8-grid{grid-template-columns:1fr}}</style><link rel="stylesheet" href="../../assets/attachlink-portal.css"><script defer src="../../assets/verify-email-banner.js"></script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-20 px-space-lg flex items-center gap-space-sm bg-surface-container-lowest"><img alt="AttachLink Logo" class="h-8 w-auto object-contain" src="attachlink-logo.svg"/><div class="flex flex-col"><span class="font-title-md text-title-md text-primary tracking-tight">AttachLink</span><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Corporate Portal</span></div></div><div class="mx-space-md my-space-sm p-space-sm bg-surface-container-low rounded-lg flex items-center gap-space-sm"><div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary shrink-0"><span class="material-symbols-outlined text-xl">business</span></div><div class="flex flex-col min-w-0 flex-1"><span class="font-label-md text-label-md text-on-surface truncate">Econet Wireless Zimbabwe</span><span class="font-body-sm text-body-sm text-on-surface-variant truncate">Harare HQ • Tech &amp; Telecoms</span></div></div><nav class="px-space-md py-space-sm space-y-1" data-active-classes="bg-primary-container text-on-primary font-label-lg rounded-lg shadow-sm"><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-colors bg-primary-container text-on-primary font-label-lg rounded-lg shadow-sm" data-path="dashboard" href="#"><span class="material-symbols-outlined text-lg">dashboard</span><span>Dashboard</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="openings" href="#"><span class="material-symbols-outlined text-lg">work_outline</span><span>Openings</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="applicants" href="#"><span class="material-symbols-outlined text-lg">groups</span><span>Applicants</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="messages" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">chat_bubble_outline</span><span>Messages</span></div><span class="w-5 h-5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm flex items-center justify-center">3</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="company-profile" href="#"><span class="material-symbols-outlined text-lg">domain</span><span>Company Profile</span></a></nav></div><div class="p-space-md space-y-space-sm bg-surface-container-lowest"><div class="p-space-sm bg-surface-container-low rounded-lg flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-base">verified</span><span class="font-label-sm text-label-sm text-on-surface-variant">Accredited Employer</span></div><span class="font-label-sm text-label-sm text-primary">Tier 1</span></div><div class="pt-space-xs flex items-center justify-between text-on-surface-variant font-label-md text-label-md px-space-xs"><a class="flex items-center gap-space-xs hover:text-primary transition-colors" data-path="help-support" href="#"><span class="material-symbols-outlined text-base">help_outline</span><span>Help &amp; Support</span></a><span class="font-code-sm text-code-sm text-outline">ZW • 2025</span></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-20 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl"><div class="flex items-center gap-space-lg flex-1 max-w-xl"><div class="relative w-full"><span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-on-surface-variant text-lg pointer-events-none">search</span><input class="w-full h-10 pl-10 pr-space-md bg-surface-container-low rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest transition-colors" placeholder="Search students, degree programmes, or openings (⌘K)..." type="search"/></div></div><div class="flex items-center gap-space-lg"><div class="hidden xl:flex items-center gap-space-xs px-space-md py-1.5 bg-surface-container-low rounded-full"><span class="material-symbols-outlined text-primary text-base">calendar_month</span><span class="font-label-sm text-label-sm text-on-surface">Aug – Dec 2025 Attachment Intake</span></div><button aria-label="Notifications" class="relative w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-xl">notifications</span><span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-error ring-2 ring-surface-container-lowest"></span></button><div class="flex items-center gap-space-sm pl-space-sm"><div class="flex flex-col text-right hidden sm:flex"><span class="font-label-md text-label-md text-on-surface leading-tight">Tadiwa Moyo</span><span class="font-body-sm text-body-sm text-on-surface-variant leading-tight">Talent Acquisition Lead</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="../employers/attachlink-logo.svg"/></div></div></header><main class="relative pt-20 w-full px-space-xl bg-surface pb-space-2xl"><section id="verify-email-banner" class="bg-secondary-fixed text-on-secondary-fixed rounded-xl p-4 mb-4" hidden><p>Verify your email address before publishing openings.</p><button type="button" class="underline font-bold">Resend verification email</button><p role="status"></p></section><div class="flex flex-col w-full">
+<!-- Verification Notice Banner -->
+<div class="mb-space-lg rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden relative">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-secondary-container"></div>
+<div class="p-space-md sm:p-space-lg flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-secondary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">policy</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-headline-sm text-title-md text-on-surface">Compliance &amp; Institutional Accreditation</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+              Pending Review
+            </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-3xl leading-relaxed">
+            Ministry of Higher and Tertiary Education &amp; PRAZ accreditation documents under rapid verification (Estimated: 24 hrs). You can still publish openings and review candidates without disruption.
+          </p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0 self-end md:self-center">
+<button class="px-space-md py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1.5" type="button">
+<span>View Verification Details</span>
+<span class="material-symbols-outlined text-base">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Header Action Bar -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-xl">
+<div>
+<div class="flex items-center gap-space-xs mb-1">
+<span class="font-code-sm text-code-sm uppercase tracking-wider text-outline">Corporate Workspace</span>
+<span class="text-outline">•</span>
+<span class="font-code-sm text-code-sm text-primary font-semibold">Harare Hub</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+        Welcome back, Tadiwa <span class="font-body-lg text-on-surface-variant font-normal">(Econet Wireless Zimbabwe)</span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+        2025 August – December Attachment Intake Management Portal
+      </p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto">
+<button class="h-10 px-space-md rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-lg text-label-lg transition-colors shadow-sm flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-lg text-outline">ios_share</span>
+<span>Export Cohort Report</span>
+</button>
+<button class="h-10 px-space-lg rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg transition-colors shadow-md flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-xl">add</span>
+<span>Post New Opening</span>
+</button>
+</div>
+</div>
+<!-- Key Metrics Bento Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md mb-space-2xl">
+<!-- Stat 1: Active Openings -->
+<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-start justify-between mb-space-md">
+<div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-xl">campaign</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-primary font-label-sm text-label-sm">
+          +2 this week
+        </span>
+</div>
+<div>
+<div class="font-display text-display text-on-surface leading-none mb-1 tracking-tight">8</div>
+<div class="font-label-md text-label-md text-on-surface font-semibold">Active Openings</div>
+<div class="font-body-sm text-body-sm text-outline mt-1 truncate">Software Dev, Network Eng, Data &amp; HR</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-1.5 text-primary font-label-sm text-label-sm">
+<span>3 closing in 48 hours</span>
+<span class="material-symbols-outlined text-xs">timer</span>
+</div>
+</div>
+<!-- Stat 2: New Applicants -->
+<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-start justify-between mb-space-md">
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">person_search</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm">
+          +18.4% intake trend
+        </span>
+</div>
+<div>
+<div class="font-display text-display text-on-surface leading-none mb-1 tracking-tight">142</div>
+<div class="font-label-md text-label-md text-on-surface font-semibold">Total Applicants</div>
+<div class="font-body-sm text-body-sm text-outline mt-1">38 unreviewed submissions today</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-1 text-tertiary font-label-sm text-label-sm">
+<span>UZ, NUST &amp; MSU cohorts</span>
+</div>
+</div>
+<!-- Stat 3: Shortlisted -->
+<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-start justify-between mb-space-md">
+<div class="w-10 h-10 rounded-lg bg-secondary-fixed text-on-secondary-fixed-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">checklist_rtl</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container/20 text-secondary font-label-sm text-label-sm">
+          Round 2 Active
+        </span>
+</div>
+<div>
+<div class="font-display text-display text-on-surface leading-none mb-1 tracking-tight">29</div>
+<div class="font-label-md text-label-md text-on-surface font-semibold">Shortlisted Candidates</div>
+<div class="font-body-sm text-body-sm text-outline mt-1">Across 5 technical departments</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-1 text-secondary font-label-sm text-label-sm">
+<span>8 interviews scheduled tomorrow</span>
+</div>
+</div>
+<!-- Stat 4: Placed & Accepted -->
+<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-start justify-between mb-space-md">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed-dim/30 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">handshake</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm">
+          92% Acceptance Rate
+        </span>
+</div>
+<div>
+<div class="font-display text-display text-on-surface leading-none mb-1 tracking-tight">12</div>
+<div class="font-label-md text-label-md text-on-surface font-semibold">Placed &amp; Accepted</div>
+<div class="font-body-sm text-body-sm text-outline mt-1">Institutional letters generated</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-1 text-primary font-label-sm text-label-sm">
+<span>Quota: 12 of 16 targets secured</span>
+</div>
+</div>
+</div>
+<!-- Main Split Layout (65% Left, 35% Right) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT COLUMN: Recent Applicants (8 of 12 cols = 66.6%) -->
+<div class="lg:col-span-8 flex flex-col gap-space-md">
+<div class="rounded-xl bg-surface-container-lowest shadow-sm p-space-lg">
+<!-- Section Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md mb-space-lg pb-space-sm">
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Recent Student Applicants</h2>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-code-sm text-code-sm">142 Total</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Pre-verified tertiary undergraduates matching your minimum requirements</p>
+</div>
+<!-- Quick Filters -->
+<div class="flex items-center gap-space-xs self-start sm:self-auto">
+<div class="relative">
+<select class="h-9 pl-3 pr-8 rounded-lg bg-surface-container-low text-on-surface font-label-md text-label-md appearance-none focus:outline-none focus:bg-surface-container">
+<option>All Universities</option>
+<option>University of Zimbabwe (UZ)</option>
+<option>NUST Bulawayo</option>
+<option>Harare Institute of Tech (HIT)</option>
+<option>Midlands State University (MSU)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline text-base pointer-events-none">expand_more</span>
+</div>
+<button class="w-9 h-9 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" title="Filter list" type="button">
+<span class="material-symbols-outlined text-lg">tune</span>
+</button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="overflow-x-auto -mx-space-lg px-space-lg">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low/70 text-outline uppercase font-label-sm text-label-sm">
+<th class="py-3 px-space-md rounded-l-lg">Student / Institution</th>
+<th class="py-3 px-space-md">Degree Programme</th>
+<th class="py-3 px-space-md">Applied Opening</th>
+<th class="py-3 px-space-md text-center">AI Match</th>
+<th class="py-3 px-space-md">Status</th>
+<th class="py-3 px-space-md text-right rounded-r-lg">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface font-body-md text-body-md">
+<!-- Applicant 1: Nyasha Chidavaenzi -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-primary-fixed text-primary font-label-lg text-label-lg flex items-center justify-center shrink-0">
+                      NC
+                    </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary transition-colors truncate">Nyasha Chidavaenzi</span>
+<span class="material-symbols-outlined text-primary text-sm shrink-0" style="font-variation-settings: 'FILL' 1;" title="Institution Verified">verified</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline truncate">University of Zimbabwe (UZ)</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-md text-label-md text-on-surface block">BSc Honours Computer Science</span>
+<span class="font-code-sm text-code-sm text-outline">Part III • 2.1 Track</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-body-sm text-body-sm text-on-surface font-medium block">Junior Backend Dev</span>
+<span class="font-label-sm text-label-sm text-outline">Applied 3h ago</span>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm font-bold">
+                    96%
+                  </span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                    Shortlisted
+                  </span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="inline-flex items-center gap-1">
+<button class="px-3 py-1.5 rounded-md bg-surface-container hover:bg-primary hover:text-on-primary text-on-surface font-label-sm text-label-sm transition-colors" type="button">
+                      View Profile
+                    </button>
+<button aria-label="Candidate options" class="p-1 rounded text-outline hover:text-on-surface transition-colors" type="button">
+<span class="material-symbols-outlined text-base">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Applicant 2: Farai Munemo -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed text-tertiary font-label-lg text-label-lg flex items-center justify-center shrink-0">
+                      FM
+                    </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary transition-colors truncate">Farai Munemo</span>
+<span class="material-symbols-outlined text-primary text-sm shrink-0" style="font-variation-settings: 'FILL' 1;" title="Institution Verified">verified</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline truncate">NUST Bulawayo</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-md text-label-md text-on-surface block">BEng Electronic Engineering</span>
+<span class="font-code-sm text-code-sm text-outline">Part III • First Class</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-body-sm text-body-sm text-on-surface font-medium block">Telecoms Network Intern</span>
+<span class="font-label-sm text-label-sm text-outline">Applied Yesterday</span>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm font-bold">
+                    92%
+                  </span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                    Applied
+                  </span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="inline-flex items-center gap-1">
+<button class="px-3 py-1.5 rounded-md bg-surface-container hover:bg-primary hover:text-on-primary text-on-surface font-label-sm text-label-sm transition-colors" type="button">
+                      View Profile
+                    </button>
+<button aria-label="Candidate options" class="p-1 rounded text-outline hover:text-on-surface transition-colors" type="button">
+<span class="material-symbols-outlined text-base">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Applicant 3: Tariro Marange -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed text-secondary font-label-lg text-label-lg flex items-center justify-center shrink-0">
+                      TM
+                    </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary transition-colors truncate">Tariro Marange</span>
+<span class="material-symbols-outlined text-primary text-sm shrink-0" style="font-variation-settings: 'FILL' 1;" title="Institution Verified">verified</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline truncate">Harare Inst. of Tech (HIT)</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-md text-label-md text-on-surface block">BTech Software Engineering</span>
+<span class="font-code-sm text-code-sm text-outline">Part III • 2.1 Track</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-body-sm text-body-sm text-on-surface font-medium block">Junior Backend Dev</span>
+<span class="font-label-sm text-label-sm text-outline">Applied 2d ago</span>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm font-bold">
+                    88%
+                  </span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-fixed"></span>
+                    Offered
+                  </span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="inline-flex items-center gap-1">
+<button class="px-3 py-1.5 rounded-md bg-surface-container hover:bg-primary hover:text-on-primary text-on-surface font-label-sm text-label-sm transition-colors" type="button">
+                      View Profile
+                    </button>
+<button aria-label="Candidate options" class="p-1 rounded text-outline hover:text-on-surface transition-colors" type="button">
+<span class="material-symbols-outlined text-base">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Applicant 4: Blessing Mutasa -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-on-surface-variant font-label-lg text-label-lg flex items-center justify-center shrink-0">
+                      BM
+                    </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary transition-colors truncate">Blessing Mutasa</span>
+<span class="material-symbols-outlined text-outline text-sm shrink-0" title="University Letter Attached">description</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline truncate">Midlands State University (MSU)</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-md text-label-md text-on-surface block">BSc Financial Information Systems</span>
+<span class="font-code-sm text-code-sm text-outline">Part III • 2.1 Track</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-body-sm text-body-sm text-on-surface font-medium block">Financial Data Attachee</span>
+<span class="font-label-sm text-label-sm text-outline">Applied 3d ago</span>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-sm text-label-sm font-bold">
+                    91%
+                  </span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                    Shortlisted
+                  </span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="inline-flex items-center gap-1">
+<button class="px-3 py-1.5 rounded-md bg-surface-container hover:bg-primary hover:text-on-primary text-on-surface font-label-sm text-label-sm transition-colors" type="button">
+                      View Profile
+                    </button>
+<button aria-label="Candidate options" class="p-1 rounded text-outline hover:text-on-surface transition-colors" type="button">
+<span class="material-symbols-outlined text-base">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Applicant 5: Rufaro Sithole -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed text-tertiary font-label-lg text-label-lg flex items-center justify-center shrink-0">
+                      RS
+                    </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary transition-colors truncate">Rufaro Sithole</span>
+<span class="material-symbols-outlined text-primary text-sm shrink-0" style="font-variation-settings: 'FILL' 1;" title="Institution Verified">verified</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline truncate">University of Zimbabwe (UZ)</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-label-md text-label-md text-on-surface block">BSc Telecommunications</span>
+<span class="font-code-sm text-code-sm text-outline">Part III • First Class</span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="font-body-sm text-body-sm text-on-surface font-medium block">Telecoms Network Intern</span>
+<span class="font-label-sm text-label-sm text-outline">Applied 4d ago</span>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm font-bold">
+                    84%
+                  </span>
+</td>
+<td class="py-3.5 px-space-md">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                    Applied
+                  </span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="inline-flex items-center gap-1">
+<button class="px-3 py-1.5 rounded-md bg-surface-container hover:bg-primary hover:text-on-primary text-on-surface font-label-sm text-label-sm transition-colors" type="button">
+                      View Profile
+                    </button>
+<button aria-label="Candidate options" class="p-1 rounded text-outline hover:text-on-surface transition-colors" type="button">
+<span class="material-symbols-outlined text-base">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="mt-space-md pt-space-md flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<span class="font-body-sm text-body-sm text-outline">Showing 5 of 142 total verified applicants</span>
+<div class="flex items-center gap-1">
+<button class="px-3 py-1 rounded bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm disabled:opacity-50" type="button">Previous</button>
+<button class="px-2.5 py-1 rounded bg-primary text-on-primary font-label-sm text-label-sm" type="button">1</button>
+<button class="px-2.5 py-1 rounded bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm" type="button">2</button>
+<button class="px-2.5 py-1 rounded bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm" type="button">3</button>
+<span class="px-1 text-outline font-label-sm text-label-sm">…</span>
+<button class="px-3 py-1 rounded bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm" type="button">Next</button>
+</div>
+</div>
+</div>
+<!-- Cohort Intake Breakdown Visual -->
+<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm">
+<div class="flex items-center justify-between mb-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">school</span>
+<h3 class="font-title-md text-title-md text-on-surface font-semibold">Institutional Talent Pipeline</h3>
+</div>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Aug – Dec 2025</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-md">
+<!-- Institutional Metric 1 -->
+<div class="p-space-md rounded-lg bg-surface-container-low">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold">UZ Harare</span>
+<span class="font-code-sm text-code-sm text-primary font-bold">58 Students</span>
+</div>
+<p class="font-body-sm text-body-sm text-outline mb-2">CS, Software Eng, Telecoms</p>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 41%"></div>
+</div>
+</div>
+<!-- Institutional Metric 2 -->
+<div class="p-space-md rounded-lg bg-surface-container-low">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold">NUST Bulawayo</span>
+<span class="font-code-sm text-code-sm text-primary font-bold">44 Students</span>
+</div>
+<p class="font-body-sm text-body-sm text-outline mb-2">Electronic Eng, Applied Maths</p>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 31%"></div>
+</div>
+</div>
+<!-- Institutional Metric 3 -->
+<div class="p-space-md rounded-lg bg-surface-container-low">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold">HIT &amp; MSU</span>
+<span class="font-code-sm text-code-sm text-primary font-bold">40 Students</span>
+</div>
+<p class="font-body-sm text-body-sm text-outline mb-2">Info Security, Data Systems</p>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 28%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: Active Openings & Deadlines (4 of 12 cols = 33.3%) -->
+<div class="lg:col-span-4 flex flex-col gap-space-lg">
+<!-- Widget 1: Active Attachment Openings Overview -->
+<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm">
+<div class="flex items-center justify-between mb-space-md">
+<div>
+<h3 class="font-title-md text-title-md text-on-surface font-semibold">Active Openings</h3>
+<p class="font-body-sm text-body-sm text-outline">Real-time cohort allocation</p>
+</div>
+<button class="text-primary font-label-md text-label-md hover:underline" type="button">
+            View All (8)
+          </button>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Opening 1 -->
+<div class="p-space-md rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors group">
+<div class="flex items-start justify-between gap-2 mb-1.5">
+<span class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary transition-colors">
+                Junior Backend Developer
+              </span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm shrink-0">
+                4 days left
+              </span>
+</div>
+<div class="flex items-center gap-1 font-body-sm text-body-sm text-outline mb-3">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Harare • Msasa Complex</span>
+</div>
+<div class="flex items-center justify-between text-label-sm font-label-sm">
+<div class="flex items-center gap-2">
+<span class="text-on-surface-variant font-medium">Slots Filled:</span>
+<span class="text-primary font-bold">2 / 4 filled</span>
+</div>
+<a class="text-primary hover:underline font-semibold flex items-center gap-0.5" href="#">
+<span>Manage</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 mt-2 overflow-hidden">
+<div class="bg-primary-container h-1.5 rounded-full" style="width: 50%"></div>
+</div>
+</div>
+<!-- Opening 2 -->
+<div class="p-space-md rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors group">
+<div class="flex items-start justify-between gap-2 mb-1.5">
+<span class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary transition-colors">
+                Telecoms Network Intern
+              </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-outline font-label-sm text-label-sm shrink-0">
+                12 days left
+              </span>
+</div>
+<div class="flex items-center gap-1 font-body-sm text-body-sm text-outline mb-3">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Kwekwe • Switch Station</span>
+</div>
+<div class="flex items-center justify-between text-label-sm font-label-sm">
+<div class="flex items-center gap-2">
+<span class="text-on-surface-variant font-medium">Slots Filled:</span>
+<span class="text-primary font-bold">1 / 3 filled</span>
+</div>
+<a class="text-primary hover:underline font-semibold flex items-center gap-0.5" href="#">
+<span>Manage</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 mt-2 overflow-hidden">
+<div class="bg-primary-container h-1.5 rounded-full" style="width: 33%"></div>
+</div>
+</div>
+<!-- Opening 3 -->
+<div class="p-space-md rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors group">
+<div class="flex items-start justify-between gap-2 mb-1.5">
+<span class="font-label-md text-label-md text-on-surface font-semibold group-hover:text-primary transition-colors">
+                Financial Data Attachee
+              </span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm shrink-0">
+                2 days left
+              </span>
+</div>
+<div class="flex items-center gap-1 font-body-sm text-body-sm text-outline mb-3">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Gweru • Regional Office</span>
+</div>
+<div class="flex items-center justify-between text-label-sm font-label-sm">
+<div class="flex items-center gap-2">
+<span class="text-on-surface-variant font-medium">Slots Filled:</span>
+<span class="text-primary font-bold">3 / 3 filled</span>
+</div>
+<a class="text-primary hover:underline font-semibold flex items-center gap-0.5" href="#">
+<span>Manage</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 mt-2 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 100%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Widget 2: Academic Release & Compliance Reminder Card -->
+<div class="rounded-xl bg-gradient-to-br from-surface-container-lowest to-surface-container-low p-space-lg shadow-sm relative overflow-hidden">
+<div class="flex items-center gap-2 text-primary mb-2">
+<span class="material-symbols-outlined text-xl">event_upcoming</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">Statutory &amp; Academic Timeline</span>
+</div>
+<h4 class="font-headline-sm text-title-md text-on-surface font-semibold mb-2">University Intake Deadlines</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mb-space-md">
+          Formal institutional attachment release letters are being issued this week. Ensure candidate offer letters are logged on AttachLink for tripartite tripartite dean signatures.
+        </p>
+<div class="space-y-space-sm pt-space-xs">
+<!-- Item 1 -->
+<div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-lowest">
+<div class="w-8 h-8 rounded-md bg-primary-fixed text-primary flex items-center justify-center font-bold text-xs shrink-0">
+              UZ
+            </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">University of Zimbabwe</span>
+<span class="font-body-sm text-body-sm text-outline">Attachment letter clearance deadline: <strong>15 Aug 2025</strong></span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-lowest">
+<div class="w-8 h-8 rounded-md bg-secondary-fixed text-secondary flex items-center justify-center font-bold text-xs shrink-0">
+              NUST
+            </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">NUST Bulawayo</span>
+<span class="font-body-sm text-body-sm text-outline">Faculty of Tech endorsement deadline: <strong>22 Aug 2025</strong></span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex items-center justify-between">
+<a class="font-label-sm text-label-sm text-primary font-bold hover:underline flex items-center gap-1" href="#">
+<span>Download Tripartite Agreement Templates</span>
+<span class="material-symbols-outlined text-xs">download</span>
+</a>
+</div>
+</div>
+<!-- Quick Action / Zimbabwe Stipend Guideline Card -->
+<div class="rounded-xl bg-surface-container-low p-space-md flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-xl">payments</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-medium truncate">Attachment Allowance Benchmarks</span>
+<span class="font-body-sm text-body-sm text-outline">National avg: $150 – $250 USD/month</span>
+</div>
+</div>
+<button class="p-1.5 rounded hover:bg-surface-container text-outline hover:text-on-surface transition-colors" title="View NEC Guidelines" type="button">
+<span class="material-symbols-outlined text-lg">info</span>
+</button>
+</div>
+</div>
+</div>
+</div></main></div><script defer src="app.js"></script><script src="employer-message-links.js?v=1" defer></script><script defer src="employer-help-admin.js?v=10d"></script><script src="../../assets/attachlink-brand.js?v=14" data-logo-ext=".png"></script>
+
+
+</body></html>

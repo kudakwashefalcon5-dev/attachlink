@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html data-theme="portal-1" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/>
+<style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><title>My Applications | AttachLink</title><link rel="stylesheet" href="../../assets/tailwind.min.css"><link href="attachlink-common.css" rel="stylesheet"/><script src="attachlink-common.js"></script><link rel="stylesheet" href="stage14-balanced-header.css?v=14">
+<link rel="stylesheet" href="../../assets/attachlink-portal.css"><script defer src="company-logo.js"></script></head><body class="bg-surface font-body-md text-body-md text-on-surface"><header class="al-header"><div class="al-top"><a class="al-brand" href="dashboard.html"><img src="../employers/attachlink-logo.svg" alt="AttachLink" width="56" height="44"></a><nav aria-label="Student navigation" class="al-links"><a class="al-link" href="dashboard.html">Find Openings</a><a aria-current="page" class="al-link" href="my-applications.html">My Applications<span class="al-count" data-al-app-count="">0</span></a><a class="al-link" href="messages.html">Messages</a><a class="al-link" href="saved-openings.html">Saved Openings<span class="al-count" data-al-save-count="">0</span></a><a class="al-tools-nav" href="career-tools.html">Career Tools</a></nav><div class="al-right"><a class="al-iconlink" href="notifications.html">Alerts <span class="al-dot" data-al-unread="" hidden="">0</span></a><a class="al-iconlink" href="profile.html">● <span data-al-name="">My Profile</span></a></div></div><nav aria-label="Mobile student navigation" class="al-mobile"><a class="al-link" href="dashboard.html">Find Openings</a><a aria-current="page" class="al-link" href="my-applications.html">My Applications<span class="al-count" data-al-app-count="">0</span></a><a class="al-link" href="messages.html">Messages</a><a class="al-link" href="saved-openings.html">Saved Openings<span class="al-count" data-al-save-count="">0</span></a><a class="al-link" href="notifications.html">Notifications</a><a class="al-link" href="career-tools.html">Career Tools</a></nav></header><main class="w-full bg-surface min-h-screen"><div class="al-demo-note" role="note">Review your submitted applications and documents.</div><div class="flex flex-col w-full">
+<div class="max-w-7xl mx-auto w-full px-6 lg:px-12 py-8 space-y-8">
+<!-- Header Section -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+<div class="space-y-1.5">
+<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-caps text-label-caps">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+          2025/2026 ACADEMIC PLACEMENT CYCLE
+        </div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Application Management</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+          Track your submitted applications and their status.
+        </p>
+</div>
+<!-- Quick Document Export / Support CTA -->
+<div class="flex items-center gap-3">
+<button class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary-container shadow-sm transition-all" id="export-applications" type="button"><span class="material-symbols-outlined text-[18px]">file_download</span> Export Applications CSV</button>
+</div>
+</div>
+<!-- Statistics Metric Strip -->
+<div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col justify-between">
+<span class="font-label-caps text-label-caps text-outline tracking-wider uppercase">Active Applications</span>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-primary font-bold" id="count-active">0</span>
+<span class="font-body-sm text-body-sm text-outline">Open</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col justify-between">
+<span class="font-label-caps text-label-caps text-tertiary tracking-wider uppercase">Offers Received</span>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold" id="count-offers">0</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps">Demo</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col justify-between">
+<span class="font-label-caps text-label-caps text-outline tracking-wider uppercase">Shortlisted</span>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-tertiary-container font-bold" id="count-shortlisted">0</span>
+<span class="font-body-sm text-body-sm text-outline">Interviewing</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col justify-between">
+<span class="font-label-caps text-label-caps text-outline tracking-wider uppercase">Submitted</span>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-on-surface-variant font-bold" id="count-review">0</span>
+
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col justify-between">
+<span class="font-label-caps text-label-caps text-outline tracking-wider uppercase">Closed / Filled</span>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-outline font-bold" id="count-closed">0</span>
+<span class="font-body-sm text-body-sm text-outline">Archived</span>
+</div>
+</div>
+</div>
+<!-- HIGH-PRIORITY ACTIONABLE OFFER BANNER -->
+<!-- Filter & Search Toolbar -->
+<div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+<!-- Tabs -->
+<div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0" id="filter-tabs">
+<button class="px-4 py-2 rounded-full font-label-md text-label-md bg-primary text-on-primary whitespace-nowrap shadow-sm" data-filter="all" type="button">All</button>
+<button class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container whitespace-nowrap flex items-center gap-1.5" data-filter="offers" type="button">Offers Received</button>
+<button class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container whitespace-nowrap flex items-center gap-1.5" data-filter="shortlisted" type="button">Shortlisted</button>
+<button class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container whitespace-nowrap flex items-center gap-1.5" data-filter="review" type="button">Submitted</button>
+<button class="px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container whitespace-nowrap flex items-center gap-1.5" data-filter="closed" type="button">Closed / Filled</button>
+</div>
+<!-- Search & Sort Controls -->
+<div class="flex items-center gap-3">
+<div class="relative flex-1 md:w-64">
+<span class="material-symbols-outlined text-outline text-[18px] absolute left-3 top-1/2 -translate-y-1/2">search</span>
+<input class="w-full pl-9 pr-3 py-2 bg-surface-container-lowest rounded-xl font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-low transition-all" aria-label="Filter applications" id="application-search" placeholder="Filter company, role..." type="text"/>
+</div>
+<select class="px-3 py-2 bg-surface-container-lowest rounded-xl font-label-md text-label-md text-on-surface" aria-label="Sort applications" id="application-sort"><option value="newest">Most Recent</option><option value="oldest">Oldest First</option><option value="company">Company A-Z</option></select>
+</div>
+</div>
+<!-- Applications List Section -->
+<div class="space-y-6" id="applications-list"><div class="bg-surface-container-lowest rounded-2xl p-8 shadow-sm text-center"><span class="material-symbols-outlined text-primary text-[36px]">hourglass_empty</span><p class="font-title-md text-title-md mt-2">Loading applications...</p></div></div>
+<!-- Student Advisory / Liaison Support Card -->
+</div>
+<!-- Inline Tab Filter Script for Client Micro-interactions -->
+</div><script src="application-layout.js?v=1"></script></main><footer class="w-full bg-surface-container-low mt-space-xl"><div class="max-w-7xl mx-auto px-6 lg:px-12 py-space-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-space-lg"><div class="flex flex-col gap-1"><div class="flex items-center gap-2"><span class="font-headline-sm text-headline-sm text-primary">AttachLink</span><span class="px-1.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-label-caps text-label-caps">ZW</span></div><p class="font-body-sm text-body-sm text-outline max-w-sm">Connecting Zimbabwean university students with premier industrial attachments and liaison coordinators nationwide.</p></div><div class="flex flex-wrap gap-space-lg font-label-md text-label-md text-on-surface-variant"><a class="hover:text-primary transition-colors" data-path="find-openings" href="dashboard.html">Browse Attachments</a><a class="hover:text-primary transition-colors" href="profile.html">Privacy &amp; Terms</a></div></div><div class="max-w-7xl mx-auto px-6 lg:px-12 pb-space-lg pt-space-sm flex flex-col sm:flex-row justify-between items-center font-body-sm text-body-sm text-outline gap-2"><p>© 2025 AttachLink Zimbabwe. Ministry of Higher &amp; Tertiary Education Alignment.</p><div class="flex items-center gap-4"><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary"></span>System Operational</span><span>Harare • Bulawayo • Mutare • Gweru</span></div></div></footer><script src="../../assets/attachlink-brand.js?v=14" data-logo-ext=".png"></script>
+<script defer src="applications.js"></script>
+</body></html>

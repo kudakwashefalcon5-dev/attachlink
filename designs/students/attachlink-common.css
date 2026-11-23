@@ -1,0 +1,152 @@
+
+/* Shared student portal navigation and accessible frontend interactions */
+.al-header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);box-shadow:0 1px 10px #10182b12}
+.al-top{max-width:80rem;margin:auto;min-height:68px;padding:10px 24px;display:flex;align-items:center;gap:16px;justify-content:space-between}
+.al-brand{color:#005c55;font-weight:800;font-size:22px;letter-spacing:-.4px;text-decoration:none;white-space:nowrap}
+.al-brand span{font-size:11px;border-radius:5px;padding:4px 6px;background:#9cf2e8;vertical-align:middle;margin-left:3px;letter-spacing:0}
+.al-links{display:flex;align-items:center;gap:3px}.al-link{text-decoration:none;color:#465654;padding:10px 11px;border-radius:9px;font-weight:600;font-size:13px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
+.al-link:hover,.al-link:focus-visible{background:#f2f3ff;color:#005c55}.al-link[aria-current="page"]{background:#0f766e;color:white}
+.al-link .al-count{font-size:10px;border-radius:99px;background:#eff4f3;padding:1px 6px;color:#005c55}.al-link[aria-current="page"] .al-count{background:#ffffff33;color:white}
+.al-right{display:flex;align-items:center;gap:7px}.al-iconlink{display:inline-flex;align-items:center;gap:5px;text-decoration:none;font-weight:600;font-size:12px;color:#005c55;padding:9px 10px;border-radius:9px;background:#f2f3ff;white-space:nowrap}.al-iconlink:hover{background:#e4e8fc}
+.al-iconlink .al-dot{background:#ba1a1a;color:white;border-radius:99px;padding:1px 6px;font-size:10px}
+.al-mobile{display:none;overflow-x:auto;white-space:nowrap;padding:0 18px 8px;gap:4px;scrollbar-width:thin}
+.al-demo-note{background:#fffbeb;border-bottom:1px solid #fde68a;color:#6f4c06;text-align:center;padding:9px 18px;font-size:12px}
+.al-page{max-width:80rem;margin:0 auto;padding:32px 24px 65px}.al-heading{font-size:clamp(24px,3vw,30px);font-weight:800;letter-spacing:-.7px;color:#131b2e}
+.al-sub{color:#56616a;font-size:14px;margin:6px 0 0}.al-panel{background:white;border-radius:16px;padding:24px;box-shadow:0 2px 11px #1a243010}
+.al-btn{border:0;cursor:pointer;border-radius:10px;padding:10px 16px;font-weight:650;font-size:14px;display:inline-flex;justify-content:center;align-items:center;gap:8px;text-decoration:none}
+.al-btn-primary{background:#0f766e;color:white}.al-btn-primary:hover{background:#005c55}.al-btn-soft{background:#f2f3ff;color:#005c55}.al-btn-soft:hover{background:#e2e7ff}.al-btn-danger{background:#fff0ec;color:#a42b24}.al-btn:disabled{opacity:.55;cursor:not-allowed}
+.al-input,.al-select,.al-textarea{display:block;width:100%;background:white;border:1px solid #cad4d1;border-radius:11px;padding:12px 13px;color:#131b2e;font-size:14px;min-width:0}.al-input:focus,.al-select:focus,.al-textarea:focus{outline:2px solid #9cf2e8;border-color:#0f766e}
+.al-pill{font-size:11px;letter-spacing:.02em;font-weight:700;border-radius:100px;padding:5px 9px;background:#e3f5f1;color:#005c55}.al-muted{font-size:13px;color:#647275}.al-grid{display:grid;gap:18px}.al-grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.al-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.al-alert{background:#e9f9f6;color:#005c55;border:1px solid #abefe8;padding:12px 15px;border-radius:10px;min-height:20px;font-size:13px}.al-empty{padding:44px 24px;text-align:center;color:#647275;background:white;border-radius:16px;border:1px dashed #d5dce0}
+.al-toast{position:fixed;z-index:150;bottom:20px;right:20px;max-width:350px;background:#005c55;color:white;border-radius:11px;padding:12px 18px;box-shadow:0 8px 22px #0002;font-size:13px}
+.al-footer{padding:24px;text-align:center;font-size:12px;color:#607171;background:#f2f3ff}
+[data-save-role]{cursor:pointer}
+@media(max-width:1200px){.al-top>.al-links{display:none}.al-mobile{display:flex}}
+@media(min-width:1201px){.al-mobile{display:none}}
+@media(max-width:680px){.al-top{padding:9px 15px;gap:8px}.al-brand{font-size:20px}.al-iconlink{font-size:12px;padding:8px}.al-grid.two,.al-grid.three{grid-template-columns:1fr}.al-page{padding:24px 14px}.al-panel{padding:18px}}
+@media print{.al-header,.al-demo-note,.al-footer,[data-save-role]{display:none!important}}
+
+/* AttachLink Career Tools: five extra frontend workflows */
+.al-tools-nav{font-size:12px;font-weight:750;padding:8px 11px;background:#e4f5f2;color:#005c55;border-radius:9px;text-decoration:none;white-space:nowrap}
+.al-tools-nav:hover,.al-tools-nav[aria-current="page"]{background:#005c55;color:#fff}
+.al-ct-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.al-ct-card{background:#fff;border:1px solid #e2e8e6;border-radius:16px;padding:24px;box-shadow:0 2px 11px #141f2a0d}
+.al-ct-card h2{color:#131b2e;font-size:18px;font-weight:700;margin:0 0 8px}
+.al-ct-card p{color:#607171;font-size:13px;line-height:1.6;margin:0 0 16px}
+.al-ct-meta{color:#647275;font-size:12px}
+.al-ct-list{display:flex;flex-direction:column;gap:12px}
+.al-ct-row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;background:#fff;border:1px solid #e2e8e6;border-radius:14px;padding:18px}
+.al-ct-subnav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.al-ct-subnav a{padding:8px 11px;background:#fff;text-decoration:none;border:1px solid #dae6e3;border-radius:9px;color:#005c55;font-size:12px;font-weight:650}
+.al-ct-subnav a[aria-current="page"]{color:#fff;background:#0f766e}
+.al-ct-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.al-ct-field{display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:700;color:#364745}
+.al-ct-field.wide{grid-column:1/-1}
+.al-ct-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.al-ct-stat{background:#fff;border:1px solid #e2e8e6;border-radius:14px;padding:16px}
+.al-ct-stat b{font-size:28px;color:#005c55;display:block;margin-top:3px}
+.al-ct-tag{font-size:12px;border-radius:99px;background:#e7f6f3;color:#005c55;padding:5px 9px;display:inline-block}
+.al-ct-note{font-size:12px;padding:12px 15px;background:#fff8e8;border:1px solid #ffe3aa;border-radius:10px;color:#73511b}
+.al-ct-preview{font-family:Inter,Arial,sans-serif;background:#fff;border:1px solid #e1e7e5;box-shadow:0 4px 20px #1111;max-width:794px;min-height:730px;margin:0 auto;padding:48px;color:#202c35}
+.al-ct-preview h2{font-size:24px;font-weight:750;line-height:1.2}
+.al-ct-preview h3{font-size:12px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:#005c55;margin:18px 0 7px;border-bottom:1px solid #b3d3cc;padding-bottom:5px}
+.al-ct-preview p,.al-ct-preview li{font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+.al-ct-preview ul{list-style:disc;margin-left:18px}
+.al-ct-preview .cv-contact{font-size:12px;color:#54636a;margin-top:9px}
+.al-ct-danger{color:#a42b24}
+.al-ct-muted{font-size:12px;color:#6c777c}
+.al-ct-hidden{display:none!important}
+@media(max-width:1130px){.al-ct-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:730px){.al-ct-grid{grid-template-columns:1fr}.al-ct-form{grid-template-columns:1fr}.al-ct-field.wide{grid-column:1}.al-ct-row{flex-direction:column}.al-ct-preview{padding:22px;min-height:0}}
+@media print{
+ body{background:#fff!important} .al-header,.al-mobile,.al-footer,.al-demo-note,.al-ct-subnav,.al-ct-editor,.al-ct-no-print,footer{display:none!important}
+ main.al-page{padding:0!important;max-width:none!important;margin:0!important}
+ main .al-grid.two{display:block!important;grid-template-columns:none!important}
+ #cv-preview{display:block!important;border:0!important;box-shadow:none!important;padding:10mm!important;min-height:0!important;max-width:none!important}
+ @page{size:A4;margin:11mm}
+}
+
+@media(max-width:730px){main .al-grid.two{grid-template-columns:1fr!important}}
+
+/* AL_STAGE11_NAV_BEGIN */
+@media (min-width: 1400px) {
+  .al-header .al-top { max-width:none;width:100%;padding:12px clamp(22px,2.2vw,44px);min-height:78px;display:grid;grid-template-columns:max-content minmax(0,1fr) max-content;column-gap:clamp(18px,2vw,42px);align-items:center;justify-content:unset;box-sizing:border-box; }
+  .al-header .al-top > .al-links {display:flex;min-width:0;justify-content:center;align-items:center;gap:clamp(6px,.75vw,18px)}
+  .al-header .al-top > .al-links > a {font-size:clamp(13px,.82vw,16px);padding:11px clamp(7px,.65vw,14px);flex-shrink:0}
+  .al-header .al-top > .al-right {margin-left:0;justify-content:flex-end;gap:clamp(8px,.7vw,16px)}
+}
+@media (min-width: 1201px) and (max-width: 1399px) {
+  .al-header .al-top > .al-links {display:none!important}
+  .al-header .al-mobile {display:flex!important;justify-content:center}
+}
+@media (max-width: 1200px) {
+  .al-header .al-mobile {scroll-padding-inline:20px}
+  .al-header .al-mobile > a {flex:0 0 auto}
+}
+/* AL_STAGE11_NAV_END */
+
+/* AL_STAGE12_COMPACT_NAV_BEGIN -- compact single-row student header on desktop */
+@media (min-width: 1080px) {
+  .al-header .al-top {
+    max-width:none!important; width:100%!important; min-height:72px;
+    padding:10px clamp(16px,1.8vw,32px)!important;
+    display:flex!important; flex-wrap:nowrap!important;
+    justify-content:flex-start!important; align-items:center;
+    column-gap:clamp(7px,1.0vw,19px)!important;
+  }
+  .al-header {font-family:Inter,Arial,sans-serif}
+  .al-header .al-top > .al-brand {flex:0 0 auto;margin:0!important}
+  .al-header .al-top > .al-links {
+    display:flex!important;flex:1 1 auto;align-items:center;justify-content:center!important;
+    gap:clamp(0px,.22vw,4px)!important; min-width:0; white-space:nowrap;
+  }
+  .al-header .al-top > .al-links > a {
+    padding:10px clamp(5px,.53vw,10px)!important;
+    font-size:clamp(12px,.83vw,15px)!important;flex:0 0 auto;white-space:nowrap;
+  }
+  .al-header .al-top > .al-right {flex:0 0 auto; margin-left:auto!important;gap:clamp(3px,.4vw,8px)!important}
+  .al-header .al-top > .al-right .al-iconlink {padding:9px clamp(6px,.55vw,11px)!important}
+  .al-header .al-mobile {display:none!important}
+}
+@media (min-width:1080px) and (max-width:1240px) {
+  .al-header .al-top {padding-inline:12px!important;column-gap:6px!important}
+  .al-header .al-top .al-brand {font-size:21px}
+  .al-header .al-top > .al-links > a {font-size:12px!important;padding-inline:4px!important}
+  .al-header .al-top > .al-right .al-iconlink {font-size:11px;padding-inline:5px!important}
+}
+@media (max-width:1079px) {
+  .al-header .al-top > .al-links {display:none!important}
+  .al-header .al-mobile {display:flex!important;overflow-x:auto;white-space:nowrap}
+}
+/* AL_STAGE12_COMPACT_NAV_END */
+
+/* AL_STAGE13_TIGHT_NAV_START - Fit student navigation links closely on one row. */
+@media (min-width:1080px) {
+  .al-header .al-top {
+    justify-content:flex-start !important;
+    column-gap:clamp(7px, .75vw, 13px) !important;
+  }
+  .al-header .al-top > .al-links {
+    flex:0 1 auto !important;
+    justify-content:flex-start !important;
+    gap:clamp(0px, .16vw, 3px) !important;
+    width:auto !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .al-header .al-top > .al-links::-webkit-scrollbar {display:none;}
+  .al-header .al-top > .al-right {
+    flex:0 0 auto !important;
+    margin-left:0 !important;
+    gap:clamp(4px, .4vw, 8px) !important;
+  }
+}
+@media (min-width:1080px) and (max-width:1240px) {
+  .al-header .al-top {column-gap:6px !important;}
+  .al-header .al-top > .al-links > a {padding-inline:3px !important;}
+}
+/* AL_STAGE13_TIGHT_NAV_END */
+
+.al-brand img { display: block; width: 56px; height: 44px; object-fit: contain; }

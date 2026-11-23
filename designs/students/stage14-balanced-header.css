@@ -1,0 +1,30 @@
+/* AL_STAGE14_NAV_BEGIN -- balanced student header, profile stays pinned far right */
+@media (min-width:1080px) {
+  .al-header .al-top {
+    display:flex!important; align-items:center!important; flex-wrap:nowrap!important;
+    justify-content:flex-start!important;
+    width:100%!important; max-width:none!important;
+    gap:clamp(7px,.85vw,17px)!important;
+  }
+  .al-header .al-top > .al-brand {
+    flex:0 0 auto!important;white-space:nowrap!important;margin-right:0!important;
+  }
+  .al-header .al-top > .al-links {
+    display:flex!important;align-items:center!important;justify-content:space-evenly!important;
+    flex:1 1 auto!important;width:auto!important;min-width:0!important;
+    margin:0!important;gap:clamp(0px,.2vw,6px)!important;
+    overflow:visible!important;white-space:nowrap!important;
+  }
+  .al-header .al-top > .al-links > a {flex:0 0 auto!important;white-space:nowrap!important;}
+  .al-header .al-top > .al-right {
+    display:flex!important;flex:0 0 auto!important;margin-left:auto!important;align-items:center!important;
+    gap:clamp(5px,.6vw,12px)!important;
+  }
+  .al-header .al-top > .al-right > :last-child {flex-shrink:0!important;white-space:nowrap!important;}
+  .al-header .al-mobile {display:none!important;}
+}
+@media (min-width:1080px) and (max-width:1250px) {
+ .al-header .al-top {padding-inline:10px!important;gap:5px!important;}
+ .al-header .al-top > .al-links > a {padding-inline:4px!important;font-size:12px!important;}
+}
+/* AL_STAGE14_NAV_END */

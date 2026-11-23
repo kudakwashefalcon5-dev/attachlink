@@ -1,0 +1,1 @@
+<?php require_once __DIR__.'/../../bootstrap.php';method('GET');out(['ok'=>true,'user'=>user()]);

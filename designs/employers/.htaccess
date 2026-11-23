@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^(applicant-profile|company-profile|dashboard|messages|opening-applicants|openings|post-edit-opening)\.html$ auth-gate.php?page=$1 [END]
+</IfModule>
+<IfModule !mod_rewrite.c>
+<FilesMatch "^(applicant-profile|company-profile|dashboard|messages|opening-applicants|openings|post-edit-opening)\.html$">
+Require all denied
+</FilesMatch>
+</IfModule>

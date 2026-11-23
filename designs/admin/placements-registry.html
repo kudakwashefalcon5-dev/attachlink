@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><link rel="stylesheet" href="../../assets/tailwind.min.css"><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/>
+
+<style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link rel="stylesheet" href="admin-stitch-offline.css?v=1"/><link rel="stylesheet" href="../../assets/attachlink-portal.css"></head><body data-portal="admin" class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-gutter flex items-center gap-space-sm bg-surface-container-lowest"><img alt="AttachLink Logo" class="h-8 w-auto object-contain" src="../employers/attachlink-logo.svg"/><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface leading-tight truncate">AttachLink</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate uppercase tracking-wider">Industrial Liaison Office</span></div></div><div class="px-gutter py-space-sm"><div class="h-px w-full bg-surface-container"></div></div><nav class="px-gutter space-y-space-xs flex flex-col" data-active-classes="bg-primary-container text-on-primary-container font-headline-sm rounded-xl"><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all" data-path="overview" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span class="truncate">Overview</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all" data-path="verification" href="#"><div class="flex items-center gap-space-md min-w-0"><span class="material-symbols-outlined text-[20px]">verified_user</span><span class="truncate">Verification</span></div></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all" data-path="companies" href="#"><span class="material-symbols-outlined text-[20px]">apartment</span><span class="truncate">Companies</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all" data-path="attachees" href="#"><span class="material-symbols-outlined text-[20px]">school</span><span class="truncate">Attachees</span></a><a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-headline-sm rounded-xl" data-path="placements" href="#"><span class="material-symbols-outlined text-[20px]">work</span><span class="truncate">Placements</span></a><a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all" data-path="settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="truncate">Settings</span></a><a data-path="messages" href="messages.html" class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-on-surface-variant font-headline-sm text-headline-sm hover:bg-surface-container hover:text-on-surface transition-all"><span class="material-symbols-outlined text-[20px]">chat</span><span class="truncate">Messages</span></a></nav></div><div class="p-gutter"><div class="bg-surface-container-low rounded-xl p-space-md flex flex-col gap-space-xs"><div class="flex items-center gap-space-xs text-primary font-label-md text-label-md"><span class="material-symbols-outlined text-[16px]">public</span><span>Zimbabwe Council</span></div><p class="font-body-sm text-body-sm text-on-surface-variant">Higher & Tertiary Education Liaison Network</p></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-gutter-desktop"><div class="flex items-center gap-gutter flex-1 max-w-2xl"><div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm select-none"><span class="material-symbols-outlined text-[18px]">home</span><span>/</span><span class="text-on-surface font-label-md text-label-md">Liaison Portal</span></div><div class="relative flex-1 max-w-md"><span class="material-symbols-outlined absolute left-space-md top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span><input class="w-full h-9 pl-10 pr-space-md bg-surface-container-low text-on-surface placeholder:text-on-surface-variant rounded-xl text-body-sm font-body-sm focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Search student ID, company or intake..." type="text"/></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs px-space-md py-1 bg-surface-container rounded-full"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wide">Intake 2024/2025 - Active</span></div><button aria-label="Notifications" class="relative p-space-xs rounded-xl hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span></button><div class="h-8 w-px bg-surface-container"></div><div class="flex items-center gap-space-md"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="../employers/attachlink-logo.svg"/><div class="flex flex-col text-left"><span class="font-label-md text-label-md text-on-surface leading-tight font-semibold">Eng. Tendai Moyo</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate">Chief Liaison Director · Harare</span></div></div></div></header><main class="relative pt-16 w-full min-h-screen bg-surface"><div class="flex flex-col w-full">
+<div class="w-full max-w-[1600px] mx-auto px-margin-desktop py-space-xl flex flex-col gap-space-lg">
+<!-- Header Section -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">National Gazette Protocol</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">/</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Liaison Form L-92B</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Industrial Placements Registry</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">Official Record of Validated Institutional Workplace Attachments, Site Supervisors, and Statutory Compliance Logs across Tertiary Institutions in Zimbabwe.</p>
+</div>
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container text-on-surface font-headline-sm text-headline-sm shadow-sm hover:bg-surface-container-high transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">print</span>
+<span>Print Formal Gazette</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-primary-container text-on-primary-container font-headline-sm text-headline-sm shadow-sm hover:opacity-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Export Placements (CSV)</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-secondary text-on-secondary font-headline-sm text-headline-sm shadow-sm hover:opacity-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>+ Record Manual Placement</span>
+</button>
+</div>
+</div>
+<!-- Executive KPI Metrics Grid (4 compact cards) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- Card 1 -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Total Active Placements</span>
+<span class="p-space-xs rounded-lg bg-surface-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">badge</span>
+</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-metric-kpi text-metric-kpi text-on-surface">2,680</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">+6.2% vs cycle</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">$1.12M USD total student stipend volume</p>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden mt-space-xs">
+<div class="bg-primary h-full rounded-full" style="width: 88%;"></div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Avg. Monthly Stipend</span>
+<span class="p-space-xs rounded-lg bg-surface-container text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-metric-kpi text-metric-kpi text-on-surface">$385 <span class="font-headline-sm text-headline-sm font-normal text-on-surface-variant">USD/mo</span></span>
+<span class="font-label-sm text-label-sm text-primary font-bold">+4.1%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Statutory minimum compliance: <strong class="text-on-surface font-semibold">98.4%</strong></p>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden mt-space-xs">
+<div class="bg-secondary h-full rounded-full" style="width: 98.4%;"></div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Academic Assessor Pool</span>
+<span class="p-space-xs rounded-lg bg-surface-container text-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">local_library</span>
+</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-metric-kpi text-metric-kpi text-on-surface">142</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Assigned Lecturers</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Average load: 18.8 students / academician</p>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden mt-space-xs">
+<div class="bg-tertiary h-full rounded-full" style="width: 92%;"></div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Assessment Visits Done</span>
+<span class="p-space-xs rounded-lg bg-surface-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-metric-kpi text-metric-kpi text-on-surface">1,894</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">/ 2,680</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Quarterly Target: <strong class="text-on-surface font-semibold">70.6% Complete</strong></p>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden mt-space-xs">
+<div class="bg-primary h-full rounded-full" style="width: 70.6%;"></div>
+</div>
+</div>
+</div>
+<!-- Filter and Date-Range Bar -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex flex-wrap items-center gap-space-xs bg-surface-container-low p-1 rounded-lg">
+<div class="flex items-center gap-space-xs px-space-sm py-1 bg-surface-container-lowest rounded shadow-sm text-on-surface font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-primary">date_range</span>
+<span>Intake: 01 Nov 2024 – 31 Oct 2025</span>
+</div>
+<button class="px-space-sm py-1 text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm uppercase tracking-wider transition-colors rounded" type="button">Current Quarter</button>
+<button class="px-space-sm py-1 bg-surface-container text-primary font-label-sm text-label-sm uppercase tracking-wider font-semibold rounded" type="button">2024 Intake</button>
+<button class="px-space-sm py-1 text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm uppercase tracking-wider transition-colors rounded" type="button">Custom Range</button>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">sync</span>
+<span>Last synchronized: 14 mins ago via Higher Life Network</span>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-sm">
+<!-- Company Filter -->
+<div class="relative">
+<span class="material-symbols-outlined absolute left-space-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">apartment</span>
+<select aria-label="Filter by period" class="w-full h-9 pl-9 pr-8 bg-surface-container-low text-on-surface rounded-lg font-body-sm text-body-sm appearance-none focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer">
+<option>All Host Companies (418)</option>
+<option>Liquid Intelligent Technologies</option>
+<option>Ernst & Young Zimbabwe</option>
+<option>Mimosa Mining Company</option>
+<option>ZETDC / ZESA Holdings</option>
+<option>ZimPlats Processing</option>
+<option>Dairibord Zimbabwe Ltd</option>
+</select>
+<span class="material-symbols-outlined absolute right-space-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">expand_more</span>
+</div>
+<!-- Industry Sector -->
+<div class="relative">
+<span class="material-symbols-outlined absolute left-space-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">domain</span>
+<select aria-label="Filter by institution" class="w-full h-9 pl-9 pr-8 bg-surface-container-low text-on-surface rounded-lg font-body-sm text-body-sm appearance-none focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer">
+<option>All Sectors</option>
+<option>Mining & Heavy Industry</option>
+<option>Telecommunications & IT</option>
+<option>Banking, Finance & FinTech</option>
+<option>Agriculture & Agribusiness</option>
+<option>Manufacturing & FMCG</option>
+<option>Energy, Transmission & Power</option>
+</select>
+<span class="material-symbols-outlined absolute right-space-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">expand_more</span>
+</div>
+<!-- Status Filter -->
+<div class="relative">
+<span class="material-symbols-outlined absolute left-space-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">rule</span>
+<select aria-label="Filter by company" class="w-full h-9 pl-9 pr-8 bg-surface-container-low text-on-surface rounded-lg font-body-sm text-body-sm appearance-none focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer">
+<option>All Active Placements</option>
+<option>Active & Verified (2,410)</option>
+<option>Scheduled Onboarding (192)</option>
+<option>Supervisor Pending Review (54)</option>
+<option>Suspended / Disputed (24)</option>
+</select>
+<span class="material-symbols-outlined absolute right-space-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">expand_more</span>
+</div>
+<!-- Province Filter -->
+<div class="relative">
+<span class="material-symbols-outlined absolute left-space-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">location_on</span>
+<select aria-label="Filter by placement status" class="w-full h-9 pl-9 pr-8 bg-surface-container-low text-on-surface rounded-lg font-body-sm text-body-sm appearance-none focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer">
+<option>All Provinces (Zimbabwe)</option>
+<option>Harare Metropolitan</option>
+<option>Bulawayo Metropolitan</option>
+<option>Midlands (Gweru/Kwekwe/Zvishavane)</option>
+<option>Mashonaland West (Chinhoyi/Selous)</option>
+<option>Manicaland (Mutare)</option>
+<option>Masvingo Province</option>
+</select>
+<span class="material-symbols-outlined absolute right-space-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px] pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<!-- Table Quick Utility Header -->
+<div class="px-space-lg py-space-sm bg-surface-container-low flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs text-on-surface font-headline-sm text-headline-sm">
+<span>Attachment Cohort Registry</span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-primary font-bold">2,680 Listed</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Table Density:</span>
+<button class="p-1 rounded bg-surface-container-lowest text-primary shadow-sm hover:bg-surface-container" type="button">
+<span class="material-symbols-outlined text-[16px]">density_medium</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[16px]">view_column</span>
+</button>
+</div>
+</div>
+<!-- Main Responsive Table -->
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse min-w-[1100px]">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant uppercase font-label-sm text-label-sm select-none">
+<th class="py-space-sm px-space-md w-10 text-center">
+<input aria-label="Select records" class="w-4 h-4 rounded text-primary focus:ring-primary cursor-pointer" id="selectAllCheckbox" type="checkbox"/>
+</th>
+<th class="py-space-sm px-space-md">Attachee & Reg ID</th>
+<th class="py-space-sm px-space-md">Host Company & Industry</th>
+<th class="py-space-sm px-space-md">Assigned Workplace Supervisor</th>
+<th class="py-space-sm px-space-md">Period & Timeline</th>
+<th class="py-space-sm px-space-md">Stipend (USD)</th>
+<th class="py-space-sm px-space-md">Academic Liaison Assessor</th>
+<th class="py-space-sm px-space-md">Status</th>
+<th class="py-space-sm px-space-md text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-body-sm font-body-sm text-on-surface">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-space-sm px-space-md text-center">
+<input aria-label="Select records" class="w-4 h-4 rounded text-primary focus:ring-primary cursor-pointer row-checkbox" type="checkbox"/>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container font-headline-sm text-headline-sm flex items-center justify-center font-bold flex-shrink-0">
+                    TS
+                  </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold truncate">Tinashe Munashe Sibanda</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">R213890D · B.Sc Comp Sci</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Liquid Intelligent Technologies</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Harare - Highlands HQ · Telecoms & Cloud</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Eng. Stanley Dube</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-mono">+263 77 319 8840</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-medium">01 Nov 2024 – 31 Oct 2025</span>
+<span class="font-label-sm text-label-sm text-primary">12 Months (Month 4 of 12)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">$450</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Monthly direct EFT</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Dr. C. Makore</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Computer Science Dept</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-on-primary-container"></span>
+                  Active & Verified
+                </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="View Digital Logbook" type="button">
+<span class="material-symbols-outlined text-[18px]">menu_book</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-secondary transition-colors" title="Schedule Assessment Visit" type="button">
+<span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" title="Download Form L-92 Contract" type="button">
+<span class="material-symbols-outlined text-[18px]">description</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-space-sm px-space-md text-center">
+<input aria-label="Select records" class="w-4 h-4 rounded text-primary focus:ring-primary cursor-pointer row-checkbox" type="checkbox"/>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container font-headline-sm text-headline-sm flex items-center justify-center font-bold flex-shrink-0">
+                    CG
+                  </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold truncate">Chiedza Lorraine Gumbo</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">R214402A · B.Com Finance</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Ernst & Young Zimbabwe</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Harare - Arundel Office Park · Financial Services</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Clement Mashingaidze CA(Z)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-mono">+263 71 289 4410</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-medium">01 Nov 2024 – 31 Oct 2025</span>
+<span class="font-label-sm text-label-sm text-primary">12 Months (Month 4 of 12)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">$500</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Monthly direct EFT</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Prof. T. Nyathi</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Finance Dept</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-on-primary-container"></span>
+                  Active & Verified
+                </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="View Digital Logbook" type="button">
+<span class="material-symbols-outlined text-[18px]">menu_book</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-secondary transition-colors" title="Schedule Assessment Visit" type="button">
+<span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" title="Download Form L-92 Contract" type="button">
+<span class="material-symbols-outlined text-[18px]">description</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-space-sm px-space-md text-center">
+<input aria-label="Select records" class="w-4 h-4 rounded text-primary focus:ring-primary cursor-pointer row-checkbox" type="checkbox"/>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-tertiary font-headline-sm text-headline-sm flex items-center justify-center font-bold flex-shrink-0">
+                    BZ
+                  </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold truncate">Blessing M. Zhou</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">R215578P · B.Sc Metallurgy</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Mimosa Mining Company</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Zvishavane Operations · Mining & Heavy Industry</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Eng. Patrick Mutero</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-mono">+263 77 821 0041</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-medium">15 Nov 2024 – 14 Nov 2025</span>
+<span class="font-label-sm text-label-sm text-primary">12 Months (Month 4 of 12)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">$550</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Includes Site Allowance</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Eng. K. Sibanda</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Mining Engineering Dept</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-on-primary-container"></span>
+                  Active & Verified
+                </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="View Digital Logbook" type="button">
+<span class="material-symbols-outlined text-[18px]">menu_book</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-secondary transition-colors" title="Schedule Assessment Visit" type="button">
+<span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" title="Download Form L-92 Contract" type="button">
+<span class="material-symbols-outlined text-[18px]">description</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-space-sm px-space-md text-center">
+<input aria-label="Select records" class="w-4 h-4 rounded text-primary focus:ring-primary cursor-pointer row-checkbox" type="checkbox"/>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container font-headline-sm text-headline-sm flex items-center justify-center font-bold flex-shrink-0">
+                    TM
+                  </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold truncate">Tariro Faith Mutasa</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">R217894M · B.Sc Electrical</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">ZETDC / ZESA Holdings</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Harare Transmission Depot · Energy & Power</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Eng. P. Shumba</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-mono">+263 77 402 1198</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-medium">01 Dec 2024 – 30 Nov 2025</span>
+<span class="font-label-sm text-label-sm text-primary">12 Months (Month 3 of 12)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">$350</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Monthly direct EFT</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Dr. E. Matongo</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Electrical Dept</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-on-primary-container"></span>
+                  Active & Verified
+                </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="View Digital Logbook" type="button">
+<span class="material-symbols-outlined text-[18px]">menu_book</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-secondary transition-colors" title="Schedule Assessment Visit" type="button">
+<span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" title="Download Form L-92 Contract" type="button">
+<span class="material-symbols-outlined text-[18px]">description</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-space-sm px-space-md text-center">
+<input aria-label="Select records" class="w-4 h-4 rounded text-primary focus:ring-primary cursor-pointer row-checkbox" type="checkbox"/>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container font-headline-sm text-headline-sm flex items-center justify-center font-bold flex-shrink-0">
+                    FS
+                  </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold truncate">Farai N. Sithole</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">R213304M · Mining Engineering</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">ZimPlats Processing Division</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Selous Complex · Mining & Extraction</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">David Marufu</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-mono">+263 77 220 9182</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-medium">01 Nov 2024 – 31 Oct 2025</span>
+<span class="font-label-sm text-label-sm text-primary">12 Months (Month 4 of 12)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">$480</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Includes Board & Travel</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Eng. K. Sibanda</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Mining Engineering Dept</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-on-primary-container"></span>
+                  Active & Verified
+                </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="View Digital Logbook" type="button">
+<span class="material-symbols-outlined text-[18px]">menu_book</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-secondary transition-colors" title="Schedule Assessment Visit" type="button">
+<span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" title="Download Form L-92 Contract" type="button">
+<span class="material-symbols-outlined text-[18px]">description</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-space-sm px-space-md text-center">
+<input aria-label="Select records" class="w-4 h-4 rounded text-primary focus:ring-primary cursor-pointer row-checkbox" type="checkbox"/>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-primary font-headline-sm text-headline-sm flex items-center justify-center font-bold flex-shrink-0">
+                    RM
+                  </div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold truncate">Ruvimbo Sharon Moyo</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">R218903P · B.Sc Biotechnology</span>
+</div>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Dairibord Zimbabwe Limited</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Gweru Plant · Food & Beverage Processing</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Dr. Miriam Gapare</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-mono">+263 73 345 6780</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-medium">01 Nov 2024 – 31 Oct 2025</span>
+<span class="font-label-sm text-label-sm text-primary">12 Months (Month 4 of 12)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">$320</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Direct EFT</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Mrs. S. Marange</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Biotechnology Dept</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-on-primary-container"></span>
+                  Active & Verified
+                </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="View Digital Logbook" type="button">
+<span class="material-symbols-outlined text-[18px]">menu_book</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-secondary transition-colors" title="Schedule Assessment Visit" type="button">
+<span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors" title="Download Form L-92 Contract" type="button">
+<span class="material-symbols-outlined text-[18px]">description</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Bottom Bar: Pagination and Records counter -->
+<div class="p-space-md bg-surface-container-lowest flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+            Showing <strong class="text-on-surface font-semibold">1 – 6</strong> of <strong class="text-on-surface font-semibold">2,680</strong> verified placements
+          </span>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Rows per page:</span>
+<select aria-label="Rows per page" class="h-8 px-2 bg-surface-container-low text-on-surface rounded font-body-sm text-body-sm border-0 focus:ring-1 focus:ring-primary">
+<option>6</option>
+<option>25</option>
+<option>50</option>
+<option>100</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="p-1.5 rounded bg-surface-container-low text-on-surface-variant hover:text-on-surface disabled:opacity-40" disabled="" type="button">
+<span class="material-symbols-outlined text-[18px]">first_page</span>
+</button>
+<button class="p-1.5 rounded bg-surface-container-low text-on-surface-variant hover:text-on-surface disabled:opacity-40" disabled="" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded bg-primary-container text-on-primary-container font-headline-sm text-headline-sm flex items-center justify-center font-bold" type="button">
+            1
+          </button>
+<button class="w-8 h-8 rounded bg-surface-container-low text-on-surface font-body-sm text-body-sm flex items-center justify-center hover:bg-surface-container transition-colors" type="button">
+            2
+          </button>
+<button class="w-8 h-8 rounded bg-surface-container-low text-on-surface font-body-sm text-body-sm flex items-center justify-center hover:bg-surface-container transition-colors" type="button">
+            3
+          </button>
+<span class="px-1 text-on-surface-variant font-label-md text-label-md">...</span>
+<button class="w-8 h-8 rounded bg-surface-container-low text-on-surface font-body-sm text-body-sm flex items-center justify-center hover:bg-surface-container transition-colors" type="button">
+            447
+          </button>
+<button class="p-1.5 rounded bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+<button class="p-1.5 rounded bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">last_page</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Floating / Docked Bulk Actions Strip -->
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-space-lg py-space-sm rounded-xl shadow-xl z-30 flex items-center gap-space-lg transition-transform duration-200 translate-y-28 opacity-0" id="bulkActionStrip">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-inverse-primary text-[20px]">check_circle</span>
+<span class="font-headline-sm text-headline-sm font-semibold" id="selectedCountText">0 Attachees Selected</span>
+</div>
+<div class="h-6 w-px bg-surface-container-highest opacity-20"></div>
+<div class="flex items-center gap-space-sm">
+<button class="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md font-semibold hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Export Selected to CSV</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md font-semibold hover:opacity-90 transition-opacity" type="button">
+<span class="material-symbols-outlined text-[16px]">supervisor_account</span>
+<span>Reassign Assessor</span>
+</button>
+<button class="p-1.5 rounded text-inverse-on-surface opacity-80 hover:opacity-100 hover:bg-surface-container-highest/20 transition-all" id="clearSelectionBtn" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+<!-- Supplementary Regional Liaison Summary Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-space-md mt-space-sm">
+<!-- Sector Allocation Distribution -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-primary">pie_chart</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Sector Placements Share</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">2024/25 CY</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-md text-label-md">
+<span class="text-on-surface">Mining & Heavy Industry</span>
+<span class="font-semibold text-primary">34.2% (916)</span>
+</div>
+<div class="w-full bg-surface-container-low h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 34.2%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-md text-label-md">
+<span class="text-on-surface">Telecommunications & Software</span>
+<span class="font-semibold text-secondary">26.8% (718)</span>
+</div>
+<div class="w-full bg-surface-container-low h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 26.8%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-md text-label-md">
+<span class="text-on-surface">Banking, Insurance & FinTech</span>
+<span class="font-semibold text-tertiary">19.5% (522)</span>
+</div>
+<div class="w-full bg-surface-container-low h-2 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full rounded-full" style="width: 19.5%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-md text-label-md">
+<span class="text-on-surface">Energy, Utilities & Agriculture</span>
+<span class="font-semibold text-on-surface-variant">19.5% (524)</span>
+</div>
+<div class="w-full bg-surface-container-low h-2 rounded-full overflow-hidden">
+<div class="bg-outline h-full rounded-full" style="width: 19.5%;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Compliance Timeline and Alerts -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-secondary">notification_important</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Liaison Field Alerts</h2>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">4 Action Req.</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-0.5">pending_actions</span>
+<div class="flex flex-col gap-0.5">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Logbook Signoff Pending (Midlands)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">18 students at ZIMASCO & Mimosa await Week 16 supervisor log verification.</p>
+</div>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">fact_check</span>
+<div class="flex flex-col gap-0.5">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Q2 On-site Itinerary Finalized</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Harare Industrial Area site visits confirmed for Eng. Makore & Prof. Nyathi.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Regulatory Reference Card -->
+<div class="p-space-lg rounded-xl bg-primary text-on-primary shadow-sm flex flex-col justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-primary-fixed">verified_user</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary-fixed">Ministry Directives</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg font-bold text-on-primary">Statutory Instrument 133</h3>
+<p class="font-body-sm text-body-sm text-on-primary opacity-90 leading-relaxed">
+            All registered tertiary organizations hosting student attachés are bound to disburse valid monthly stipends and guarantee registered industrial insurance coverage during all scheduled work hours.
+          </p>
+</div>
+<div class="flex items-center justify-between pt-space-sm border-t border-primary-container">
+<span class="font-label-sm text-label-sm text-primary-fixed-dim">Council Ref: ZWE-2024/ATT-DIR</span>
+<button class="px-space-sm py-1 rounded bg-on-primary text-primary font-headline-sm text-headline-sm font-semibold hover:bg-surface-container transition-colors" type="button">
+            Review Protocol
+          </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function initPlacementRegistry() {
+    const selectAll = document.getElementById('selectAllCheckbox');
+    const rowCheckboxes = document.querySelectorAll('.row-checkbox');
+    const bulkStrip = document.getElementById('bulkActionStrip');
+    const countText = document.getElementById('selectedCountText');
+    const clearBtn = document.getElementById('clearSelectionBtn');
+
+    function updateBulkBar() {
+      const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
+      const count = checkedBoxes.length;
+
+      if (count > 0) {
+        countText.textContent = `${count} Attachee${count > 1 ? 's' : ''} Selected`;
+        bulkStrip.classList.remove('translate-y-28', 'opacity-0');
+        bulkStrip.classList.add('translate-y-0', 'opacity-100');
+      } else {
+        bulkStrip.classList.remove('translate-y-0', 'opacity-100');
+        bulkStrip.classList.add('translate-y-28', 'opacity-0');
+      }
+
+      if (selectAll) {
+        selectAll.checked = count === rowCheckboxes.length && rowCheckboxes.length > 0;
+        selectAll.indeterminate = count > 0 && count < rowCheckboxes.length;
+      }
+    }
+
+    if (selectAll) {
+      selectAll.addEventListener('change', function() {
+        rowCheckboxes.forEach(cb => {
+          cb.checked = selectAll.checked;
+        });
+        updateBulkBar();
+      });
+    }
+
+    rowCheckboxes.forEach(cb => {
+      cb.addEventListener('change', updateBulkBar);
+    });
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function() {
+        rowCheckboxes.forEach(cb => {
+          cb.checked = false;
+        });
+        if (selectAll) selectAll.checked = false;
+        updateBulkBar();
+      });
+    }
+  })();
+</script></main></div><script src="app.js?v=1" defer></script>
+<script src="admin-stitch-icons.js?v=1" defer></script>
+<script src="../../assets/attachlink-brand.js?v=14" data-logo-ext=".png"></script>
+<script src="../../assets/attachlink-connect.js?v=3" defer></script>
+</body></html>

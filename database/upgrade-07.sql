@@ -1,0 +1,34 @@
+CREATE TABLE IF NOT EXISTS application_status_events (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ application_id BIGINT UNSIGNED NOT NULL,
+ changed_by BIGINT UNSIGNED NOT NULL,
+ previous_status VARCHAR(20) NOT NULL,
+ new_status VARCHAR(20) NOT NULL,
+ note TEXT NULL,
+ created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ INDEX (application_id,id),
+ FOREIGN KEY (application_id) REFERENCES applications(id) ON DELETE CASCADE,
+ FOREIGN KEY (changed_by) REFERENCES users(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS student_preferences (
+ student_id BIGINT UNSIGNED PRIMARY KEY,
+ recruiter_visible TINYINT(1) NOT NULL DEFAULT 1,
+ sectors VARCHAR(255) NOT NULL DEFAULT '',
+ stipend DECIMAL(10,2) NULL,
+ work_model VARCHAR(80) NOT NULL DEFAULT '',
+ relocation VARCHAR(255) NOT NULL DEFAULT '',
+ FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS admin_setting_entries (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ category ENUM('campus','programme','intake') NOT NULL,
+ name VARCHAR(180) NOT NULL,
+ details TEXT NOT NULL,
+ is_active TINYINT(1) NOT NULL DEFAULT 1,
+ created_by BIGINT UNSIGNED NOT NULL,
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ UNIQUE KEY (category,name),
+ FOREIGN KEY (created_by) REFERENCES users(id)
+) ENGINE=InnoDB;
