@@ -15,7 +15,10 @@ if($_SERVER['REQUEST_METHOD']==='GET'){
         $path=application_storage().'/'.$name;
         if(!is_file($path)||is_link($path))fail('File not found.',404);
         header('Content-Type: '.$file['mime_type']);
-        if($file['purpose']==='verification')header('Content-Disposition: attachment; filename="verification-document.'.$match[1].'"');
+        if($file['purpose']==='verification'){
+            audit_event((int)$account['id'],'document.download','company_verification_document',$id,['actor_role'=>$account['role'],'company_id'=>$company]);
+            header('Content-Disposition: attachment; filename="verification-document.'.$match[1].'"');
+        }
         header('Content-Length: '.filesize($path));
         readfile($path);
         exit;

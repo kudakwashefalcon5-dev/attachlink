@@ -11,4 +11,9 @@ Options -Indexes
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule "(^|/)\.git(?:/|$)" - [F,L,NC]
+    RewriteRule "^(database|docs|vendor|tests|scripts)(/|$)" - [F,L,NC]
 </IfModule>
+
+<FilesMatch "(?i)^(composer\..*|package.*\.json|.*\.md)$">
+    Require all denied
+</FilesMatch>

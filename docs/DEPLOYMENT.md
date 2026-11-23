@@ -18,6 +18,7 @@ Use a VPS with Apache and PHP, TLS certificates, an application-specific databas
 - ATTACHLINK_DOCUMENT_STORAGE should resolve to a private directory where the service can write. Deny direct access to backend/storage, which contains avatars. Set a writable PHP session directory and upload temporary directory. Set upload_max_filesize to at least 5 MB, post_max_size above 45 MB and max_file_uploads to at least nine.
 - Set ATTACHLINK_MAIL_TRANSPORT=smtp for real delivery. Set ATTACHLINK_SMTP_HOST, ATTACHLINK_SMTP_EHLO and ATTACHLINK_SMTP_FROM. STARTTLS defaults to port 587 and implicit TLS to 465. Set the relay's LOGIN or PLAIN mechanism and both credentials if required. The PHP CLI needs OpenSSL and the locked PHPMailer dependencies.
 - Run php backend/check-config.php as the service account. It checks configuration, DB and schema readiness, document writability and mail transport settings without sending mail or printing secrets.
+- Set ATTACHLINK_ADMIN_TOTP_KEY to a secret 32-byte key encoded as 64 hexadecimal characters. Keep it in the deployment secret store and retain a protected recovery copy apart from database backups. Administrators enroll an authenticator on their first production sign-in and should store the ten single-use recovery codes offline. Restoring database records requires the same key.
 
 The CSP restricts scripts, styles, fonts and connections to the application origin. Inline scripts and styles are still used by the current portal templates. Apache applies framing, referrer and permissions restrictions. PHP emits HSTS on production HTTPS responses. For HSTS on static files, configure ATTACHLINK_ENV=production in Apache's TLS virtual host or set the header at the TLS terminator. Confirm the entire installation is HTTPS before enabling HSTS.
 
@@ -26,6 +27,8 @@ Run the mail job every minute and the document purge job every five minutes as t
 Publish the relay's SPF record, enable provider DKIM signing, and publish DMARC for the From domain. Verify alignment on delivered test messages. Begin with a monitoring DMARC policy before considering enforcement. [Sender authentication guidance](https://support.google.com/mail/answer/81126)
 
 ## Release and backups
+
+Extract the release into a deployment directory and set the Apache DocumentRoot to its public/ subdirectory. Keep database/, docs/ and the top-level Markdown files beside public/. Run PHP jobs and the configuration checker from public/. In the production TLS virtual host, add `Header always set Strict-Transport-Security "max-age=31536000"` to cover static responses and Apache-generated errors.
 
 Run composer install --no-dev --optimize-autoloader, npm ci, and npm run build:css from the source checkout. Run scripts/build-release.ps1 on Windows or sh scripts/build-release.sh on Linux to create dist/attachlink.zip. The builder and verifier use scripts/release-allowlist.txt and scripts/release-excludes.txt. Use -Verify path on PowerShell or --verify path on Linux to check an existing ZIP.
 

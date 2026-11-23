@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__.'/../../lib/ApplicationDocuments.php';
 method('POST');
 $student = user('student');
 protect($_POST);
@@ -9,13 +10,15 @@ $opening = positive($_POST['listing_id'] ?? 0);
 $letter = $_POST['cover_letter'] ?? '';
 if (!is_string($letter) || strlen($letter) > 12000) fail('Invalid cover letter.');
 
-$required = ['stamped_letter'=>'attachment_letter', 'cv'=>'cv', 'national_id'=>'id', 'transcript'=>'transcript', 'o_level'=>'o_level'];
-$optional = ['a_level'=>'a_level', 'extra_certificate_1'=>'other_certificate', 'extra_certificate_2'=>'other_certificate', 'extra_certificate_3'=>'other_certificate'];
 $files = [];
-foreach ($required + $optional as $field => $type) {
+$useVault=($_POST['use_vault']??null)==='1';
+foreach (REQUIRED_APPLICATION_DOCUMENTS as $field => [$type, $label]) {
     $file = $_FILES[$field] ?? null;
-    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE && !isset($required[$field])) continue;
-    $files[] = [$type, ...validate_application_upload($file)];
+    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+        if ($useVault) continue;
+        fail('Please upload '.$label.'.', 422);
+    }
+    $files[$field] = validate_application_upload($file);
 }
 
 $pdo = db();
@@ -31,6 +34,18 @@ try {
         $pdo->rollBack();
         require_verified_email($current);
     }
+    $vault=[];
+    if ($useVault) {
+        foreach (rows('SELECT document_type,stored_name,original_name,mime_type FROM student_document_vault WHERE student_id=?',[$student['id']]) as $document) {
+            $vault[$document['document_type']]=$document;
+        }
+        foreach (REQUIRED_APPLICATION_DOCUMENTS as $field => [$type,$label]) {
+            if (!isset($files[$field]) && !isset($vault[$field])) {
+                $pdo->rollBack();
+                fail('Please upload '.$label.'.',422);
+            }
+        }
+    }
     $record = getrow("SELECT o.title,o.company_id FROM openings o JOIN companies c ON c.id=o.company_id WHERE o.id=? AND o.status='published' AND c.verification_status='verified' AND (o.deadline IS NULL OR o.deadline>=CURDATE()) FOR UPDATE", [$opening]);
     if (!$record) {
         $pdo->rollBack();
@@ -38,8 +53,15 @@ try {
     }
     execute('INSERT INTO applications(opening_id,student_id,cover_letter) VALUES(?,?,?)', [$opening,$student['id'],trim($letter)]);
     $id = (int)$pdo->lastInsertId();
-    foreach ($files as [$type,$temporary,$original,$mime,$extension]) {
-        $stored = store_application_upload($temporary, $extension);
+    foreach (REQUIRED_APPLICATION_DOCUMENTS as $field=>[$type]) {
+        if (isset($files[$field])) {
+            [$temporary,$original,$mime,$extension]=$files[$field];
+            $stored=store_application_upload($temporary,$extension);
+        } else {
+            $original=$vault[$field]['original_name'];
+            $mime=$vault[$field]['mime_type'];
+            $stored=copy_vault_document($vault[$field]['stored_name']);
+        }
         $saved[] = $stored;
         execute('INSERT INTO application_documents(application_id,document_type,original_name,stored_name,mime_type) VALUES(?,?,?,?,?)', [$id,$type,$original,$stored,$mime]);
     }
@@ -56,4 +78,4 @@ try {
     error_log('AttachLink application submission failed: '.$error::class);
     fail('Application could not be submitted.', 500);
 }
-out(['ok'=>true,'application_id'=>$id,'document_count'=>count($files),'message'=>'Application submitted.'], 201);
+out(['ok'=>true,'application_id'=>$id,'document_count'=>count($saved),'message'=>'Application submitted.'], 201);

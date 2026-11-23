@@ -57,7 +57,7 @@ def server(php, db_port, environment, scratch, production=False):
     base = f"http://127.0.0.1:{port}"
     with tempfile.TemporaryFile() as log:
         process = subprocess.Popen(
-            [php, "-d", f"mysqli.default_port={db_port}", "-d", f"session.save_path={scratch}",
+            [php, "-d", f"mysqli.default_port={db_port}", "-d", f"session.save_path={scratch}", "-d", f"upload_tmp_dir={scratch}",
              "-S", f"127.0.0.1:{port}", "-t", str(ROOT), str(router)],
             cwd=ROOT, env=environment, stdout=log, stderr=log,
         )

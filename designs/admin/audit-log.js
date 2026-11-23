@@ -18,7 +18,7 @@
             if (reset) list.replaceChildren();
             for (const event of result.events) {
                 const item = document.createElement('li');
-                item.textContent = event.created_at+' | '+event.action+' | Admin '+event.admin_id+' | '+event.target_type+' '+(event.target_id??'')+' | '+event.detail;
+                item.textContent = event.created_at+' | '+event.action+' | Actor '+event.admin_id+' | '+event.target_type+' '+(event.target_id??'')+' | '+event.detail;
                 list.append(item);
             }
             cursor = result.next_before;
@@ -63,6 +63,7 @@
             const report=document.querySelector('#retention-report');
             const labels={
                 pending_file_removals:'Pending file removals',
+                saved_vault_documents:'Saved vault documents',
                 expired_resets_over_30_days:'Reset tokens expired over 30 days ago',
                 mail_over_90_days:'Completed mail records older than 90 days',
                 audit_over_365_days:'Audit events older than 365 days',

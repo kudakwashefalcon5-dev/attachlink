@@ -8,7 +8,7 @@ const api = '/backend/api/';
 const password = 'Portal smoke fixture password';
 const longName='Interdisciplinary'.repeat(5);
 const longMessage='M'.repeat(1000);
-const requiredDocuments=['stamped_letter','cv','national_id','transcript','o_level'];
+const requiredDocuments=['stamped_letter','academic_certificates','national_id','transcript','birth_certificate'];
 const expectedStatus = {student: 'students', employer: 'employers', admin: 'admin'};
 async function call(page, route, data) {
     let response;

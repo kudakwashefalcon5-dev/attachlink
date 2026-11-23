@@ -60,11 +60,69 @@
     status.textContent = 'Signing in...';
     try {
       const {csrf_token} = await request('csrf.php');
-      await request('login.php', {
+      const result = await request('login.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({...fields, role, csrf_token})
       });
+      if (result.totp_required) {
+        form.hidden = true;
+        const factor = document.createElement('form');
+        const label = document.createElement('label');
+        const code = document.createElement('input');
+        const proceed = document.createElement('button');
+        const feedback = document.createElement('p');
+        label.textContent = result.setup_key ? 'Authenticator code' : 'Authenticator or recovery code';
+        code.className = 'al-auth-input';
+        code.autocomplete = 'one-time-code';
+        code.required = true;
+        code.maxLength = 40;
+        label.append(code);
+        proceed.className = submit.className;
+        proceed.textContent = 'Verify and sign in';
+        feedback.setAttribute('role','status');
+        if (result.setup_key) {
+          const setup = document.createElement('p');
+          setup.textContent = 'Add a time-based account named AttachLink in your authenticator. Enter this setup key: ' + result.setup_key;
+          factor.append(setup);
+        }
+        factor.append(label, proceed, feedback);
+        form.after(factor);
+        code.focus();
+        factor.addEventListener('submit', async verification => {
+          verification.preventDefault();
+          proceed.disabled = true;
+          try {
+            const {csrf_token} = await request('csrf.php');
+            const verified = await request('admin-totp.php', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({csrf_token, code: code.value.trim()})
+            });
+            if (!verified.recovery_codes.length) {
+              location.assign('../../backend/open-portal.php');
+              return;
+            }
+            const instructions = document.createElement('p');
+            instructions.textContent = 'Save these single-use recovery codes somewhere secure. They are shown only once.';
+            const codes = document.createElement('ul');
+            for (const value of verified.recovery_codes) {
+              const item = document.createElement('li');
+              item.textContent = value;
+              codes.append(item);
+            }
+            const portal = document.createElement('a');
+            portal.href = '../../backend/open-portal.php';
+            portal.textContent = 'Continue to dashboard';
+            factor.replaceChildren(instructions, codes, portal);
+            portal.focus();
+          } catch (error) {
+            feedback.textContent = error.message;
+            proceed.disabled = false;
+          }
+        });
+        return;
+      }
       location.assign('../../backend/open-portal.php');
     } catch (error) {
       status.textContent = error.message;

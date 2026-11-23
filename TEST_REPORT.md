@@ -161,7 +161,23 @@ During browser testing, a duplicated CSRF URL suffix broke recovery form submiss
 
 The final axe sweep reports 24 moderate rule findings across page-width checks. There are 18 landmark-region findings and two each for heading order, missing main landmark and missing page-level heading. The detailed report is test-results/portal-smoke-all-portal-pa-7f975-and-meet-serious-axe-checks/portal-audit.json. Earlier sweeps exposed missing logo requests, low-contrast secondary text, unlabeled controls and mobile overflow. Those issues were corrected and the sweep was rerun.
 
-The release artifact is dist/attachlink.zip. Git commit remains unavailable because the supplied workspace has no .git directory. The active XAMPP database was left intact.
+The release artifact is dist/attachlink.zip. The active XAMPP database was left intact.
+
+## Staging follow-ups on 23 November 2026
+
+| Check | Result | Evidence |
+|---|---|---|
+| Release allowlist | PASSED | The 225-file ZIP verified. Removing upgrade-12 or adding the retired admin login made verification fail. SQL and documentation are outside the public/ document root. |
+| Web exposure | PASSED | The XAMPP HTTP smoke suite returned 403 or 404 for SQL, docs, vendor, Composer and npm metadata, Markdown, tests and scripts. |
+| Environment detection | PASSED | An unset environment refused HTTPS, forwarded headers, external hosts and deployment base URLs. Loopback HTTP remained usable. |
+| Migrations | PASSED | The local database recorded upgrades 12 through 14. A disposable unversioned upgrade-09 schema applied only upgrades 10 through 14. The checker reported pending names before migration, the login endpoint returned generic 503, and the migration rerun made no changes. |
+| HSTS | PASSED | The production PHP fixture sent the header. A temporary XAMPP Apache TLS virtual host sent it on static HTTP 200 and Apache-generated 404 responses. |
+| Employer preferences | PASSED | Employer detail omitted all three private preferences, returned them after opt-in, and omitted stipend in both cases. |
+| Application documents and vault | PASSED | The API rejected submissions with each of the five required documents missing in turn. It attached all five saved files without a re-upload, rejected invalid MIME and employer vault access, and purged replaced files and deleted account files. |
+| Audit | PASSED | The action filters returned application and company verification document downloads and retention-report views. |
+| Production admin TOTP | PASSED | The API denied admin access before the second factor, issued ten recovery codes on enrollment, rejected TOTP replay and rejected a second use of a recovery code. |
+| Companies and merged admin sign-in | PASSED | An authenticated admin received the Companies page. The retired admin login URL redirected to the shared sign-in form. |
+| Browser interaction | NOT TESTED | The new vault and TOTP controls, the Companies menu click, and admin sign-out were verified through code or HTTP responses. A full browser interaction run remains outstanding. |
 
 ## Staging follow-ups
 

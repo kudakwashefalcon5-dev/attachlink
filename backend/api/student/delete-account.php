@@ -17,7 +17,7 @@ if (!$current || $current['password_hash']!==$identity['password_hash']) {
     $pdo->rollBack();
     fail('Account changed. Sign in again and retry.',409);
 }
-$files=rows("SELECT 'document' AS storage_kind,d.stored_name FROM application_documents d JOIN applications a ON d.application_id=a.id WHERE a.student_id=?",[$student['id']]);
+$files=rows("SELECT 'document' AS storage_kind,d.stored_name FROM application_documents d JOIN applications a ON d.application_id=a.id WHERE a.student_id=? UNION ALL SELECT 'document',stored_name FROM student_document_vault WHERE student_id=?",[$student['id'],$student['id']]);
 $files[]=['storage_kind'=>'avatar','stored_name'=>$student['id'].'.jpg'];
 foreach ($files as $file) {
     execute('INSERT IGNORE INTO document_purge_queue(storage_kind,stored_name) VALUES(?,?)',array_values($file));

@@ -17,6 +17,16 @@ try {
     exit(1);
 }
 report_setting('ATTACHLINK_ENV',app_environment_issue(),config_env('ATTACHLINK_ENV'),'Detected '.APP_ENV.'.');
+if (APP_ENV==='production') {
+    require_once __DIR__.'/lib/AdminTotp.php';
+    try {
+        admin_totp_key();
+        if (!extension_loaded('openssl')) throw new ConfigException('OpenSSL is required for admin authenticator encryption.');
+        report_setting('ATTACHLINK_ADMIN_TOTP_KEY',null,'','Authenticator encryption is configured.');
+    } catch (ConfigException $error) {
+        report_setting('ATTACHLINK_ADMIN_TOTP_KEY',$error->getMessage(),config_env('ATTACHLINK_ADMIN_TOTP_KEY'),'');
+    }
+}
 try {
     configured_base_url();
     report_setting('ATTACHLINK_BASE_URL',null,'','Valid URL or local default.');
@@ -39,6 +49,13 @@ try {
     $pdo=null;
 }
 if ($pdo!==null) {
+    require_once __DIR__.'/lib/Migrations.php';
+    try {
+        $pending=array_keys(pending_migrations($pdo));
+        report_setting('Database migrations',$pending?'Pending: '.implode(', ',$pending):null,'checked','All migrations recorded.');
+    } catch (Throwable $error) {
+        report_setting('Database migrations',$error instanceof ConfigException?$error->getMessage():'Could not read migration state.','checked','');
+    }
     try {
         $pdo->query('SELECT email_verified_at,password_changed_at,consent_at,consent_version FROM users LIMIT 0')->closeCursor();
         $pdo->query('SELECT html_body,message_id FROM email_outbox LIMIT 0')->closeCursor();

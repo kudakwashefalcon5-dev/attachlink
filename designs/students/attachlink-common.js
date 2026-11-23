@@ -114,22 +114,12 @@ function applyInstitutionContext(account) {
       const programme = String(account.programme || '').trim();
       course.textContent = [level, programme, institute].filter(Boolean).join(' • ');
     }
-    containing('University of Zimbabwe clearance pending signed industrial letter. All portal applications remain fully accessible.',
-      'Institution clearance has not yet been verified by ' + institute + '.');
     exact('UZ Verification', 'Institution verification (pending)');
     exact('UZ Prerequisite Credits', 'Institution prerequisites (unverified)');
     exact('UZ Student Scheme', 'Institution scheme (unverified)');
-    exact('UZ Registrar Watermark', 'Registrar verification not connected');
-    exact('UZ Official Academic Transcript', 'Academic transcript (not verified)');
-    exact("Pending Dean's Signature / Stamp", 'Clearance not yet verified');
-    exact('Faculty of Science & Technology, University of Zimbabwe',
-      institute + ' — liaison contact not linked');
     exact('Industrial Faculty Liaison Module: CS380', 'Liaison module information not linked');
-    exact('University SIS Integration (Planned)', 'Institutional system integration (planned)');
     exact('University Gateway Auth', 'Institution sign-in (not connected)');
     containing('UZ ID: R228491M', 'Institution ID: not yet verified');
-    containing('Faculty Ref: FS/CS/25', 'Institution reference: not verified');
-    containing('University sync: Demo', 'Institution sync: not connected');
     containing('No university database is connected', 'No institution database is connected');
   }
 

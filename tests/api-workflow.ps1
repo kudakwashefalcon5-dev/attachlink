@@ -21,12 +21,13 @@ function Post($Client,$Path,$Expected,$Data){
     $Data.csrf_token=Token $Client
     Call $Client POST $Path $Expected $Data
 }
-function Pack($Client,$Opening,$Invalid=$false){
+function Pack($Client,$Opening,$Invalid=$false,$Omit=''){
     $part=[System.Net.Http.MultipartFormDataContent]::new()
     $part.Add([System.Net.Http.StringContent]::new((Token $Client)),'csrf_token')
     $part.Add([System.Net.Http.StringContent]::new([string]$Opening),'listing_id')
-    foreach($field in 'stamped_letter','cv','national_id','transcript','o_level'){
-        $content=if($Invalid -and $field -eq 'cv'){'invalid document'}else{"%PDF-1.4`n%%EOF`n"}
+    foreach($field in 'stamped_letter','academic_certificates','national_id','transcript','birth_certificate'){
+        if($field -eq $Omit){continue}
+        $content=if($Invalid -and $field -eq 'academic_certificates'){'invalid document'}else{"%PDF-1.4`n%%EOF`n"}
         $part.Add([System.Net.Http.ByteArrayContent]::new([Text.Encoding]::ASCII.GetBytes($content)),$field,'test.pdf')
     }
     return ,$part
@@ -211,6 +212,9 @@ try{
     $null=Call $student POST student/apply-with-documents.php 415 (Pack $student $opening $true)
     $applications=(Call $student GET student/applications.php 200).applications
     Confirm ($applications.Count -eq 0) 'Invalid document pack created no application'
+    foreach($field in 'stamped_letter','academic_certificates','national_id','transcript','birth_certificate'){
+        $null=Call $student POST student/apply-with-documents.php 422 (Pack $student $opening $false $field)
+    }
     $application=Call $student POST student/apply-with-documents.php 201 (Pack $student $opening)
     Confirm ($application.document_count -eq 5) 'All five required documents recorded'
     Confirm ((Call $student GET student/applications.php 200).applications.id -contains $application.application_id) 'Submitted application appears in My Applications'
@@ -253,6 +257,13 @@ try{
     $null=Post $student email-preferences.php 200 @{email_notifications=$true}
     $detail=Call $employer GET "employer/applications.php?application_id=$($application.application_id)" 200
     Confirm ($null -eq $detail.application.email -and $null -eq $detail.application.student_city) 'Recruiter-hidden contact fields withheld'
+    foreach($field in 'preferred_sectors','preferred_work_model','preferred_relocation','preferred_stipend'){
+        Confirm ($null -eq $detail.application.PSObject.Properties[$field]) "$field withheld when recruiter visibility is off"
+    }
+    $null=Post $student student/preferences.php 200 @{recruiter_visible=$true;stipend='75.00';sectors='Design';work_model='Hybrid';relocation='Harare'}
+    $shared=(Call $employer GET "employer/applications.php?application_id=$($application.application_id)" 200).application
+    Confirm ($shared.preferred_sectors -eq 'Design' -and $shared.preferred_work_model -eq 'Hybrid' -and $shared.preferred_relocation -eq 'Harare') 'Visible placement preferences shared'
+    Confirm ($null -eq $shared.PSObject.Properties['preferred_stipend']) 'Stipend never returned'
     Confirm ($detail.events[0].new_status -eq 'accepted' -and $detail.events[0].note -eq 'Verified QA documents') 'Application decision history persisted'
     $null=Post $admin admin/placements.php 400 @{application_id=$application.application_id;start_date='2027-01-01';end_date='2026-12-31'}
     $null=Post $admin admin/placements.php 200 @{application_id=$application.application_id;start_date='2027-01-01';end_date='2027-04-30'}

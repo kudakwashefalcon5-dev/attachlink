@@ -48,7 +48,7 @@ async function verify(page, email) {
 
 async function apply(page, opening, throttled) {
     await page.goto('/designs/students/attachment-details.html?id='+opening);
-    const fields = ['stamped_letter','cv','national_id','transcript','o_level'];
+    const fields = ['stamped_letter','academic_certificates','national_id','transcript','birth_certificate'];
     const file = {name:'fixture.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4\n%'+ '0'.repeat(20000)+'\n%%EOF\n')};
     const applyButton = page.locator('#listing-apply');
     if (throttled) {

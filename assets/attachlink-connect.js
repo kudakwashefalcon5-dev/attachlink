@@ -21,60 +21,117 @@ function getForm(form){return Object.fromEntries(new FormData(form).entries())}
 function card(title,subtitle){let d=el('article');d.className='al-api-card';d.append(el('h3',title),el('p',subtitle||''));return d}
 function replaceFixture(node){if(node)node.replaceChildren()}
 function insertStyles(){let s=el('style');s.textContent=`.al-api-panel{background:#fff;color:#153d3c;padding:20px;border:1px solid #dce8e5;border-radius:14px;margin:18px 0;box-shadow:0 1px 5px #002c2410;font-family:Inter,Arial,sans-serif}.al-api-panel h2{font-size:1.2rem;font-weight:700;margin:0 0 14px}.al-api-panel h3{font-size:1rem;font-weight:700;margin:0 0 6px}.al-api-card{padding:14px;border:1px solid #e2e9e7;border-radius:12px;margin:8px 0;background:#fbfefd}.al-api-card p{margin:5px 0;font-size:.9rem}.al-api-btn{background:#08796d!important;color:#fff!important;border:0!important;border-radius:9px!important;padding:9px 13px!important;margin:5px 7px 5px 0!important;cursor:pointer!important;font:inherit!important}.al-api-btn:disabled{opacity:.6}.al-api-field{display:block;margin:10px 0;font-size:.9rem;font-weight:600}.al-api-field input,.al-api-field textarea,.al-api-field select{display:block;width:100%;border:1px solid #aabdb9;background:white;border-radius:8px;padding:9px;color:#173936}.al-api-field textarea{min-height:80px}.al-api-error{background:#fff0ee;color:#992e23;padding:12px;border:1px solid #e0aba4;border-radius:9px;position:relative;z-index:50}.al-api-muted{color:#5a7371;font-size:.9rem}.al-api-list{display:grid;gap:9px}.al-api-link{color:#06796b;text-decoration:underline}.al-api-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}`;document.head.append(s)}
-function goAuth(){const path=role==='admin'?'../admin/login.html':role==='employer'?'../students/login.html?role=recruiter':'../students/login.html';location.replace(path)}
+function goAuth(){const path=role==='admin'?'../students/login.html?role=admin':role==='employer'?'../students/login.html?role=recruiter':'../students/login.html';location.replace(path)}
 async function signout(){await api('auth/logout.php',{});goAuth()}
 function addLogout(){if(document.querySelector('[data-al-logout]'))return;let a=button('Sign out',signout);a.dataset.alLogout='1';let nav=document.querySelector('nav')||document.querySelector('header')||document.querySelector('aside');(nav||document.body).append(a)}
+function renderProfileCompleteness(account){
+ const fields=[
+  ['first_name','first name'],['last_name','last name'],['email','email address'],
+  ['phone','phone number'],['city','city or location'],['institution','college or university'],
+  ['programme','programme'],['study_level','academic level'],['bio','biography']
+ ];
+ const missing=fields.filter(([key])=>!String(account[key]??'').trim());
+ const completed=fields.length-missing.length;
+ const percent=Math.round(completed/fields.length*100);
+ const progress=$('profile-completeness-progress');
+ progress.max=fields.length;
+ progress.value=completed;
+ progress.hidden=false;
+ $('profile-completeness-status').textContent=missing.length
+  ? `${percent}% complete · ${missing.length} of ${fields.length} details left to fill in`
+  : '100% complete. You’ve filled in all the details on this checklist.';
+ const list=$('profile-completeness-list');
+ for(const [key,label] of missing){
+  const item=el('li');
+  const edit=el('a','Add '+label);
+  edit.href='account.html#'+key;
+  edit.className='al-api-link';
+  item.append(edit);
+  list.append(item);
+ }
+ $('profile-completeness-remaining').hidden=missing.length===0;
+}
 async function student(){
  if(page==='dashboard.html'){
   const ui=window.AttachLinkOverview;
-  const section=ui.node('section','al-overview');
-  section.setAttribute('aria-label','Application overview');
-  section.setAttribute('aria-busy','true');
+  const section=ui.node('section','al-overview student-activity');
+  section.setAttribute('aria-labelledby','student-activity-title');
+  const header=ui.node('div','student-activity-header');
+  const title=ui.node('h2','','Recent activity');
+  title.id='student-activity-title';
+  header.append(title,ui.actions([['My applications','my-applications.html'],['Notifications','notifications.html']]));
+  const body=ui.node('div','student-activity-body');
+  const totals=ui.node('div','student-activity-totals');
+  totals.append(ui.node('h3','','Application summary'));
+  const feed=ui.node('div','student-activity-feed');
+  feed.append(ui.node('h3','','Latest updates'));
+  const updates=ui.node('div','');
+  const status=ui.node('p','student-activity-status','Loading activity?');
+  status.setAttribute('role','status');
+  updates.append(status);
+  feed.append(updates);
+  body.append(totals,feed);
+  section.append(header,body);
   $('recommended-openings')?.before(section);
-  const tiles=[['Total applications','description'],['Pending applications','schedule'],['Accepted applications','check_circle']];
-  const links=[['Browse Opportunities','#all-attachment-openings'],['My Applications','my-applications.html'],['Notifications','notifications.html']];
-  section.append(ui.metrics(tiles),ui.node('p','','Loading your application activity...'));
-  try{
-   const [result,alerts]=await Promise.all([api('student/applications.php'),api('notifications.php')]);
-   const applications=result.applications;
+
+  const tiles=[['Applications','description'],['Pending','schedule'],['Accepted','check_circle']];
+  const metrics=ui.metrics(tiles);
+  totals.append(metrics);
+  const [result,alerts]=await Promise.allSettled([api('student/applications.php'),api('notifications.php')]);
+  const applications=result.status==='fulfilled'?result.value.applications:[];
+  const notifications=alerts.status==='fulfilled'?alerts.value.notifications:[];
+  if(result.status==='fulfilled'){
    const counts=[applications.length,applications.filter(item=>['submitted','reviewing'].includes(item.status)).length,applications.filter(item=>item.status==='accepted').length];
-   const activity=ui.node('div','al-activity');
-   activity.append(ui.node('h2','','Recent activity'));
-   if(!applications.length)activity.append(ui.node('p','','No applications yet. Explore available attachment opportunities to get started.'));
-   const entries=[
-    ...applications.map(item=>({title:item.title,detail:item.status,created_at:item.created_at})),
-    ...alerts.notifications.map(item=>({title:item.title,detail:item.message,created_at:item.created_at}))
-   ].sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at))).slice(0,5);
-   const list=ui.node('ul','');
+   metrics.replaceWith(ui.metrics(tiles.map((tile,index)=>[...tile,counts[index]])));
+  }
+  const statusLabels={submitted:'Application submitted',reviewing:'In review',accepted:'Accepted',rejected:'Not selected',withdrawn:'Withdrawn'};
+  const entries=[
+   ...applications.map(item=>({title:item.title,detail:statusLabels[item.status]??item.status,icon:'description',date:item.created_at})),
+   ...notifications.map(item=>({title:item.title,detail:item.message,icon:'notifications',date:item.created_at}))
+  ].sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,5);
+  status.textContent=result.status==='rejected'||alerts.status==='rejected'?'Some activity could not be loaded. Try refreshing.':'';
+  if(entries.length){
+   const list=ui.node('ul','student-activity-list');
    for(const item of entries){
     const row=ui.node('li','');
-    row.append(ui.node('strong','',item.title),ui.node('span','',item.detail));
+    const icon=ui.node('span','material-symbols-outlined student-activity-icon',item.icon);
+    icon.setAttribute('aria-hidden','true');
+    const detail=ui.node('div','');
+    detail.append(ui.node('strong','',item.title),ui.node('p','',item.detail));
+    row.append(icon,detail);
     list.append(row);
    }
-   if(entries.length)activity.append(list);
-   activity.append(ui.actions(links));
-   section.replaceChildren(ui.metrics(tiles.map((tile,index)=>[...tile,counts[index]])),activity);
-  }catch{
-   section.replaceChildren(ui.node('h2','','Recent activity'),ui.node('p','','Application activity is unavailable. Try refreshing the page.'),ui.actions(links));
-  }finally{section.setAttribute('aria-busy','false');}
+   updates.append(list);
+  }else if(result.status==='fulfilled'&&alerts.status==='fulfilled'){
+   const empty=ui.node('div','student-activity-empty');
+   const icon=ui.node('span','material-symbols-outlined student-activity-icon','inbox');
+   icon.setAttribute('aria-hidden','true');
+   const copy=ui.node('div','');
+   copy.append(ui.node('strong','','No activity yet'),ui.node('p','','Apply for an opening to start tracking your progress here.'));
+   const browse=ui.node('a','','Browse openings');
+   browse.href='#all-attachment-openings';
+   copy.append(browse);
+   empty.append(icon,copy);
+   updates.append(empty);
+  }
  }
  if(page==='saved-openings.html'){let box=$('saved-results')||panel('Saved openings');let list=async()=>{let d=await api('student/saved.php');clear(box);for(let o of d.openings){let c=card(o.title,`${o.company_name} • ${o.city||''}`);let a=el('a','View');a.href=`attachment-details.html?id=${o.id}`;a.className='al-api-link';c.append(a,button('Remove',async()=>{await api('student/saved.php',{opening_id:o.id},'DELETE');await list()}));box.append(c)}if(!d.openings.length)box.append(el('p','No saved openings.'))};await list()}
  if(page==='profile.html'){
-  const [profile,activity]=await Promise.all([api('student/account.php'),api('student/applications.php')]);
-  const account=profile.account;
-  if($('application-count'))$('application-count').textContent=String(activity.applications.length);
-  const biography=el('p',account.bio||'Biography not provided.');
-  $('profile-name')?.parentElement.append(biography);
   $('export-profile-btn')?.addEventListener('click',()=>window.print());
   $('share-profile-btn')?.setAttribute('hidden','');
-  for(const control of document.querySelectorAll('[data-upload],[data-view]')){
-   control.onclick=()=>location.assign('my-applications.html');
-  }
-  for(const status of document.querySelectorAll('[data-doc-name]'))status.textContent='See My Applications';
-  for(const control of document.querySelectorAll('[data-demo-notice]')){
-   if(control.dataset.demoNotice.startsWith('Messaging'))control.onclick=()=>location.assign('messages.html');
-   else{control.disabled=true;control.title='Appointment booking is unavailable';}
-  }
+  await Promise.all([
+   api('student/account.php').then(({account})=>{
+    renderProfileCompleteness(account);
+    const biography=el('p',account.bio||'Biography not provided.');
+    $('profile-name')?.parentElement.append(biography);
+   }).catch(error=>{
+    $('profile-completeness-status').textContent='Profile details could not be loaded. Try refreshing.';
+    showError(error);
+   }),
+   api('student/applications.php').then(({applications})=>{
+    if($('application-count'))$('application-count').textContent=String(applications.length);
+   })
+  ]);
  }
  if(page==='messages.html')await messages('thread-list','thread-heading','message-list','chat-form','message-text');
  if(page==='account.html')return; // Existing working PHP account page handles its own requests.

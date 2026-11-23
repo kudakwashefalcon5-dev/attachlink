@@ -40,7 +40,7 @@ CREATE TABLE `admin_setting_entries` (
 CREATE TABLE `application_documents` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `application_id` bigint(20) unsigned NOT NULL,
-  `document_type` enum('attachment_letter','cv','id','transcript','o_level','a_level','other_certificate') NOT NULL,
+  `document_type` enum('attachment_letter','cv','id','transcript','o_level','a_level','other_certificate','academic_certificates','birth_certificate') NOT NULL,
   `original_name` varchar(255) NOT NULL,
   `stored_name` varchar(120) NOT NULL,
   `mime_type` varchar(80) NOT NULL,
@@ -421,5 +421,21 @@ CREATE TABLE `users` (
   CONSTRAINT `fk_user_company` FOREIGN KEY (`company_id`) REFERENCES `companies` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+CREATE TABLE IF NOT EXISTS student_document_vault (
+    student_id BIGINT UNSIGNED NOT NULL,
+    document_type VARCHAR(32) CHARACTER SET ascii NOT NULL,
+    original_name VARCHAR(255) NOT NULL,
+    stored_name VARCHAR(255) NOT NULL,
+    mime_type VARCHAR(100) NOT NULL,
+    PRIMARY KEY (student_id,document_type),
+    CONSTRAINT fk_vault_student FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS admin_totp (
+    admin_id BIGINT UNSIGNED NOT NULL PRIMARY KEY,
+    encrypted_secret VARCHAR(128) CHARACTER SET ascii NOT NULL,
+    last_step BIGINT NOT NULL,
+    recovery_hashes TEXT NOT NULL,
+    CONSTRAINT fk_totp_admin FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 SET FOREIGN_KEY_CHECKS=@attachlink_old_fk;
-INSERT IGNORE INTO schema_migrations(version) VALUES ('upgrade-02'),('upgrade-03'),('upgrade-04'),('upgrade-05'),('upgrade-06'),('upgrade-07'),('upgrade-08'),('upgrade-09'),('upgrade-10'),('upgrade-11');
+INSERT IGNORE INTO schema_migrations(version) VALUES ('upgrade-02'),('upgrade-03'),('upgrade-04'),('upgrade-05'),('upgrade-06'),('upgrade-07'),('upgrade-08'),('upgrade-09'),('upgrade-10'),('upgrade-11'),('upgrade-12'),('upgrade-13'),('upgrade-14');

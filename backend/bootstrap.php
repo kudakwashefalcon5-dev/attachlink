@@ -22,12 +22,12 @@ header('Referrer-Policy: no-referrer');
 header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
 require_once __DIR__.'/config.php';
 require_once __DIR__.'/lib/Accounts.php';
+require_once __DIR__.'/lib/Migrations.php';
 if ($issue=app_environment_issue()) throw new ConfigException($issue);
-$usingHttps = !empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off';
+$usingHttps = request_uses_https();
 if (APP_ENV === 'production' && PHP_SAPI !== 'cli') {
     if (!$usingHttps) fail('HTTPS is required.',403);
     require_valid_settings(db_setting_issues());
-    header('Strict-Transport-Security: max-age=31536000');
 }
 if (session_status() !== PHP_SESSION_ACTIVE) {
     ini_set('session.use_strict_mode', '1');
@@ -50,7 +50,13 @@ function out(array $body, int $code = 200): never { http_response_code($code); e
 function fail(string $message, int $code = 400): never { out(['ok'=>false,'message'=>$message],$code); }
 function db(): PDO {
     static $pdo;
-    return $pdo ??= connect_database();
+    if ($pdo===null) {
+        $connection=connect_database();
+        $pending=array_keys(pending_migrations($connection));
+        if ($pending) throw new ConfigException('Pending database migrations: '.implode(', ',$pending));
+        $pdo=$connection;
+    }
+    return $pdo;
 }
 function body(): array {
     $raw=file_get_contents('php://input');
@@ -70,8 +76,20 @@ function user(?string $role=null): array {
     if (!$id) fail('Authentication required.',401);
     $s=db()->prepare('SELECT id,role,first_name,last_name,email,phone,company_id,is_active,email_verified_at,password_changed_at FROM users WHERE id=?');$s->execute([$id]);$u=$s->fetch();
     if (!$u || !(int)$u['is_active'] || $u['password_changed_at'] !== ($_SESSION['password_changed_at'] ?? null)) {unset($_SESSION['user_id']);fail('Account not available.',401);}
+    if (APP_ENV==='production' && $u['role']==='admin' && empty($_SESSION['admin_totp_verified'])) fail('Sign in with your authenticator.',401);
     if ($role!==null && $u['role']!==$role) fail('Access denied for this portal.',403);
     return $u;
+}
+function establish_login(array $user,bool $totpVerified=false): void {
+    session_regenerate_id(true);
+    $_SESSION=[
+        'user_id'=>(int)$user['id'],
+        'csrf_token'=>bin2hex(random_bytes(32)),
+        'password_changed_at'=>$user['password_changed_at'],
+        'authenticated_at'=>time(),
+        'last_active_at'=>time(),
+        'admin_totp_verified'=>$totpVerified,
+    ];
 }
 function required(array $a,string $key,int $max=255): string {
     $value=$a[$key]??'';if (!is_string($value)) fail("Invalid $key.");

@@ -7,10 +7,8 @@
   const modal=$('al-modal');
   const fields=$('al-form-fields');
   const edit=$('edit-preferences-btn');
-  const notice=document.createElement('p');
-  notice.setAttribute('role','status');
-  edit.after(notice);
-  const names={sectors:'Preferred sectors',stipend:'Minimum monthly stipend (USD)',work_model:'Preferred work model',relocation:'Relocation destinations'};
+  const notice=$('placement-preferences-status');
+  const names={sectors:'Target sectors',stipend:'Minimum monthly stipend (USD)',work_model:'Preferred work model',relocation:'Relocation preferences'};
   let saved;
   async function request(path,data){
     const options={credentials:'same-origin',cache:'no-store'};
@@ -26,9 +24,10 @@
   function display(){
     visibility.checked=saved.recruiter_visible;
     $('al-sectors').textContent=saved.sectors||'Not specified';
-    $('al-stipend').textContent=saved.stipend==null?'Not specified':'$'+saved.stipend+' USD';
+    $('al-stipend').textContent=saved.stipend==null?'Not specified':'$'+saved.stipend+' USD / month';
     $('al-work-model').textContent=saved.work_model||'Not specified';
     $('al-relocation').textContent=saved.relocation||'Not specified';
+    edit.textContent=Object.keys(names).some(key=>String(saved[key]??'').trim())?'Edit preferences':'Add preferences';
   }
   function describe(input,text){
     const row=input.closest('.flex.items-start.justify-between');
@@ -48,8 +47,12 @@
   }
   visibility.onchange=()=>save({...saved,stipend:String(saved.stipend??''),recruiter_visible:visibility.checked});
   edit.onclick=()=>{
-    $('al-modal-title').textContent='Edit Placement Preferences';
+    $('al-modal-title').textContent=edit.textContent;
     fields.replaceChildren();
+    const error=document.createElement('p');
+    error.id='placement-preferences-error';
+    error.setAttribute('role','alert');
+    fields.append(error);
     for(const [key,label] of Object.entries(names)){
       const wrap=document.createElement('label');
       wrap.className='al-field';wrap.textContent=label;
@@ -67,10 +70,15 @@
   $('al-form').onsubmit=async event=>{
     event.preventDefault();
     const submit=event.submitter;submit.disabled=true;
-    try{if(await save({...Object.fromEntries(new FormData(event.target)),recruiter_visible:saved.recruiter_visible}))close();}
+    const error=$('placement-preferences-error');
+    error.textContent='';
+    try{
+      if(await save({...Object.fromEntries(new FormData(event.target)),recruiter_visible:saved.recruiter_visible}))close();
+      else error.textContent=notice.textContent;
+    }
     finally{submit.disabled=false;}
   };
-  request('student/preferences.php').then(result=>{saved=result.preferences;display();visibility.disabled=false;edit.disabled=false;}).catch(error=>{notice.textContent=error.message;});
+  request('student/preferences.php').then(result=>{saved=result.preferences;display();notice.textContent='';visibility.disabled=false;edit.disabled=false;}).catch(error=>{notice.textContent=error.message;});
 })();
 
 /* AttachLink Stage 16 — Replaces ONLY the outdated academic timeline panel.
@@ -571,4 +579,44 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install, { once: true });
   else install();
+})();
+
+(() => {
+  const form=document.getElementById('document-vault');
+  const status=document.getElementById('vault-status');
+  const list=document.getElementById('vault-documents');
+  const button=form.querySelector('button');
+  const endpoint='../../backend/api/student/document-vault.php';
+  const labels=Object.fromEntries([...form.elements.document_type.options].map(item=>[item.value,item.text]));
+  async function request(url,options){
+    const response=await fetch(url,{cache:'no-store',...options});
+    const result=await response.json();
+    if(!response.ok||!result.ok) throw Error(result.message||'Documents are unavailable.');
+    return result;
+  }
+  function display(documents){
+    const saved=new Map(documents.map(item=>[item.document_type,item.original_name]));
+    list.replaceChildren(...Object.entries(labels).map(([key,label])=>{
+      const row=document.createElement('li');
+      row.textContent=label+' - '+(saved.get(key)||'Still needed');
+      return row;
+    }));
+  }
+  request(endpoint).then(({documents})=>{
+    display(documents);status.textContent='';button.disabled=false;
+  }).catch(error=>{status.textContent=error.message;});
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();
+    button.disabled=true;
+    try{
+      const data=new FormData(form);
+      const {csrf_token}=await request('../../backend/api/auth/csrf.php');
+      data.set('csrf_token',csrf_token);
+      const {documents}=await request(endpoint,{method:'POST',body:data});
+      display(documents);
+      form.elements.file.value='';
+      status.textContent='Document saved.';
+    }catch(error){status.textContent=error.message;}
+    finally{button.disabled=false;}
+  });
 })();

@@ -52,18 +52,35 @@ def excluded(name):
 def verify(archive, expected):
     with ZipFile(archive) as package:
         names = package.namelist()
-        if len(names) != len(set(names)) or set(names) != set(expected):
-            raise ValueError("ZIP members differ from the release allowlist.")
+        if any(name.lower() in {"designs/admin/login.html", "public/designs/admin/login.html"} for name in names):
+            raise ValueError("The retired admin login page is forbidden.")
         damaged = package.testzip()
         if damaged:
             raise ValueError("ZIP integrity check failed for " + damaged)
+        if "database/schema.sql" not in names:
+            raise ValueError("ZIP is missing database/schema.sql.")
+        schema = package.read("database/schema.sql").decode("utf-8")
+        migration_list = re.search(r"INSERT\s+IGNORE\s+INTO\s+schema_migrations\b[^;]+;", schema, re.I)
+        if not migration_list:
+            raise ValueError("The schema has no migration list.")
+        migrations = set(re.findall(r"'(upgrade-\d+)'", migration_list[0]))
+        if not migrations:
+            raise ValueError("The schema migration list is empty.")
+        absent = {"database/" + migration + ".sql" for migration in migrations} - set(names)
+        if absent:
+            raise ValueError("Missing schema migrations: " + ", ".join(sorted(absent)))
+        if len(names) != len(set(names)) or set(names) != set(expected):
+            raise ValueError("ZIP members differ from the release allowlist.")
         for name in names:
             path = PurePosixPath(name)
-            if path.is_absolute() or ".." in path.parts or "\\" in name or excluded(name):
+            source_name = name.removeprefix("public/")
+            if path.is_absolute() or ".." in path.parts or "\\" in name or excluded(source_name):
                 raise ValueError("Forbidden ZIP member " + name)
+            if name.startswith("public/") and (path.suffix.lower() in {".sql", ".md"} or source_name.startswith(("database/", "docs/"))):
+                raise ValueError("SQL and documentation must be outside public/: " + name)
             if path.suffix.lower() in SCANNED_TEXT:
                 source = package.read(name).decode("utf-8", errors="replace")
-                if references_cdn(source) or (path.suffix.lower() in RUNTIME_TEXT and not name.startswith("vendor/") and REMOTE_ASSET.search(source)):
+                if references_cdn(source) or (path.suffix.lower() in RUNTIME_TEXT and not source_name.startswith("vendor/") and REMOTE_ASSET.search(source)):
                     raise ValueError("External CDN or remote asset reference in " + name)
     print(f"Verified {len(expected)} allowlisted ZIP files and checked for external CDN references.")
 
@@ -79,7 +96,10 @@ def main():
     missing = [rule for rule in allow if "*" not in rule and rule not in paths]
     if missing:
         raise ValueError("Required release inputs are missing: " + ", ".join(missing))
-    paths = {name: path for name, path in paths.items() if not excluded(name)}
+    paths = {
+        name if name.startswith(("database/", "docs/")) or name.endswith(".md") else "public/" + name: path
+        for name, path in paths.items() if not excluded(name)
+    }
     if args.verify:
         verify(args.verify, paths)
         return

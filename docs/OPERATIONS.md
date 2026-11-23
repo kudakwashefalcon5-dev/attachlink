@@ -8,6 +8,8 @@ For password recovery, use the normal reset link. If the daily per-email reset q
 
 ## Employer verification and retention
 
+The retention report includes saved student vault documents. Replacing a vault file queues the old file for removal. Account deletion queues both current vault files and application copies. The audit page has action filters for document downloads and retention-report views.
+
 Review company evidence in Verification before approving an employer. Use Mark email verified only after confirming control of the account outside the portal. Both actions are recorded in the audit log.
 
 Students can delete their accounts and submitted data in Account. Database records are removed transactionally and file removal retries through backend/jobs/purge-documents.php. Investigate persistent pending deletions. The retention report shows aged reset, mail and audit records and accounts that predate recorded consent. Report thresholds are review markers. Agree on retention and legal requirements before deleting audit information. Existing backups expire according to the operator's backup policy.

@@ -6,7 +6,7 @@ if($_SERVER['REQUEST_METHOD']==='GET'){
 }
 method('POST');protect($_POST);$id=positive($_POST['application_id']??0);
 if(!getrow('SELECT id FROM applications WHERE id=? AND student_id=?',[$id,$u['id']]))fail('Not found.',404);
-$type=(string)($_POST['document_type']??'');$types=['attachment_letter','cv','id','transcript','o_level','a_level','other_certificate'];if(!in_array($type,$types,true))fail('Invalid document type.');
+$type=(string)($_POST['document_type']??'');$types=['attachment_letter','cv','id','transcript','o_level','a_level','other_certificate','academic_certificates','birth_certificate'];if(!in_array($type,$types,true))fail('Invalid document type.');
 [$temporary,$original,$mime,$extension]=validate_application_upload($_FILES['file']??null);
 $pdo=db();
 $pdo->beginTransaction();

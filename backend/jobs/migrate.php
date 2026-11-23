@@ -4,6 +4,7 @@ if (PHP_SAPI!=='cli') { http_response_code(404); exit; }
 
 try {
     require_once __DIR__.'/../config.php';
+    require_once __DIR__.'/../lib/Migrations.php';
     if ($issue=app_environment_issue()) throw new ConfigException($issue);
     $pdo=connect_database();
     $lock=$pdo->prepare('SELECT GET_LOCK(?,10)');
@@ -11,16 +12,14 @@ try {
     if ((int)$lock->fetchColumn()!==1) throw new RuntimeException('Another migration is running.');
     $lock->closeCursor();
     $pdo->exec("CREATE TABLE IF NOT EXISTS schema_migrations (version VARCHAR(32) CHARACTER SET ascii PRIMARY KEY, applied_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP) ENGINE=InnoDB");
-    $check=$pdo->prepare('SELECT 1 FROM schema_migrations WHERE version=?');
     $record=$pdo->prepare('INSERT INTO schema_migrations(version) VALUES(?)');
-    $files=glob(__DIR__.'/../../database/upgrade-*.sql');
-    sort($files,SORT_NATURAL);
-    foreach ($files as $file) {
-        $version=basename($file,'.sql');
-        $check->execute([$version]);
-        $applied=$check->fetchColumn();
-        $check->closeCursor();
-        if ($applied) continue;
+    if (!(int)$pdo->query('SELECT COUNT(*) FROM schema_migrations')->fetchColumn()) {
+        foreach (detect_unversioned_migrations($pdo) as $version) {
+            $record->execute([$version]);
+            echo "Detected $version\n";
+        }
+    }
+    foreach (pending_migrations($pdo) as $version=>$file) {
         $sql=file_get_contents($file);
         if ($sql===false) throw new RuntimeException('Cannot read '.$version.'.');
         // Older upgrades assume the default database in manual imports.

@@ -101,7 +101,7 @@
         img.alt='AL';img.src='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><rect width="48" height="48" rx="12" fill="#005c55"/><text x="24" y="30" text-anchor="middle" font-size="17" font-family="Arial" font-weight="bold" fill="white">AL</text></svg>');
       });
     });
-    const links={overview:'dashboard.html',verification:'verification-queue.html',companies:'verification-queue.html?focus=organizations',attachees:'attachees-directory.html',placements:'placements-registry.html',settings:'system-settings.html'};
+    const links={overview:'dashboard.html',verification:'verification-queue.html',companies:'companies.html',attachees:'attachees-directory.html',placements:'placements-registry.html',settings:'system-settings.html'};
     qAll('nav a[data-path]').forEach(a=>{const key=a.dataset.path;if(links[key])a.href=links[key];});
     document.title='AttachLink | Administrator Portal';
   }
@@ -110,6 +110,35 @@
     qAll('button').filter(b => /Export Directorate|Print Formal Gazette|Record Manual Placement|Batch Status Notice|Register Student|Schedule Intake|Add Degree|Connect Hub|Provision Officer/i.test(b.textContent)).forEach(b=>{
       b.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();alert('This function is not connected to the AttachLink database yet.');},true);
     });
+  }
+  async function companyDirectory() {
+    const {companies}=await api('admin/companies.php');
+    const search=byId('company-search');
+    const filter=byId('company-status-filter');
+    const list=byId('company-results');
+    const status=byId('company-results-status');
+    const labels={pending:'Pending review',verified:'Verified',rejected:'Rejected'};
+    function render() {
+      const term=search.value.trim().toLowerCase();
+      const visible=companies.filter(company=>(!filter.value||company.verification_status===filter.value) &&
+        [company.name,company.industry,company.city].some(value=>String(value??'').toLowerCase().includes(term)));
+      list.replaceChildren();
+      for(const company of visible) {
+        const card=element('li','company-directory-card');
+        const title=element('h2','',company.name);
+        const location=[company.industry,company.city].filter(Boolean).join(' ? ');
+        const badge=element('span','company-directory-status',labels[company.verification_status]||'Status unavailable');
+        badge.dataset.status=company.verification_status;
+        card.append(title,badge);
+        if(location)card.append(element('p','',location));
+        if(company.description)card.append(element('p','',company.description));
+        list.append(card);
+      }
+      status.textContent=visible.length ? visible.length+' '+(visible.length===1?'company':'companies') : 'No companies match your filters.';
+    }
+    search.addEventListener('input',render);
+    filter.addEventListener('change',render);
+    render();
   }
   async function identity() {
     const data=await api('auth/me.php');
@@ -129,14 +158,29 @@
       if(card)card.style.display='none';
     }
     const container=q('#al-admin-overview-loading')||q('main .lg\\:grid-cols-5');
-    const section=ui.node('section','al-overview');
-    const keys=[
-      ['Registered students','school','students'],['Registered employers','domain','employers'],['Pending companies','schedule','companies_pending'],
-      ['Verified companies','verified','companies_verified'],['Active openings','work','openings'],['Total applications','description','applications'],
-      ['Accepted applications','check_circle','accepted_applications'],['Placements','assignment_turned_in','placements'],['Pending support conversations','support_agent','pending_support_conversations']
+    const section=ui.node('section','al-overview admin-overview');
+    section.setAttribute('aria-labelledby','admin-overview-title');
+    const header=ui.node('div','admin-overview-header');
+    const heading=ui.node('h2','','Platform overview');
+    heading.id='admin-overview-title';
+    header.append(heading,ui.actions([['Review companies','verification-queue.html'],['View users','attachees-directory.html']]));
+    section.append(header);
+    const groups=[
+      ['Accounts and verification',[
+        ['Registered students','school','students'],['Registered employers','domain','employers'],
+        ['Companies awaiting review','schedule','companies_pending'],['Verified companies','verified','companies_verified']
+      ]],
+      ['Recruitment and support',[
+        ['Active openings','work','openings'],['Applications','description','applications'],
+        ['Accepted applications','check_circle','accepted_applications'],['Placements','assignment_turned_in','placements'],
+        ['Open support conversations','support_agent','pending_support_conversations']
+      ]]
     ];
-    section.append(ui.node('h2','','Platform Overview'),ui.metrics(keys.map(([label,icon,key])=>[label,icon,data.counts[key]])),
-      ui.actions([['Review Companies','verification-queue.html'],['View Users','attachees-directory.html']]));
+    for(const [label,metrics] of groups){
+      const group=ui.node('div','admin-overview-group');
+      group.append(ui.node('h3','',label),ui.metrics(metrics.map(([name,icon,key])=>[name,icon,data.counts[key]])));
+      section.append(group);
+    }
     if(container)container.replaceWith(section);else q('main')?.prepend(section);
     const verifyButton=findText('button','Initiate Verification');
     if(verifyButton)verifyButton.onclick=()=>location.href='verification-queue.html';
@@ -467,6 +511,7 @@
       const navBadge=verificationNav?.querySelector('span:last-child');
       if(navBadge && /^\d+$/.test(navBadge.textContent.trim()))text(navBadge,(navTotals.organization_totals.pending||0)+(navTotals.organization_totals.unverified||0)+(navTotals.listing_review_totals?.pending||0));
       if(path==='dashboard.html')await overview(navTotals);
+      if(path==='companies.html')await companyDirectory();
       if(path==='verification-queue.html')await verification();
       if(path==='attachees-directory.html')await attachees();
       if(path==='system-settings.html')await settings();

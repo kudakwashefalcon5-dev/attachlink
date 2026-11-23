@@ -19,14 +19,25 @@ function detected_environment(): string {
     $configured=getenv('ATTACHLINK_ENV');
     if ($configured==='development' || $configured==='production') return $configured;
     if ($configured!==false && $configured!=='') return 'invalid';
-    if (PHP_SAPI!=='cli') return loopback_host()?'development':'unconfigured';
-    $base=parse_url(config_env('ATTACHLINK_BASE_URL'),PHP_URL_SCHEME);
-    $production=$base==='https' || config_env('ATTACHLINK_MAIL_TRANSPORT')==='smtp'
-        || config_env('ATTACHLINK_SMTP_HOST')!=='' || config_env('ATTACHLINK_DB_PASS')!=='';
-    return $production?'production':'development';
+    foreach (array_keys($_SERVER) as $key) {
+        if ($key==='HTTP_FORWARDED' || str_starts_with($key,'HTTP_X_FORWARDED_')) return 'unconfigured';
+    }
+    if (request_uses_https() || ((PHP_SAPI!=='cli' || isset($_SERVER['HTTP_HOST'])) && !loopback_host())) return 'unconfigured';
+    $base=config_env('ATTACHLINK_BASE_URL');
+    $scheme=parse_url($base,PHP_URL_SCHEME);
+    $host=strtolower((string)parse_url($base,PHP_URL_HOST));
+    $deployment=($base!=='' && ($scheme!=='http' || !in_array($host,['localhost','127.0.0.1','[::1]'],true)))
+        || config_env('ATTACHLINK_MAIL_TRANSPORT')==='smtp' || config_env('ATTACHLINK_SMTP_HOST')!==''
+        || config_env('ATTACHLINK_DB_PASS')!=='';
+    return $deployment?'unconfigured':'development';
+}
+
+function request_uses_https(): bool {
+    return !empty($_SERVER['HTTPS']) && strtolower((string)$_SERVER['HTTPS'])!=='off';
 }
 
 define('APP_ENV', detected_environment());
+if (APP_ENV==='production' && PHP_SAPI!=='cli') header('Strict-Transport-Security: max-age=31536000');
 define('DB_HOST', config_env('ATTACHLINK_DB_HOST','127.0.0.1'));
 define('DB_PORT', config_env('ATTACHLINK_DB_PORT',ini_get('mysqli.default_port') ?: '3306'));
 define('DB_NAME', config_env('ATTACHLINK_DB_NAME','attachlink_db'));
@@ -65,7 +76,7 @@ function env_mail_hostname(): string {
 function app_environment_issue(): ?string {
     return match(APP_ENV) {
         'development','production'=>null,
-        'unconfigured'=>'ATTACHLINK_ENV is required for non-loopback HTTP requests.',
+        'unconfigured'=>'ATTACHLINK_ENV must be explicitly configured for deployment.',
         default=>'ATTACHLINK_ENV must be development or production.',
     };
 }

@@ -1,0 +1,64 @@
+.student-activity {
+  border: 1px solid var(--al-border);
+  border-radius: 1.15rem;
+  background: #fff;
+  box-shadow: 0 8px 24px #173d310a;
+  overflow: hidden;
+}
+.student-activity-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: .75rem 1.5rem;
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  border-bottom: 1px solid var(--al-border);
+}
+.student-activity-header h2 {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+}
+.student-activity-header .al-overview-actions { margin: 0; }
+.student-activity-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+}
+.student-activity-totals, .student-activity-feed { padding: clamp(1rem, 2.5vw, 1.5rem); }
+.student-activity-totals { background: #f2f8f5; }
+.student-activity h3 { margin: 0 0 .8rem; font-size: .95rem; font-weight: 700; }
+.student-activity .al-metric-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: .5rem;
+}
+.student-activity .al-metric {
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: .35rem;
+  padding: clamp(.45rem, 1.5vw, .85rem);
+  box-shadow: none;
+}
+.student-activity .al-metric-icon { grid-row: auto; justify-self: start; }
+.student-activity .al-metric-value { grid-row: 2; font-size: clamp(1.25rem, 3vw, 1.9rem); }
+.student-activity .al-metric-label { font-size: .78rem; }
+.student-activity-status:empty { display: none; }
+.student-activity-list { margin: 0; padding: 0; list-style: none; }
+.student-activity-list li, .student-activity-empty {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: .7rem;
+  padding: .65rem 0;
+}
+.student-activity-list li + li { border-top: 1px solid var(--al-border); }
+.student-activity-icon {
+  padding: .38rem;
+  border-radius: .55rem;
+  color: var(--al-accent);
+  background: #e6f4ee;
+  font-size: 1.1rem;
+}
+.student-activity-feed p { margin: .15rem 0 0; }
+.student-activity-empty a { display: inline-block; margin-top: .55rem; color: var(--al-accent); font-weight: 650; text-decoration: underline; }
+@media (max-width: 760px) {
+  .student-activity-body { grid-template-columns: minmax(0, 1fr); }
+}

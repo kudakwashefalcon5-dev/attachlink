@@ -352,29 +352,42 @@ function ready(){
  const apply=$('listing-apply'), cover=$('listing-cover-letter'), feedback=$('application-feedback');
  if(!apply||!cover||!feedback)return;
  const fields=[
-  ['stamped_letter','Stamped attachment letter',true],
-  ['cv','Curriculum vitae (PDF from CV Builder is acceptable)',true],
-  ['national_id','National ID',true],
-  ['transcript','Academic transcript',true],
-  ['o_level','O-level certificate',true],
-  ['a_level','A-level certificate — if available',false],
-  ['extra_certificate_1','Tertiary or previous course certificate 1 — if available',false],
-  ['extra_certificate_2','Tertiary or previous course certificate 2 — if available',false],
-  ['extra_certificate_3','Tertiary or previous course certificate 3 — if available',false]
+  ['national_id','Certified copy of national ID'],
+  ['academic_certificates','Academic certificates'],
+  ['stamped_letter','Attachment letter'],
+  ['birth_certificate','Birth certificate'],
+  ['transcript','Academic transcripts']
  ];
  const section=document.createElement('section');
  section.id='al-stage10d-documents';section.className='flex flex-col gap-3 rounded-xl bg-surface-container-low p-4';
  const heading=document.createElement('h3');heading.className='font-title-md text-title-md text-primary font-semibold';heading.textContent='Documents required for application';
- const info=document.createElement('p');info.className='font-body-sm text-body-sm text-on-surface-variant';info.textContent='Upload your own documents. Required: stamped letter, CV, ID, transcript and O-level certificate. A-level and prior-course certificates are optional if applicable. PDF, JPG or PNG; up to 5 MB each.';
+ const info=document.createElement('p');info.className='font-body-sm text-body-sm text-on-surface-variant';info.textContent='All five uploads are required. If you have multiple certificates or transcripts, combine each group into one PDF. PDF, JPG or PNG, up to 5 MB per upload.';
  section.append(heading,info);
+ const savedDocuments=new Map();
+ const vaultLink=document.createElement('a');
+ vaultLink.href='profile.html#vault-title';
+ vaultLink.className='text-primary underline';
+ vaultLink.textContent='Manage saved application documents';
+ section.append(vaultLink);
  const inputs=new Map();
- for(const [key,title,required] of fields){
+ const labels=new Map();
+ for(const [key,title] of fields){
   const label=document.createElement('label');label.className='flex flex-col gap-1 font-label-md text-label-md text-on-surface';
-  const span=document.createElement('span');span.textContent=title+(required?' *':'');
-  const input=document.createElement('input');input.type='file';input.name=key;input.accept='.pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png';input.required=required;
+  const span=document.createElement('span');span.textContent=title+' *';
+  const input=document.createElement('input');input.type='file';input.name=key;input.accept='.pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png';input.required=true;
   input.className='w-full p-2 rounded-lg bg-surface-container-lowest text-on-surface border border-outline-variant';
-  label.append(span,input);section.append(label);inputs.set(key,input);
+  label.append(span,input);section.append(label);inputs.set(key,input);labels.set(key,span);
  }
+ fetch('../../backend/api/student/document-vault.php',{cache:'no-store'})
+  .then(response=>response.ok?response.json():null)
+  .then(result=>{
+   for(const document of result?.documents??[]) savedDocuments.set(document.document_type,document.original_name);
+   for(const [key,title] of fields){
+    if(!savedDocuments.has(key))continue;
+    labels.get(key).textContent=title+' - saved file will be attached unless you choose another';
+    inputs.get(key).required=false;
+   }
+  }).catch(()=>{});
  const progress=document.createElement('progress');
  progress.max=100;progress.hidden=true;
  progress.setAttribute('aria-label','Application upload progress');
@@ -410,9 +423,10 @@ function ready(){
   const id=new URLSearchParams(location.search).get('id');
   if(!id||!/^[1-9]\d*$/.test(id)){feedback.textContent='Choose an opening first.';return;}
   const data=new FormData();data.set('listing_id',id);data.set('cover_letter',cover.value.trim());
-  for(const [key,title,required] of fields){
+  if(savedDocuments.size)data.set('use_vault','1');
+  for(const [key,title] of fields){
    const file=inputs.get(key).files[0];
-   if(required&&!file){feedback.textContent='Please attach: '+title;inputs.get(key).focus();return;}
+   if(!file&&!savedDocuments.has(key)){feedback.textContent='Please attach: '+title;inputs.get(key).focus();return;}
    if(file){
     if(!file.size||file.size>5*1024*1024){feedback.textContent=title+' must be between 1 byte and 5 MB.';inputs.get(key).focus();return;}
     if(!/\.(pdf|jpe?g|png)$/i.test(file.name)||file.type&&!['application/pdf','image/jpeg','image/png'].includes(file.type)){

@@ -16,8 +16,9 @@ Paths are relative to `backend/api/`. JSON mutations accept `csrf_token` in the 
 | student/avatar.php | GET status or image, POST multipart avatar, DELETE | Student owner |
 | student/skills.php | GET, POST action add/update/delete, id for existing item, name/category on write | Student owner |
 | student/applications.php | GET | Student owner |
-| student/apply-with-documents.php | POST multipart listing_id, cover_letter, stamped_letter, cv, national_id, transcript, o_level and optional a_level or extra_certificate_1 through 3 | Student |
+| student/apply-with-documents.php | POST multipart listing_id, cover_letter, national_id (certified copy), academic_certificates, stamped_letter, birth_certificate, and transcript. All five uploads are required, with a 5 MB limit per file | Student |
 | student/documents.php | GET application_id, POST application_id/document_type/file | Student application owner |
+| student/document-vault.php | GET saved file names, POST multipart document_type and file. Submit with use_vault=1 to fill missing application uploads from the vault | Student owner |
 | student/saved.php | GET, POST or DELETE opening_id | Student owner |
 | student/saved-listings.php | GET, POST listing_id and action save/remove | Student owner |
 | student/interviews.php | GET, POST interview details or DELETE id | Student owner |

@@ -2,7 +2,8 @@
 require_once __DIR__.'/../../bootstrap.php';method('POST');$a=body();protect($a);
 $email=trim((string)($a['email']??''));$phone=normalizePhone(trim((string)($a['phone']??'')));
 if($email==='' && $phone==='')fail('Email or phone required.');
-$u=$email!==''?getrow('SELECT * FROM users WHERE email=?',[strtolower($email)]):getrow('SELECT * FROM users WHERE phone=?',[$phone]);
+$identitySql='SELECT id,role,first_name,last_name,company_id,is_active,password_hash,password_changed_at FROM users';
+$u=$email!==''?getrow($identitySql.' WHERE email=?',[strtolower($email)]):getrow($identitySql.' WHERE phone=?',[$phone]);
 $ipBucket=hash('sha256','login-ip:'.client_ip());
 $prefix=login_account_prefix($u,strtolower($email?:$phone));
 $accountBucket=$prefix.substr(hash('sha256','login-local:'.client_ip()),0,47);
@@ -35,7 +36,17 @@ if ($hashInfo['algoName']==='bcrypt' && ($hashInfo['options']['cost']??0)<PASSWO
     $replacement=attachlink_password_hash((string)($a['password']??''));
     execute('UPDATE users SET password_hash=? WHERE id=? AND BINARY password_hash=BINARY ?',[$replacement,$u['id'],$hash]);
 }
-session_regenerate_id(true);$_SESSION['user_id']=(int)$u['id'];$_SESSION['csrf_token']=bin2hex(random_bytes(32));
-$_SESSION['password_changed_at']=$u['password_changed_at'];
-$_SESSION['authenticated_at']=$_SESSION['last_active_at']=time();
+if (APP_ENV==='production' && $u['role']==='admin') {
+    require_once __DIR__.'/../../lib/AdminTotp.php';
+    admin_totp_key();
+    $id=(int)$u['id'];
+    $secret=getrow('SELECT admin_id FROM admin_totp WHERE admin_id=?',[$id])?null:random_bytes(20);
+    session_regenerate_id(true);
+    $_SESSION=[
+        'csrf_token'=>bin2hex(random_bytes(32)),
+        'totp_pending'=>['id'=>$id,'password_changed_at'=>$u['password_changed_at'],'expires'=>time()+300,'secret'=>$secret],
+    ];
+    out(['ok'=>true,'totp_required'=>true,'setup_key'=>$secret===null?null:totp_base32($secret)]);
+}
+establish_login($u);
 out(['ok'=>true,'message'=>'Signed in.','user'=>['id'=>(int)$u['id'],'role'=>$u['role'],'first_name'=>$u['first_name'],'last_name'=>$u['last_name'],'company_id'=>$u['company_id']]]);

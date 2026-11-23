@@ -82,7 +82,7 @@ fields={"csrf_token":call(student,"auth/csrf.php")["csrf_token"],"listing_id":st
 parts=[f'--{boundary}\r\nContent-Disposition: form-data; name="{key}"\r\n\r\n{value}\r\n'.encode()
        for key,value in fields.items()]
 parts.extend(f'--{boundary}\r\nContent-Disposition: form-data; name="{key}"; filename="fixture.pdf"\r\nContent-Type: application/pdf\r\n\r\n%PDF-1.4\n%%EOF\n\r\n'.encode()
-             for key in ("stamped_letter","cv","national_id","transcript","o_level"))
+             for key in ("stamped_letter","academic_certificates","national_id","transcript","birth_certificate"))
 parts.append(f"--{boundary}--\r\n".encode())
 application_id=call(student,"student/apply-with-documents.php",201,(b"".join(parts),boundary))["application_id"]
 files=sql(f"SELECT stored_name FROM application_documents WHERE application_id={int(application_id)}").splitlines()

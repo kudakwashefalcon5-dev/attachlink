@@ -27,6 +27,9 @@ try{
     }
     $envResponse=Request GET 'backend/.env'
     Check 'Local environment file denied' ($envResponse.Code -in 403,404) $true
+    foreach($path in 'database/schema.sql','docs/DEPLOYMENT.md','vendor/autoload.php','composer.json','composer.lock','package.json','package-lock.json','README.md','tests/http-smoke.ps1','scripts/build-release.py'){
+        Check "$path is private" ((Request GET $path).Code -in 403,404) $true
+    }
     Check 'Private storage denied' (Request GET 'backend/storage/documents/check.pdf').Code 403
     Check 'Login enforces POST' (Request GET 'backend/api/auth/login.php').Code 405
     Check 'Application enforces POST' (Request GET 'backend/api/student/apply-with-documents.php').Code 405
