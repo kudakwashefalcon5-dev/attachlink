@@ -24,6 +24,7 @@ header('Content-Security-Policy: '.content_security_policy());
 require_once __DIR__.'/lib/Accounts.php';
 require_once __DIR__.'/lib/Migrations.php';
 if ($issue=app_environment_issue()) throw new ConfigException($issue);
+if (mail_transport_name()==='log') require_valid_settings(mail_setting_issues());
 $usingHttps = request_uses_https();
 if (APP_ENV === 'production' && PHP_SAPI !== 'cli') {
     if (!$usingHttps) fail('HTTPS is required.',403);

@@ -154,6 +154,15 @@ def run(args):
                 api(client, base, "forgot-password", 503, {"email": signin["email"]})
         print("PASSED missing transport and invalid SMTP settings return generic HTTP 503")
 
+        production_log = {**production, "ATTACHLINK_BASE_URL": canonical, "ATTACHLINK_MAIL_TRANSPORT": "log"}
+        with server(args.php, args.db_port, production_log, scratch, production=True) as base:
+            api(build_opener(), base, "csrf", 503)
+        checked = subprocess.run([args.php, "-d", f"mysqli.default_port={args.db_port}", "backend/check-config.php"],
+                                 env=production_log, cwd=ROOT, capture_output=True, text=True, check=False)
+        assert checked.returncode == 1 and "INVALID ATTACHLINK_MAIL_TRANSPORT" in checked.stdout, checked.stdout
+        assert production_log["ATTACHLINK_DB_PASS"] not in checked.stdout + checked.stderr
+        print("PASSED production log transport fails startup and check-config without exposing secrets")
+
         checked = subprocess.run([args.php, "-d", f"mysqli.default_port={args.db_port}", "backend/check-config.php"],
                                  env=production, cwd=ROOT, capture_output=True, text=True, check=False)
         assert checked.returncode == 1 and "MISSING ATTACHLINK_BASE_URL " in checked.stdout, checked.stdout

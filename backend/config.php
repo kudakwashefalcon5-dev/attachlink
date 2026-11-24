@@ -139,7 +139,57 @@ function mail_transport_name(): string {
 }
 
 function mail_log_path(): string {
-    return config_env('ATTACHLINK_MAIL_LOG') ?: sys_get_temp_dir().'/attachlink-mail.jsonl';
+    return config_env('ATTACHLINK_MAIL_LOG') ?: sys_get_temp_dir().DIRECTORY_SEPARATOR.'attachlink-mail'.DIRECTORY_SEPARATOR.'mail.jsonl';
+}
+
+function path_is_within_directory(string $path,string $directory): bool {
+    $path=rtrim(str_replace('\\','/',$path),'/');
+    $directory=rtrim(str_replace('\\','/',$directory),'/');
+    if (PHP_OS_FAMILY==='Windows') {
+        $path=strtolower($path);
+        $directory=strtolower($directory);
+    }
+    return $path===$directory || str_starts_with($path,$directory.'/');
+}
+
+function prepare_private_mail_log(string $path): void {
+    if ($path==='' || is_link($path)) throw new ConfigException('ATTACHLINK_MAIL_LOG must not be a symbolic link.');
+    $directory=dirname($path);
+    if (!is_dir($directory)) {
+        $previous=umask(0077);
+        try {
+            $created=@mkdir($directory,0700,true);
+        } finally {
+            umask($previous);
+        }
+        if (!$created && !is_dir($directory)) throw new ConfigException('Could not create the private mail log directory.');
+        clearstatcache(true,$directory);
+    }
+    if (is_link($directory) || !is_dir($directory) || !is_writable($directory)) {
+        throw new ConfigException('ATTACHLINK_MAIL_LOG must be inside a writable private directory.');
+    }
+    $resolvedDirectory=realpath($directory);
+    $roots=[realpath(dirname(__DIR__))];
+    if (!empty($_SERVER['DOCUMENT_ROOT'])) $roots[]=realpath($_SERVER['DOCUMENT_ROOT']);
+    foreach ($roots as $root) {
+        if ($resolvedDirectory!==false && $root!==false && path_is_within_directory($resolvedDirectory,$root)) {
+            throw new ConfigException('ATTACHLINK_MAIL_LOG must be outside the application and document roots.');
+        }
+    }
+    if (PHP_OS_FAMILY!=='Windows') {
+        $mode=@fileperms($directory);
+        if ($mode===false || ($mode&0077)!==0) throw new ConfigException('The mail log directory must have 0700 permissions.');
+    }
+    if (file_exists($path)) {
+        if (!is_file($path) || !is_writable($path) || (!@chmod($path,0600) && PHP_OS_FAMILY!=='Windows')) {
+            throw new ConfigException('ATTACHLINK_MAIL_LOG must be a writable regular file.');
+        }
+        if (PHP_OS_FAMILY!=='Windows') {
+            clearstatcache(true,$path);
+            $mode=@fileperms($path);
+            if ($mode===false || ($mode&0077)!==0) throw new ConfigException('The mail log file must have 0600 permissions.');
+        }
+    }
 }
 
 function smtp_settings(): array {
@@ -162,9 +212,13 @@ function mail_setting_issues(): array {
         return ['ATTACHLINK_MAIL_TRANSPORT'=>'Set this to log or smtp.'];
     }
     if ($transport==='log') {
-        $path=mail_log_path();
-        return is_link($path) || (file_exists($path)?!is_file($path)||!is_writable($path):!is_dir(dirname($path))||!is_writable(dirname($path)))
-            ? ['ATTACHLINK_MAIL_LOG'=>'Provide a writable file path in a private directory.'] : [];
+        if (APP_ENV!=='development') return ['ATTACHLINK_MAIL_TRANSPORT'=>'The log transport is allowed only in development.'];
+        try {
+            prepare_private_mail_log(mail_log_path());
+        } catch (ConfigException $error) {
+            return ['ATTACHLINK_MAIL_LOG'=>$error->getMessage()];
+        }
+        return [];
     }
     $settings=smtp_settings();
     $tests=[
