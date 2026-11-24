@@ -17,6 +17,7 @@ try {
     exit(1);
 }
 report_setting('ATTACHLINK_ENV',app_environment_issue(),config_env('ATTACHLINK_ENV'),'Detected '.APP_ENV.'.');
+report_setting('Web server',null,'','Apache only; nginx and Caddy are unsupported.');
 require_once __DIR__.'/lib/CompanyLocation.php';
 foreach (['ATTACHLINK_ZW_LOCATION_BOUNDS'=>'location_bounds','ATTACHLINK_LOCATION_MAX_KM'=>'location_distance_limit','ATTACHLINK_MAP_TILE_URL'=>'map_tile_settings'] as $key=>$check) {
     try { $check(); report_setting($key,null,'','Valid location setting.'); }

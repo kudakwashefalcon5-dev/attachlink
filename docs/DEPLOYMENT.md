@@ -2,7 +2,7 @@
 
 ## Local development setup
 
-1. Install XAMPP with PHP 8, MariaDB 10.6 or newer, PDO MySQL, Mbstring and Fileinfo. Place the project in the Apache web root. Keep Apache rewrite and headers enabled and honor the shipped .htaccess files.
+1. Install XAMPP with PHP 8, MariaDB 10.6 or newer, PDO MySQL, Mbstring and Fileinfo. Place the project in the Apache web root for local development. Keep Apache rewrite and headers enabled and honor the shipped .htaccess files. The source checkout is not the production document root.
 2. Import database/schema.sql on a fresh database. It creates all current tables and records the included migrations. For an existing database, take a backup and run php backend/jobs/migrate.php with a migration account. Review the printed migrations and rerun the checker.
 3. Copy backend/.env.example to backend/.env if the defaults need changing. Existing environment variables take precedence. Copy the file using local permissions and keep it out of version control and release archives.
 4. Run php backend/check-config.php, then php backend/create-admin.php EMAIL PASSWORD FIRST_NAME LAST_NAME. Open the local URL. Run php backend/jobs/send-emails.php manually for a log delivery check.
@@ -11,7 +11,7 @@ For standalone QA, install the locked application dependencies with composer ins
 
 ## Production configuration
 
-Use a VPS with Apache and PHP, TLS certificates, an application-specific database account and private storage. Direct HTTP traffic to HTTPS before handing it to PHP. Pass a trusted HTTPS indication to PHP when terminating TLS at a reverse proxy. Keep ATTACHLINK_TRUSTED_PROXIES empty for direct Apache access or list the exact managed proxy addresses. Campus NAT users share the IP login bucket.
+Use a VPS with Apache and PHP, TLS certificates, an application-specific database account and private storage. Apache with the shipped .htaccess rules is the only supported web server; nginx and Caddy are unsupported. Direct HTTP traffic to HTTPS before handing it to PHP. Pass a trusted HTTPS indication to PHP when terminating TLS at a reverse proxy. Keep ATTACHLINK_TRUSTED_PROXIES empty for direct Apache access or list the exact managed proxy addresses. Campus NAT users share the IP login bucket.
 
 - ATTACHLINK_ENV=production and ATTACHLINK_BASE_URL must be the canonical HTTPS URL including the installation path.
 - ATTACHLINK_DB_USER must be non-root and ATTACHLINK_DB_PASS non-empty. Configure ATTACHLINK_DB_HOST, ATTACHLINK_DB_PORT and ATTACHLINK_DB_NAME as appropriate.
@@ -28,7 +28,23 @@ Publish the relay's SPF record, enable provider DKIM signing, and publish DMARC 
 
 ## Release and backups
 
-Extract the release into a deployment directory and set the Apache DocumentRoot to its public/ subdirectory. Keep database/, docs/ and the top-level Markdown files beside public/. Run PHP jobs and the configuration checker from public/. In the production TLS virtual host, add `Header always set Strict-Transport-Security "max-age=31536000"` to cover static responses and Apache-generated errors.
+Extract the release into a versioned deployment directory with this layout, then point Apache's DocumentRoot only at `public/`:
+
+```text
+attachlink-release/
+|-- public/                 Apache DocumentRoot; application pages, assets and API routes
+|   |-- backend/api/        Intentional HTTP entry points
+|   |-- backend/jobs/       CLI-only; direct HTTP access denied
+|   |-- backend/lib/        PHP runtime; direct HTTP access denied
+|   |-- backend/storage/    Private runtime area; direct HTTP access denied
+|   |-- vendor/             PHP runtime dependencies; direct HTTP access denied
+|   `-- .htaccess           Required access-control and response-header rules
+|-- database/               Schema and migrations; never web reachable
+|-- docs/                   Operations documentation; never web reachable
+`-- *.md                    Release documentation; never web reachable
+```
+
+The release archive includes backend runtime files and Composer dependencies below `public/` so PHP can load them. Only `backend/api/` is an intended backend HTTP entry point; Apache denies direct requests for jobs, libraries, configuration, storage and vendor files. Keep `ATTACHLINK_DOCUMENT_STORAGE`, avatars, backups, sessions and `.env` outside `public/`. The source-checkout `.htaccess` additionally denies database, docs, tests, scripts, dist, test-results, node_modules, `.git` and `dev-router.php` paths; this is defense-in-depth and does not make the repository root an acceptable production DocumentRoot. Run `python tests/deployment-layout.py` before a release to probe both layouts over a local Apache instance. Run PHP jobs and the configuration checker from the extracted `public/` directory. In the production TLS virtual host, add `Header always set Strict-Transport-Security "max-age=31536000"` to cover static responses and Apache-generated errors.
 
 Run composer install --no-dev --optimize-autoloader, npm ci, and npm run build:css from the source checkout. Run scripts/build-release.ps1 on Windows or sh scripts/build-release.sh on Linux to create dist/attachlink.zip. The builder and verifier use scripts/release-allowlist.txt and scripts/release-excludes.txt. Use -Verify path on PowerShell or --verify path on Linux to check an existing ZIP.
 
