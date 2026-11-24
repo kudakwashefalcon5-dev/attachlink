@@ -103,6 +103,11 @@ def run(args):
         print("PASSED loopback registration and sign-in with no environment or .env")
         print("PASSED non-loopback host fails closed without leaking configuration")
 
+        remote_development = {**env, "ATTACHLINK_ENV": "development"}
+        with server(args.php, args.db_port, remote_development, scratch) as base:
+            api(build_opener(), base, "csrf", 503, headers={"Host": "example.invalid"})
+        print("PASSED explicitly configured development mode fails closed for non-loopback hosts")
+
         production = {**env, "ATTACHLINK_ENV": "production", "ATTACHLINK_DB_USER": args.production_user,
                       "ATTACHLINK_DB_PASS": os.environ["ATTACHLINK_TEST_DB_PASS"],
                       "ATTACHLINK_MAIL_TRANSPORT": "smtp", "ATTACHLINK_SMTP_HOST": "smtp.example.invalid",
@@ -112,8 +117,11 @@ def run(args):
         for url in ("", "http://pilot.example.invalid"):
             candidate = {**production, "ATTACHLINK_BASE_URL": url}
             with server(args.php, args.db_port, candidate, scratch, production=True) as base:
-                client = build_opener(HTTPCookieProcessor(CookieJar(policy=DefaultCookiePolicy(secure_protocols=("https", "http")))))
+                cookies = CookieJar(policy=DefaultCookiePolicy(secure_protocols=("https", "http")))
+                client = build_opener(HTTPCookieProcessor(cookies))
                 api(client, base, "login", 200, signin)
+                session_cookies = [cookie for cookie in cookies if cookie.name == "attachlink_sid"]
+                assert session_cookies and all(cookie.secure for cookie in session_cookies), session_cookies
                 api(client, base, "register", 503, refused)
                 api(client, base, "forgot-password", 503, {"email": signin["email"]})
                 api(client, base, "resend-verification", 503, {})

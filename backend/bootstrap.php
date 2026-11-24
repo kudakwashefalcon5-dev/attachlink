@@ -33,7 +33,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     ini_set('session.use_strict_mode', '1');
     ini_set('session.use_only_cookies', '1');
     session_name('attachlink_sid');
-    session_set_cookie_params(['lifetime'=>0,'path'=>'/','secure'=>$usingHttps,'httponly'=>true,'samesite'=>'Lax']);
+    session_set_cookie_params(['lifetime'=>0,'path'=>'/','secure'=>APP_ENV==='production'||$usingHttps,'httponly'=>true,'samesite'=>'Lax']);
     if (!session_start()) throw new ConfigException('PHP session.save_path is unavailable or not writable.');
     if (isset($_SESSION['user_id'])) {
         $now = time();

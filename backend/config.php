@@ -35,7 +35,10 @@ function loopback_host(): bool {
 
 function detected_environment(): string {
     $configured=getenv('ATTACHLINK_ENV');
-    if ($configured==='development' || $configured==='production') return $configured;
+    if ($configured==='production') return 'production';
+    if ($configured==='development') {
+        return PHP_SAPI==='cli' || loopback_host() ? 'development' : 'unconfigured';
+    }
     if ($configured!==false && $configured!=='') return 'invalid';
     foreach (array_keys($_SERVER) as $key) {
         if ($key==='HTTP_FORWARDED' || str_starts_with($key,'HTTP_X_FORWARDED_')) return 'unconfigured';
