@@ -1,4 +1,3 @@
-/* AttachLink Stage 12: interview coach UI. No simulated text is presented as AI output. */
 (() => {
   'use strict';
   const root=document.getElementById('al-interview-assistant');
@@ -9,6 +8,8 @@
   const setup=qs('#al-ai-setup'), start=qs('#al-ai-start'), reset=qs('#al-ai-clear');
   const url='../../backend/api/student/interview-ai.php';
   let configured=false, token='', busy=false, history=[];
+  const prompts=root.querySelectorAll('[data-ai-prompt]');
+  const welcome='Choose an interview focus and start a practice question, or ask for interview advice.';
   const bank={
     general:['Tell me about yourself and why you chose your field of study.','Why are you interested in an industrial attachment with this company?','What strengths would you bring to an attachment team?'],
     technical:['A user says their computer has no internet access. How would you diagnose the problem step by step?','What is the difference between a switch and a router?','A Windows laptop keeps restarting unexpectedly. How would you investigate?'],
@@ -18,36 +19,63 @@
   let index={general:0,technical:0,behavioural:0,software:0};
   function bubble(who, text){
     const el=document.createElement('div'); el.className='al-ai-bubble is-'+who;
-    el.textContent=text; thread.appendChild(el);thread.scrollTop=thread.scrollHeight;
+    if(who==='assistant'){
+      const parts=text.split(/(\*\*[^*\n]+\*\*|\*[^*\n]+\*)/g);
+      parts.forEach((part,index)=>{
+        if(index%2===0){el.append(part);return;}
+        const bold=part.startsWith('**');
+        const emphasis=document.createElement(bold?'strong':'em');
+        emphasis.textContent=bold?part.slice(2,-2):part.slice(1,-1);
+        el.append(emphasis);
+      });
+    }else{
+      el.textContent=text;
+    }
+    thread.appendChild(el);
+    thread.scrollTop=thread.scrollHeight;
+    return el;
   }
   function state(label,live=false){status.textContent=label;status.classList.toggle('is-live',live);}
-  function setBusy(value){busy=value;send.disabled=value||!configured;input.disabled=value;start.disabled=value;}
+  function setBusy(value){
+    busy=value;
+    send.disabled=value||!configured;
+    input.disabled=value||!configured;
+    start.disabled=value;
+    reset.disabled=value;
+    track.disabled=value;
+    prompts.forEach(button=>{button.disabled=value;});
+  }
   async function check(){
     state('Checking AI connection');
+    setBusy(true);
     try{
       const r=await fetch(url,{credentials:'same-origin',cache:'no-store'});
       const v=await r.json();
       if(!r.ok || !v.ok) throw Error(v.message||'Student login required');
       configured=!!v.configured;token=v.csrf_token||'';
       setup.hidden=configured;
-      state(configured?'AI available':'AI not yet configured',configured);
-      send.disabled=!configured;
+      state(configured?'AI configured':'AI not yet configured',configured);
       input.placeholder=configured?'Type an answer or ask for interview advice...':'AI chat is not configured yet. Use a sample practice question.';
-      input.disabled=!configured;
-    }catch(err){configured=false;send.disabled=true;input.disabled=true;setup.hidden=false;state('AI connection unavailable');bubble('system',err.message||'Could not connect. Please sign in again.');}
+    }catch(err){
+      configured=false;
+      setup.hidden=false;
+      state('AI connection unavailable');
+      bubble('system','Could not check the AI connection. You can still try a sample question.');
+    }finally{setBusy(false);}
   }
   function practiceQuestion(){
     const kind=track.value in bank?track.value:'general';
     const pool=bank[kind];const q=pool[index[kind]%pool.length];index[kind]++;
-    bubble('assistant','Practice question (offline example):\n'+q);
-    if(!configured) bubble('system','You can think through your answer now. AI-generated feedback becomes available only after the server-side AI service is configured.');
-    return q;
+    bubble('system','Sample practice question\n'+q);
   }
-  async function ask(message){
+  async function ask(message, newInterview=false){
     if(!configured || busy || !token || !message.trim()) return;
-    const previous=history.slice(-8);
-    bubble('user',message);
+    const previous=newInterview?[]:history;
+    const pending=bubble('user',newInterview?'Let’s start a mock interview.':message);
+    const typing=bubble('system','Coach is typing…');
+    typing.classList.add('is-typing');
     setBusy(true);
+    state('Coach is responding',true);
     try{
       const response=await fetch(url,{
         method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},
@@ -55,27 +83,35 @@
       });
       const data=await response.json();
       if(!response.ok||!data.ok) throw Error(data.message||'Unable to get AI feedback.');
-      history.push({role:'user',text:message.slice(0,700)},{role:'assistant',text:data.reply.slice(0,700)});
-      if(history.length>8) history=history.slice(-8);
+      typing.remove();
+      if(newInterview) thread.replaceChildren(pending);
+      history=[...previous,{role:'user',text:message},{role:'assistant',text:Array.from(data.reply).slice(0,1400).join('')}].slice(-8);
       bubble('assistant',data.reply);
-    }catch(err){bubble('system',err.message||'An error occurred.');}
-    finally{setBusy(false);input.value='';input.focus();}
+      input.value='';
+    }catch(err){
+      typing.remove();
+      pending.remove();
+      bubble('system',err instanceof SyntaxError?'The AI coach could not respond. Please try again.':err.message);
+    }finally{
+      state('AI configured',true);
+      setBusy(false);
+      input.focus();
+    }
   }
   form.addEventListener('submit',event=>{event.preventDefault();ask(input.value.trim());});
   start.addEventListener('click',()=>{
-    const q=practiceQuestion();
-    if(configured){ // Real interview questions and feedback are provided via the API.
-      ask('Please start a mock interview for this field. Ask me one question at a time, starting with a question like: '+q);
-    }
+    if(configured) ask('Start a mock interview. Ask one question at a time.',true);
+    else practiceQuestion();
   });
   reset.addEventListener('click',()=>{
-    history=[];thread.replaceChildren();bubble('assistant','Welcome to the Interview Assistant. Choose a topic and start with a practice question. Your conversation is not saved when you leave this page.');
+    history=[];input.value='';thread.replaceChildren();bubble('system',welcome);
   });
-  root.querySelectorAll('[data-ai-prompt]').forEach(button=>button.addEventListener('click',()=>{
+  track.addEventListener('change',()=>{history=[];input.value='';thread.replaceChildren();bubble('system',welcome);});
+  prompts.forEach(button=>button.addEventListener('click',()=>{
     const text=button.dataset.aiPrompt||'';
-    if(configured) ask(text);
+    if(configured) ask(text,button.hasAttribute('data-ai-mock'));
     else practiceQuestion();
   }));
-  bubble('assistant','Welcome to the Interview Assistant. Practise common, technical and behavioural interview questions. AI coaching becomes available when your administrator enables the API connection.');
+  bubble('system',welcome);
   check();
 })();

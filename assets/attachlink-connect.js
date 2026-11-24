@@ -24,32 +24,53 @@ function insertStyles(){let s=el('style');s.textContent=`.al-api-panel{backgroun
 function goAuth(){const path=role==='admin'?'../students/login.html?role=admin':role==='employer'?'../students/login.html?role=recruiter':'../students/login.html';location.replace(path)}
 async function signout(){await api('auth/logout.php',{});goAuth()}
 function addLogout(){if(document.querySelector('[data-al-logout]'))return;let a=button('Sign out',signout);a.dataset.alLogout='1';let nav=document.querySelector('nav')||document.querySelector('header')||document.querySelector('aside');(nav||document.body).append(a)}
-function renderProfileCompleteness(account){
+let completenessAccount, incompleteDocuments;
+function renderProfileCompleteness(){
+ const status=$('profile-completeness-status');
+ const progress=$('profile-completeness-progress');
+ if (completenessAccount===null || incompleteDocuments===null) {
+  status.textContent='Profile completeness could not be checked. Try refreshing.';
+  progress.hidden=true;
+  $('profile-completeness-remaining').hidden=true;
+  return;
+ }
+ if (!completenessAccount || !incompleteDocuments) return;
  const fields=[
   ['first_name','first name'],['last_name','last name'],['email','email address'],
   ['phone','phone number'],['city','city or location'],['institution','college or university'],
   ['programme','programme'],['study_level','academic level'],['bio','biography']
  ];
- const missing=fields.filter(([key])=>!String(account[key]??'').trim());
- const completed=fields.length-missing.length;
- const percent=Math.round(completed/fields.length*100);
- const progress=$('profile-completeness-progress');
- progress.max=fields.length;
+ const missingFields=fields.filter(([key])=>!String(completenessAccount[key]??'').trim());
+ const missing=[
+  ...missingFields.map(([key,label])=>['Add '+label,'account.html#'+key]),
+  ...incompleteDocuments.missing.map(({document_type,label})=>['Upload '+label,'#vault-file-'+document_type])
+ ];
+ const total=fields.length+incompleteDocuments.total;
+ const completed=total-missing.length;
+ const percent=Math.floor(completed/total*100);
+ progress.max=total;
  progress.value=completed;
  progress.hidden=false;
- $('profile-completeness-status').textContent=missing.length
-  ? `${percent}% complete · ${missing.length} of ${fields.length} details left to fill in`
-  : '100% complete. You’ve filled in all the details on this checklist.';
+ status.textContent=missing.length
+  ? `${percent}% complete. ${missing.length} of ${total} checklist items remaining.`
+  : '100% complete. Your profile details and required documents are ready.';
  const list=$('profile-completeness-list');
- for(const [key,label] of missing){
+ list.replaceChildren();
+ for(const [label,href] of missing){
   const item=el('li');
-  const edit=el('a','Add '+label);
-  edit.href='account.html#'+key;
+  const edit=el('a',label);
+  edit.href=href;
   edit.className='al-api-link';
   item.append(edit);
   list.append(item);
  }
  $('profile-completeness-remaining').hidden=missing.length===0;
+}
+if (role==='student' && page==='profile.html') {
+ document.addEventListener('attachlink:profile-documents',event=>{
+  incompleteDocuments=event.detail;
+  renderProfileCompleteness();
+ });
 }
 async function student(){
  if(page==='dashboard.html'){
@@ -121,11 +142,13 @@ async function student(){
   $('share-profile-btn')?.setAttribute('hidden','');
   await Promise.all([
    api('student/account.php').then(({account})=>{
-    renderProfileCompleteness(account);
+    completenessAccount=account;
+    renderProfileCompleteness();
     const biography=el('p',account.bio||'Biography not provided.');
     $('profile-name')?.parentElement.append(biography);
    }).catch(error=>{
-    $('profile-completeness-status').textContent='Profile details could not be loaded. Try refreshing.';
+    completenessAccount=null;
+    renderProfileCompleteness();
     showError(error);
    }),
    api('student/applications.php').then(({applications})=>{

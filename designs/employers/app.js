@@ -119,6 +119,14 @@ if (location.pathname.split('/').pop() !== 'messages.html') {
     const controls=actions.map(([action,label])=>btn(label,'data-opening-action="'+action+'" data-opening-id="'+escape(l.id)+'"')).join(' ');
     return `<tr><td><strong>${escape(l.title)}</strong><div class="s8-muted">${escape(l.city)}</div></td><td>${status(l.status)}</td><td>${status(review)}</td><td>${escape(amount(l.stipend_usd))}</td><td>${escape(l.closing_date || 'Not set')}</td><td>${link('post-edit-opening.html?listing_id='+encodeURIComponent(l.id),'View / Edit')} &nbsp; ${link('opening-applicants.html?listing_id='+encodeURIComponent(l.id),'Applicants')} ${controls}</td></tr>`;
   }
+  function renderActiveOpenings(panel,listings) {
+    const active=listings?.filter(opening=>opening.status==='published');
+    panel.innerHTML=`<div class="s8-flex mb-4"><h2 class="font-title-md text-title-md">Active openings</h2>${link('openings.html?status=published','View all active openings'+(active?' ('+active.length+')':''))}</div>
+      ${active?.length?active.slice(0,5).map(opening=>`<div class="p-space-md rounded-lg bg-surface-container-low mb-space-sm">
+        <strong>${escape(opening.title)}</strong>${opening.city?`<p class="s8-muted">${escape(opening.city)}</p>`:''}
+        <div class="s8-flex mt-2">${link('post-edit-opening.html?listing_id='+encodeURIComponent(opening.id),'Edit opening')} ${link('opening-applicants.html?listing_id='+encodeURIComponent(opening.id),'Manage applicants')}</div>
+      </div>`).join(''):`<p class="s8-muted">${active?'No published openings yet.':'Active openings could not be loaded.'}</p>`}`;
+  }
   function statCard(n,label,explanation) {
     return `<div class="rounded-xl bg-surface-container-lowest p-space-lg shadow-sm hover:shadow-md transition-shadow"><div class="flex items-start justify-between mb-space-md"><span class="material-symbols-outlined text-primary">analytics</span></div><div><div class="font-headline-lg text-headline-lg text-on-surface">${int(n)}</div><div class="font-title-md text-title-md text-on-surface font-semibold">${escape(label)}</div><p class="s8-muted mt-1">${escape(explanation)}</p></div></div>`;
   }
@@ -145,8 +153,12 @@ if (location.pathname.split('/').pop() !== 'messages.html') {
   }
   async function openings() {
     const rows=await allListings();
-    mount(`<div class="flex items-center justify-between gap-space-md mb-space-xl"><div><h1 class="font-headline-lg text-headline-lg">My Attachment Openings</h1><p class="s8-note">${escape(overview.organization.name)} • ${rows.length} openings</p></div>${btn('Post New Opening','id="s8-new"')}</div>
-      <div class="s8-card"><div class="s8-alert">Drafts are private. Published openings from verified companies are visible to students.</div><div style="overflow:auto"><table class="s8-table"><thead><tr><th>Position / city</th><th>Status</th><th>Company verification</th><th>Stipend</th><th>Closing</th><th>Manage</th></tr></thead><tbody>${rows.map(openingRow).join('')||'<tr><td colspan="6">No openings yet.</td></tr>'}</tbody></table></div></div>`);
+    const activeOnly=new URLSearchParams(location.search).get('status')==='published';
+    const active=rows.filter(opening=>opening.status==='published');
+    const visible=activeOnly?active:rows;
+    const filters=[['openings.html','All openings ('+rows.length+')',!activeOnly],['openings.html?status=published','Active openings ('+active.length+')',activeOnly]];
+    mount(`<div class="flex items-center justify-between gap-space-md mb-space-xl"><div><h1 class="font-headline-lg text-headline-lg">Manage my openings</h1><p class="s8-note">${escape(overview.organization.name)}</p></div>${btn('Post New Opening','id="s8-new"')}</div>
+      <div class="s8-card"><nav aria-label="Filter openings" class="s8-flex mb-4">${filters.map(([href,label,selected])=>`<a href="${href}" class="${selected?'s8-action':'s8-action-soft'}"${selected?' aria-current="page"':''}>${escape(label)}</a>`).join('')}</nav><div style="overflow:auto"><table class="s8-table"><thead><tr><th>Position / city</th><th>Status</th><th>Company verification</th><th>Stipend</th><th>Closing</th><th>Manage</th></tr></thead><tbody>${visible.map(openingRow).join('')||`<tr><td colspan="6">${activeOnly?'No published openings yet.':'No openings yet.'}</td></tr>`}</tbody></table></div></div>`);
     $('#s8-new').onclick=()=>location.href='post-edit-opening.html';
     $$('[data-opening-action]').forEach(button=>{
       button.onclick=async()=>{
@@ -164,14 +176,14 @@ if (location.pathname.split('/').pop() !== 'messages.html') {
     const [apps,listings]=await Promise.all([allApplications(),allListings()]);
     const params=new URLSearchParams(location.search);const fixedListing=params.get('listing_id')||'';
     const initial= listings.some(l=>String(l.id)===fixedListing)?fixedListing:'';
-    mount(`<div class="mb-space-xl"><h1 class="font-headline-lg text-headline-lg">Opening Applicants</h1><p class="s8-muted">Only applications belonging to ${escape(overview.organization.name)} are accessible.</p></div>
-    <div class="s8-card"><div class="s8-flex mb-space-md"><input class="s8-field" style="flex:2;min-width:230px" id="s8-search" type="search" placeholder="Search applicants by name, institution or opening"/><select class="s8-field" aria-label="Filter by application status" id="s8-status" style="flex:1;min-width:140px"><option value="">All statuses</option>${['submitted','reviewing','shortlisted','interview','accepted','rejected','withdrawn'].map(x=>`<option value="${x}">${x}</option>`).join('')}</select><select class="s8-field" aria-label="Filter by opening" id="s8-listing" style="flex:1;min-width:160px"><option value="">All openings</option>${listings.map(l=>`<option value="${escape(l.id)}" ${String(l.id)===initial?'selected':''}>${escape(l.title)}</option>`).join('')}</select></div>
+    mount(`<div class="mb-space-xl"><h1 class="font-headline-lg text-headline-lg">Opening Applicants</h1><p class="s8-muted">${escape(overview.organization.name)}</p></div>
+    <div class="s8-card"><div class="s8-flex mb-space-md"><input class="s8-field" style="flex:2;min-width:230px" id="s8-search" type="search" aria-label="Search applicants" placeholder="Search applicants by name, institution or opening"/><select class="s8-field" aria-label="Filter by application status" id="s8-status" style="flex:1;min-width:140px"><option value="">All statuses</option>${['submitted','reviewing','shortlisted','interview','accepted','rejected','withdrawn'].map(x=>`<option value="${x}">${x}</option>`).join('')}</select><select class="s8-field" aria-label="Filter by opening" id="s8-listing" style="flex:1;min-width:160px"><option value="">All openings</option>${listings.map(l=>`<option value="${escape(l.id)}" ${String(l.id)===initial?'selected':''}>${escape(l.title)}</option>`).join('')}</select></div>
     <div id="s8-count" class="s8-muted mb-space-md"></div><div style="overflow:auto"><table class="s8-table"><thead><tr><th>Student / institution</th><th>Programme</th><th>Applied opening</th><th>Status</th><th>Review</th></tr></thead><tbody id="s8-app-rows"></tbody></table></div></div>`);
     function render() {
       const q=$('#s8-search').value.toLowerCase().trim(), status=$('#s8-status').value, listing=$('#s8-listing').value;
       const matches=apps.filter(a=>(!status||a.status===status)&&(!listing||String(a.listing_id)===listing)&&(!q||[a.first_name,a.last_name,a.institution,a.programme,a.listing_title].join(' ').toLowerCase().includes(q)));
       $('#s8-count').textContent=`Showing ${matches.length} of ${apps.length} organization applications`;
-      $('#s8-app-rows').innerHTML=matches.map(applicationRow).join('')||'<tr><td colspan="5">No applications match your filters.</td></tr>';
+      $('#s8-app-rows').innerHTML=matches.map(applicationRow).join('')||(apps.length?'<tr><td colspan="5">No applications match your filters.</td></tr>':'<tr><td colspan="5">No applications yet.</td></tr>');
     }
     ['s8-search','s8-status','s8-listing'].forEach(id=>$('#'+id).addEventListener(id==='s8-search'?'input':'change',render));render();
   }
@@ -276,94 +288,88 @@ if (location.pathname.split('/').pop() !== 'messages.html') {
     await loadFiles();
   }
   async function editor() {
-    const main=$('main');if(!main)throw new Error('Could not find Stitch vacancy form.');
-    // Existing Stitch form, cards, controls, preview and colour classes stay in the HTML.
-    const title=$('#input-title'),city=$('#input-location'),description=$('#input-description'),stipend=$('#input-stipend'),deadline=$('#input-deadline');
-    if(!title||!city||!description)throw new Error('Stitch editor fields were not found.');
-    // Neutralize leftover dated/sample claims in the supplied editor, without touching its layout.
-    const originalClaims={
-      'Econet Wireless Zimbabwe':overview.organization.name,
-      'INTAKE: AUG 2025 – AUG 2026':'TEST INTAKE • Dates not linked',
-      '31 July 2025':'Deadline not set',
-      'Cohort August 2025 intake round':'New opening',
-      'UZ, NUST, MSU, HIT, CUT':'Select eligible institutions below',
-      'This opening automatically notifies faculty placement officers across accredited Zimbabwean universities once verified by HR Operations.':'After administrator approval, eligible students can see this opening. Faculty notifications are not connected.'
-    };
-    const textWalker=document.createTreeWalker(main,NodeFilter.SHOW_TEXT);
-    while(textWalker.nextNode()) {
-      const t=textWalker.currentNode;const v=t.nodeValue.trim();
-      if(Object.hasOwn(originalClaims,v))t.nodeValue=t.nodeValue.replace(v,originalClaims[v]);
-    }
     const form=$('#attachment-form');
-    const department=$('#input-department'),counter=$('#slot-counter');
-    const addSkill=$$('main button').find(button=>button.textContent.includes('Add Skill'));
-    const skillTemplate=addSkill.previousElementSibling.cloneNode(true);
-    for(const chip of [...addSkill.parentElement.children])if(chip!==addSkill)chip.remove();
-    function addSkillChip(value){
-      const chip=skillTemplate.cloneNode(true);
-      chip.dataset.requiredSkill=value;
-      chip.querySelector('span:nth-child(2)').textContent=value;
-      const remove=chip.querySelector('button');
-      remove.setAttribute('aria-label','Remove '+value);
-      remove.onclick=()=>chip.remove();
-      addSkill.before(chip);
+    const title=$('#input-title'), department=$('#input-department'), city=$('#input-location');
+    const description=$('#input-description'), requirements=$('#s8-requirements'), skills=$('#input-required-skills');
+    const positions=$('#slot-counter'), stipend=$('#input-stipend'), deadline=$('#input-deadline');
+    const intakeMonth=$('#input-start-month'), intakeYear=$('#input-start-year'), intakeEnd=$('#input-end-date');
+    const save=$('#btn-save-opening'), publish=$('#btn-publish');
+    const activePanel=$('#editor-active-openings');
+    let id=new URLSearchParams(location.search).get('listing_id');
+    let published=false;
+    let listings=await allListings().catch(error=>{if(id)throw error;return null;});
+    renderActiveOpenings(activePanel,listings);
+
+    function updateIntakeEnd() {
+      intakeEnd.value=intakeMonth.value&&intakeYear.value&&intakeYear.validity.valid
+        ? intakeMonth.selectedOptions[0].textContent+' '+(Number(intakeYear.value)+1) : '';
     }
-    addSkill.onclick=()=>{
-      const value=prompt('Enter a required skill')?.trim();
-      const skills=$$('[data-required-skill]');
-      if(!value||skills.some(chip=>chip.dataset.requiredSkill===value))return;
-      if(skills.length>=30||value.length>90){alertBox('Enter up to 30 skills, with at most 90 characters each.',true);return;}
-      addSkillChip(value);
-    };
-    const requirements=document.createElement('div');requirements.className='rounded-xl bg-surface-container-lowest p-space-lg shadow-sm mt-space-md';
-    requirements.innerHTML='<label class="block font-title-md text-title-md font-bold mb-space-sm" for="s8-requirements">Requirements</label><textarea id="s8-requirements" class="s8-field" rows="4" placeholder="Required knowledge, skills, or qualifications"></textarea>';
-    form.append(requirements);
-    const meta=new URLSearchParams(location.search);let id=meta.get('listing_id');
-    if(id && !/^\d+$/.test(id))throw new Error('Invalid listing ID.');
-    const all=id?await allListings():[];
-    const editing=id ? all.find(l=>String(l.id)===id) : null;
-    if(id&&!editing)throw new Error('Listing not found in this employer account.');
-    if(editing) {
-      title.value=editing.title||'';description.value=editing.description||'';
+    intakeMonth.addEventListener('change',updateIntakeEnd);
+    intakeYear.addEventListener('input',updateIntakeEnd);
+
+    function updateActions() {
+      save.textContent=published?'Save changes':'Save as draft';
+      publish.hidden=published;
+      if (id) $('#opening-editor-title').textContent='Edit opening';
+    }
+    if (id) {
+      if (!/^\d+$/.test(id)) throw Error('Invalid listing ID.');
+      const editing=listings.find(listing=>String(listing.id)===id);
+      if (!editing) throw Error('Listing not found in this employer account.');
+      title.value=editing.title||'';
       department.value=editing.department||'';
-      counter.textContent=editing.available_positions??'1';
-      for(const skill of (editing.required_skills||'').split('\n').filter(Boolean))addSkillChip(skill);
-      const value=(editing.city||'').toLowerCase();
-      if(![...city.options].some(o=>o.value===value)) {const opt=new Option(editing.city, value);city.add(opt);}
-      city.value=value;
-      $('#s8-requirements').value=editing.requirements||'';
-      stipend.value=editing.stipend_usd===null?'':editing.stipend_usd;
+      city.value=editing.city||'';
+      description.value=editing.description||'';
+      requirements.value=editing.requirements||'';
+      skills.value=editing.required_skills||'';
+      positions.value=editing.available_positions??'';
+      stipend.value=editing.stipend_usd??'';
       deadline.value=editing.closing_date||'';
+      const [year,month]=(editing.intake_start_month||'').split('-');
+      intakeMonth.value=['01','08'].includes(month)?month:'';
+      intakeYear.value=year||'';
+      published=editing.status==='published';
+      updateIntakeEnd();
     }
-    // Blank the leftover sample preview. It is not persisted and shouldn't claim an Econet vacancy.
-    const preview={'preview-title':title.value||'Your attachment title','preview-dept':department.value||'Department','preview-desc':description.value||'Write your opening description to preview it here.','preview-stipend':stipend.value||'Not specified','preview-location':city.options[city.selectedIndex]?.textContent||'Zimbabwe','preview-slots':counter.textContent+' Open Positions'};
-    for(const [key,value] of Object.entries(preview)) {const el=$('#'+key);if(el)el.textContent=value;}
-    const changePreview=()=>{
-      if($('#preview-title'))$('#preview-title').textContent=title.value||'Your attachment title';
-      if($('#preview-desc'))$('#preview-desc').textContent=description.value||'Write a description';
-      if($('#preview-location'))$('#preview-location').textContent=city.options[city.selectedIndex]?.textContent||'Zimbabwe';
-      if($('#preview-stipend'))$('#preview-stipend').textContent=stipend.value||'Not specified';
-    };
-    [title,city,description,stipend].forEach(el=>el.addEventListener('input',changePreview));
-    const save=$$('main button').find(b=>b.textContent.includes('Save as Draft'));
-    const submit=$('#btn-publish');
-    const view=$$('main button').find(b=>b.textContent.includes('Student Preview Mode'));
-    if(view)view.onclick=()=>alertBox('The existing preview is local only. Student visibility begins after publication.');
-    alertBox('Save your opening as a draft or publish it when your company is verified.');
-    async function doSave() {
-      const val=stipend.value.replace(/\s*USD.*$/i,'').replace('$','').trim();
-      const data={action:'save',title:title.value.trim(),department:department.value.trim(),available_positions:Number(counter.textContent),required_skills:$$('[data-required-skill]').map(chip=>chip.dataset.requiredSkill),city:city.options[city.selectedIndex]?.textContent?.split(' - ')[0]||city.value,description:description.value.trim(),requirements:$('#s8-requirements').value.trim(),stipend_usd:val||null,closing_date:deadline.value||''};
-      if(id)data.listing_id=Number(id);
-      const result=await post('/employer/listings.php',data);
-      id=String(result.listing_id);
-      history.replaceState(null,'','post-edit-opening.html?listing_id='+id);
-      return result;
-    }
-    if(save)save.onclick=async(e)=>{e.preventDefault();save.disabled=true;try{await doSave();alertBox('Opening saved.');}catch(err){safeError(err);}finally{save.disabled=false;}};
-    if(submit)submit.textContent='Publish opening';
-    if(submit)submit.onclick=async(e)=>{e.preventDefault();submit.disabled=true;try{await doSave();await post('/employer/listings.php',{action:'submit',listing_id:Number(id)});alertBox('Opening published.');if(save)save.disabled=true;form.querySelectorAll('input,textarea,select').forEach(el=>el.disabled=true);}catch(err){safeError(err);submit.disabled=false;}};
-    // Remove original form submission because API writes must be CSRF protected.
-    if(form)form.addEventListener('submit',e=>e.preventDefault());
+    updateActions();
+
+    form.addEventListener('submit',async event=>{
+      event.preventDefault();
+      const publishing=event.submitter===publish;
+      if ((intakeMonth.value||intakeYear.value)&&!intakeEnd.value) {
+        alertBox('Choose January or August and enter an intake year.',true);
+        (intakeMonth.value?intakeYear:intakeMonth).focus();
+        return;
+      }
+      const data={
+        action:'save', title:title.value.trim(), department:department.value.trim(), city:city.value.trim(),
+        description:description.value.trim(), requirements:requirements.value.trim(),
+        required_skills:[...new Set(skills.value.split(/\r?\n/).map(skill=>skill.trim()).filter(Boolean))],
+        stipend_usd:stipend.value||null, closing_date:deadline.value,
+        intake_start_month:intakeEnd.value?intakeYear.value+'-'+intakeMonth.value:''
+      };
+      if (positions.value) data.available_positions=Number(positions.value);
+      if (id) data.listing_id=Number(id);
+      if (publishing) data.status='published';
+      save.disabled=publish.disabled=true;
+      try {
+        const result=await post('/employer/listings.php',data);
+        id=String(result.listing_id);
+        history.replaceState(null,'','post-edit-opening.html?listing_id='+id);
+        published=published||publishing;
+        if (published) {
+          listings=[{id,title:data.title,city:data.city,status:'published'},
+            ...(listings||[]).filter(opening=>String(opening.id)!==id)];
+          renderActiveOpenings(activePanel,listings);
+        }
+        updateActions();
+        alertBox(publishing?'Opening published.':'Opening saved.');
+      } catch (error) {
+        safeError(error);
+      } finally {
+        save.disabled=publish.disabled=false;
+      }
+    });
   }
   // Populate the supplied Stitch employer Dashboard IN PLACE, preserving its original main grid.
   async function dashboardInplace() {
@@ -407,30 +413,8 @@ if (location.pathname.split('/').pop() !== 'messages.html') {
     recent.innerHTML=`<div class="flex items-center justify-between gap-space-md mb-space-lg"><div><h2 class="font-headline-sm text-headline-sm">Recent Student Applicants</h2><p class="font-body-sm text-body-sm text-outline mt-1">${int(overview.counts.total_applications)} applications • ${int(overview.counts.new_applications)} submitted and waiting for review</p></div>${link('opening-applicants.html','View all')}</div><div style="overflow:auto"><table class="s8-table"><thead><tr><th>Student / institution</th><th>Degree programme</th><th>Opening</th><th>Status</th><th>Action</th></tr></thead><tbody>${apps.slice(0,5).map(applicationRow).join('')||'<tr><td colspan="5">No applicants yet.</td></tr>'}</tbody></table></div>`;
     left.children[1]?.remove();
     const openingPanel=right.children[0];
-    if(openingPanel)openingPanel.innerHTML=`<div class="flex items-center justify-between mb-space-md"><div><h3 class="font-title-md text-title-md">Active Openings</h3><p class="s8-muted">Published openings</p></div>${link('openings.html','View all ('+listings.length+')')}</div>${listings.slice(0,5).map(l=>`<div class="p-space-md rounded-lg bg-surface-container-low mb-space-md"><div class="font-bold text-sm">${escape(l.title)}</div><div class="s8-muted mt-1">${escape(l.city)} • ${escape(l.status)} • ${escape(l.review_status||'')}</div><div class="mt-2">${link('opening-applicants.html?listing_id='+l.id,'Manage applicants')}</div></div>`).join('')||'<p class="s8-muted">No listings yet. Create a draft to begin.</p>'}`;
+    if(openingPanel)renderActiveOpenings(openingPanel,listings);
     right.children[1]?.remove();
-  }
-
-  // Preserve the supplied Opening Applicants page, filtering and table's original surface.
-  async function applicantsInplace() {
-    const [apps,listings]=await Promise.all([allApplications(),allListings()]);
-    const root=$('main > div');const wrapper=root?.children[0];
-    if(!wrapper || wrapper.children.length<7)throw new Error('Original applicants table structure is incomplete.');
-    const header=wrapper.children[2],filters=wrapper.children[3],bulk=wrapper.children[4],tableBox=wrapper.children[5],footer=wrapper.children[6];
-    const params=new URLSearchParams(location.search);const fixed=params.get('listing_id')||'';
-    const listingId=listings.some(l=>String(l.id)===fixed)?fixed:'';
-    header.innerHTML=`<div class="flex flex-col gap-space-sm mb-space-lg"><div class="font-label-md text-label-md text-primary">${link('openings.html','Openings')} / Applicants</div><div class="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-space-md"><div><h1 class="font-headline-lg text-headline-lg">Opening Applicants</h1><p class="s8-note">${escape(overview.organization.name)} • ${apps.length} database applications</p></div>${link('dashboard.html','Dashboard')}</div></div>`;
-    filters.innerHTML=`<div class="s8-flex"><input class="s8-field" id="s8-search" type="search" style="flex:2;min-width:230px" placeholder="Search candidates by name, institution or opening"><select class="s8-field" aria-label="Filter by application status" id="s8-status" style="flex:1;min-width:130px"><option value="">All statuses</option>${['submitted','reviewing','shortlisted','interview','accepted','rejected','withdrawn'].map(v=>`<option value="${v}">${v}</option>`).join('')}</select><select class="s8-field" aria-label="Filter by opening" id="s8-listing" style="flex:1;min-width:170px"><option value="">All openings</option>${listings.map(l=>`<option value="${escape(l.id)}" ${String(l.id)===listingId?'selected':''}>${escape(l.title)}</option>`).join('')}</select></div>`;
-    bulk.hidden=true;bulk.style.display='none';
-    const table=$('table',tableBox);
-    if(!table)throw new Error('Stitch applicants table missing.');
-    table.innerHTML='<thead><tr><th>Student / institution</th><th>Programme</th><th>Applied opening</th><th>Status</th><th>Action</th></tr></thead><tbody id="s8-app-rows"></tbody>';
-    function render() {
-      const q=$('#s8-search').value.toLowerCase().trim(), s=$('#s8-status').value, l=$('#s8-listing').value;
-      const filtered=apps.filter(a=>(!s||a.status===s)&&(!l||String(a.listing_id)===l)&&(!q||[a.first_name,a.last_name,a.institution,a.programme,a.listing_title].join(' ').toLowerCase().includes(q)));
-      $('#s8-app-rows').innerHTML=filtered.map(applicationRow).join('')||'<tr><td colspan="5">No applications match the selected filters.</td></tr>';
-    }
-    ['s8-search','s8-status','s8-listing'].forEach(id=>$('#'+id).addEventListener(id==='s8-search'?'input':'change',render));render();
   }
 
   async function init() {
@@ -441,7 +425,7 @@ if (location.pathname.split('/').pop() !== 'messages.html') {
       switch(page) {
         case 'dashboard.html':await dashboardInplace();break;
         case 'openings.html':await openings();break;
-        case 'opening-applicants.html':await applicantsInplace();break;
+        case 'opening-applicants.html':await applicants();break;
         case 'applicant-profile.html':await applicantProfile();break;
         case 'company-profile.html':await companyProfile();break;
         case 'post-edit-opening.html':await editor();break;
@@ -449,7 +433,7 @@ if (location.pathname.split('/').pop() !== 'messages.html') {
       }
     } catch(e) {
       const main=$('main');
-      if(main) main.innerHTML=`<div class="s8-card" style="margin:40px 0"><h1 class="font-headline-lg text-headline-lg">Employer portal unavailable</h1><p class="s8-alert error" style="margin:16px 0">${escape(e.message||'Could not load your employer session.')}</p><p>Sign in with your employer account to continue.</p><div class="mt-4">${link('login.html','Employer sign in')}</div></div>`;
+      if(main) main.innerHTML=`<div class="s8-card" style="margin:40px 0"><h1 class="font-headline-lg text-headline-lg">Employer portal unavailable</h1><p class="s8-alert error" style="margin:16px 0">${escape(e.message||'Could not load your employer session.')}</p><div class="mt-4">${e.status===401?link('login.html','Employer sign in'):link(location.pathname.split('/').pop()+location.search,'Try again')}</div></div>`;
     } finally {document.body.classList.add('s8-ready');}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
@@ -457,7 +441,6 @@ if (location.pathname.split('/').pop() !== 'messages.html') {
 
 }
 
-if (location.pathname.split('/').pop() !== 'openings.html') {
 /* AttachLink Stage 10B employer controls.
  * Additive behavior only: the five uploaded Stitch layouts and compiled CSS are unchanged.
  * All account/listing mutations are checked again by PHP and MySQL.
@@ -631,37 +614,6 @@ if (location.pathname.split('/').pop() !== 'openings.html') {
       if(dot)dot.style.display=res.unread_messages?'':'none';
     }catch(_){/* Keep the existing page usable if messages are unavailable. */}
   }
-  async function myOpenings() {
-    let data;try{data=await api('/employer/listings.php?page=1');}catch(err){note(err.message,true);return;}
-    openModal('Manage my openings',modal=>{
-      modal.append(el('p','font-body-sm text-on-surface-variant mb-space-md','These are your organization’s database vacancies. Drafts need administrator approval before publication.'));
-      const list=el('div','flex flex-col gap-space-sm');modal.append(list);
-      const footer=el('div','flex gap-space-sm flex-wrap mt-space-lg');footer.append(actionButton('Create new opening',()=>location.href='post-edit-opening.html'));
-      modal.append(footer);
-      async function render(rows){list.replaceChildren();
-        if(!rows.length){list.append(el('p','text-on-surface-variant','No openings yet. Create the first draft.'));return;}
-        for(const l of rows){const card=el('div','p-space-md rounded-lg bg-surface-container-low');card.style.marginBottom='10px';
-          card.append(el('strong','font-label-lg text-primary',l.title),el('p','font-body-sm text-on-surface-variant',`${l.city} • ${l.status} • ${l.review_status || 'draft'}`));
-          const controls=el('div','flex gap-space-sm flex-wrap mt-space-sm');
-          controls.append(actionButton('Applicants',()=>location.href='opening-applicants.html?listing_id='+encodeURIComponent(l.id),true));
-          if(l.status==='draft'&&['draft','rejected','legacy_draft'].includes(l.review_status||'draft')){
-            controls.append(actionButton('Edit',()=>location.href='post-edit-opening.html?listing_id='+encodeURIComponent(l.id),true));
-            controls.append(actionButton('Submit for review',async()=>{
-              if(!confirm('Submit this test vacancy for administrator review?'))return;
-              try{await api('/employer/listings.php',{action:'submit',listing_id:Number(l.id)});note('Submitted for admin review.');closeModal();location.reload()}catch(e){note(e.message,true)}
-            }));
-          }
-          if(l.status==='published'&&l.review_status==='approved')controls.append(actionButton('Close vacancy',async()=>{
-            if(!confirm('Close this opening?'))return;
-            try{await api('/employer/listings.php',{action:'close',listing_id:Number(l.id)});note('Vacancy closed.');closeModal();location.reload()}catch(e){note(e.message,true)}
-          },true));
-          card.append(controls);list.append(card);
-        }
-      }
-      render(data.listings||[]);
-      if(data.has_more)modal.append(el('p','font-body-sm text-on-surface-variant','Showing first 20 openings. Additional pages remain available through the backend.'));
-    });
-  }
   function interceptNavigations() {
     // Stage 8's original sidebar uses placeholder href="#". Do not replace the sidebar HTML.
     for(const a of $$('aside a[data-path]')){
@@ -671,32 +623,27 @@ if (location.pathname.split('/').pop() !== 'openings.html') {
       if(name==='dashboard')a.href='dashboard.html';
       if(name==='applicants')a.href='opening-applicants.html';
       if(name==='company-profile')a.href='company-profile.html';
-      if(name==='openings'){
-        a.href='dashboard.html#stitch-openings';
-        a.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();myOpenings();},true);
-      }
-    }
-    // A visible way to return to the shared login without overwriting the original sidebar.
-    const sidebarHelp=$('aside a[data-path="help-support"]');
-    const footer=sidebarHelp?.closest('.p-space-md');
-    if(footer&&!$('#employer-switch-account')){
-      const switcher=el('button','font-label-sm text-label-sm text-primary mt-space-sm','Sign out / Switch account');
-      switcher.id='employer-switch-account';switcher.type='button';
-      switcher.style.textDecoration='underline';switcher.style.cursor='pointer';
-      switcher.addEventListener('click',async()=>{
-        if(!confirm('Sign out from this employer account?'))return;
-        try{await api('/auth/logout.php',{});location.href='login.html';}
-        catch(e){note('Sign out failed: '+e.message,true);}
-      });
-      footer.append(switcher);
+      if(name==='openings')a.href='openings.html';
     }
     const bell=$('header button[aria-label="Notifications"]');
+    const accountControls=bell?.parentElement||$('aside nav');
+    if(accountControls&&!$('#employer-switch-account')){
+      const switcher=el('button','shrink-0 whitespace-nowrap rounded-lg bg-primary text-on-primary px-3 py-2 font-semibold','Sign out');
+      switcher.id='employer-switch-account';switcher.type='button';
+      switcher.addEventListener('click',async()=>{
+        if(!confirm('Sign out from this employer account?'))return;
+        switcher.disabled=true;
+        try{await api('/auth/logout.php',{});location.replace('../students/login.html?role=employer');}
+        catch(e){note('Sign out failed: '+e.message,true);switcher.disabled=false;}
+      });
+      accountControls.append(switcher);
+    }
     if(bell){bell.setAttribute('aria-expanded','false');bell.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();showNotifications();},true)}
     // Two original design navigation buttons lead to the actual working views.
     if(page==='dashboard.html'){
       for(const button of $$('main button')){
         if(/View Verification Details/.test(button.textContent))button.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();location.href='company-profile.html#section-legal';},true);
-        else if(/View All|Post \/ Edit Openings/.test(button.textContent)&&button.closest('main'))button.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();myOpenings();},true);
+        else if(/View All|Post \/ Edit Openings/.test(button.textContent)&&button.closest('main'))button.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();location.href='openings.html';},true);
         else if(/tune/.test(button.textContent.trim())&&button.textContent.length<40)button.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();location.href='opening-applicants.html';},true);
       }
     }
@@ -715,34 +662,6 @@ if (location.pathname.split('/').pop() !== 'openings.html') {
         catch(err){note('Cannot open message: '+err.message,true)}
       },true);
     }
-    if(page==='post-edit-opening.html')editorExtras();
-  }
-  function editorExtras() {
-    const title=$('#input-title'),desc=$('#input-description');
-    const inputSnapshot={};
-    for(const x of $$('#attachment-form input[id],#attachment-form select[id],#attachment-form textarea[id]'))inputSnapshot[x.id]=x.value;
-    const revert=$$('main button').find(b=>/Revert Changes/.test(b.textContent));
-    if(revert)revert.addEventListener('click',e=>{
-      e.preventDefault();e.stopImmediatePropagation();if(!confirm('Restore fields to the values when this editor was opened?'))return;
-      for(const [id,value] of Object.entries(inputSnapshot)){const input=$('#'+CSS.escape(id));if(input){input.value=value;input.dispatchEvent(new Event('input',{bubbles:true}));}}
-      note('Editor fields restored. Database records were not changed.');
-    },true);
-    const preview=$$('main button').find(b=>/Student Preview Mode/.test(b.textContent));
-    if(preview)preview.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();
-      const card=$('#preview-title')?.closest('.rounded-xl')||$('#preview-title');
-      if(card){card.scrollIntoView({behavior:'smooth',block:'center'});card.style.outline='3px solid #0c786d';setTimeout(()=>card.style.outline='',1500)}
-      note('Student preview is a local design preview. Only approved listings appear in the student portal.');
-    },true);
-    $$('main button').find(b=>/Add Discipline/.test(b.textContent))?.remove();
-    for(const b of $$('main button')){
-      if(!/^(format_bold|format_italic|format_list_bulleted)$/.test(b.textContent.trim()))continue;
-      b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();if(!desc)return;
-        const start=desc.selectionStart,end=desc.selectionEnd,text=desc.value.slice(start,end),kind=b.textContent.trim();
-        const insertion=kind==='format_bold'?'**'+(text||'bold text')+'**':kind==='format_italic'?'*'+(text||'italic text')+'*':'\n- '+(text||'item');
-        desc.setRangeText(insertion,start,end,'end');desc.dispatchEvent(new Event('input',{bubbles:true}));desc.focus();
-      },true);
-    }
-    $$('main button').find(b=>/Quick Apply with Industrial Letter/.test(b.textContent))?.remove();
   }
   async function init() {
     interceptNavigations();markAvatar();
@@ -753,8 +672,6 @@ if (location.pathname.split('/').pop() !== 'openings.html') {
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
-
-}
 
 /* AttachLink Stage 14 — show the employer's registered COMPANY name in the portal header.
    Personal contact details are still editable within Company Profile. */

@@ -21,17 +21,22 @@ function Post($Client,$Path,$Expected,$Data){
     $Data.csrf_token=Token $Client
     Call $Client POST $Path $Expected $Data
 }
-function Pack($Client,$Opening,$Invalid=$false,$Omit=''){
+function Pack($Client,$Opening){
     $part=[System.Net.Http.MultipartFormDataContent]::new()
     $part.Add([System.Net.Http.StringContent]::new((Token $Client)),'csrf_token')
     $part.Add([System.Net.Http.StringContent]::new([string]$Opening),'listing_id')
-    foreach($field in 'stamped_letter','academic_certificates','national_id','transcript','birth_certificate'){
-        if($field -eq $Omit){continue}
-        $content=if($Invalid -and $field -eq 'academic_certificates'){'invalid document'}else{"%PDF-1.4`n%%EOF`n"}
-        $part.Add([System.Net.Http.ByteArrayContent]::new([Text.Encoding]::ASCII.GetBytes($content)),$field,'test.pdf')
-    }
     return ,$part
 }
+function Save-ProfileDocument($Client,$Field,$Invalid=$false){
+    $part=[System.Net.Http.MultipartFormDataContent]::new()
+    $part.Add([System.Net.Http.StringContent]::new((Token $Client)),'csrf_token')
+    $part.Add([System.Net.Http.StringContent]::new($Field),'document_type')
+    $content=if($Invalid){'invalid document'}else{"%PDF-1.4`n%%EOF`n"}
+    $part.Add([System.Net.Http.ByteArrayContent]::new([Text.Encoding]::ASCII.GetBytes($content)),'file','test.pdf')
+    $expected=if($Invalid){415}else{200}
+    $null=Call $Client POST student/document-vault.php $expected $part
+}
+$requiredDocuments='cv','stamped_letter','academic_certificates','national_id','transcript','birth_certificate'
 function Confirm($Condition,$Message){if(!$Condition){throw $Message};Write-Host "PASS $Message"}
 if ($env:ATTACHLINK_DB_NAME -notmatch '^attachlink_(qa|phase1)[a-z0-9_]*$' -or !$env:ATTACHLINK_MAIL_LOG) {
     throw 'Set ATTACHLINK_DB_NAME to the isolated QA database and ATTACHLINK_MAIL_LOG to the QA mail file.'
@@ -209,14 +214,15 @@ try{
     Confirm ($saved.saved.listing_id -contains $opening) 'Opening saved'
     $null=Call $student POST student/apply-with-documents.php 403 (Pack $student $opening)
     Verify $student $studentEmail
-    $null=Call $student POST student/apply-with-documents.php 415 (Pack $student $opening $true)
+    Save-ProfileDocument $student 'academic_certificates' $true
     $applications=(Call $student GET student/applications.php 200).applications
     Confirm ($applications.Count -eq 0) 'Invalid document pack created no application'
-    foreach($field in 'stamped_letter','academic_certificates','national_id','transcript','birth_certificate'){
-        $null=Call $student POST student/apply-with-documents.php 422 (Pack $student $opening $false $field)
+    foreach($field in $requiredDocuments){
+        $null=Call $student POST student/apply-with-documents.php 422 (Pack $student $opening)
+        Save-ProfileDocument $student $field
     }
     $application=Call $student POST student/apply-with-documents.php 201 (Pack $student $opening)
-    Confirm ($application.document_count -eq 5) 'All five required documents recorded'
+    Confirm ($application.document_count -eq 6) 'All six required profile documents recorded'
     Confirm ((Call $student GET student/applications.php 200).applications.id -contains $application.application_id) 'Submitted application appears in My Applications'
     $null=Call $student POST student/apply-with-documents.php 409 (Pack $student $opening)
     $documents=(Call $employer GET "employer/documents.php?application_id=$($application.application_id)" 200).documents
@@ -233,6 +239,7 @@ try{
     Confirm (@(Mail $employerEmail 'New application').Count -eq 1) 'New application email delivered'
     Confirm (@(Mail $studentEmail 'Application accepted').Count -eq 1) 'Decision email delivered'
     Verify $secondStudent $secondEmail
+    foreach($field in $requiredDocuments){ Save-ProfileDocument $secondStudent $field }
     Confirm ((Call $employer GET email-preferences.php 200).email_notifications) 'Email notifications default on'
     $null=Post $employer email-preferences.php 200 @{email_notifications=$false}
     $another=Call $secondStudent POST student/apply-with-documents.php 201 (Pack $secondStudent $opening)

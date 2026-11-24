@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__.'/../../bootstrap.php';$u=user('student');
+require_once __DIR__.'/../../lib/ApplicationDocuments.php';
 if($_SERVER['REQUEST_METHOD']==='GET'){
  $id=positive($_GET['application_id']??0);if(!getrow('SELECT id FROM applications WHERE id=? AND student_id=?',[$id,$u['id']]))fail('Not found.',404);
  out(['ok'=>true,'documents'=>rows('SELECT id,document_type,original_name,uploaded_at FROM application_documents WHERE application_id=?',[$id])]);
@@ -7,12 +8,18 @@ if($_SERVER['REQUEST_METHOD']==='GET'){
 method('POST');protect($_POST);$id=positive($_POST['application_id']??0);
 if(!getrow('SELECT id FROM applications WHERE id=? AND student_id=?',[$id,$u['id']]))fail('Not found.',404);
 $type=(string)($_POST['document_type']??'');$types=['attachment_letter','cv','id','transcript','o_level','a_level','other_certificate','academic_certificates','birth_certificate'];if(!in_array($type,$types,true))fail('Invalid document type.');
-[$temporary,$original,$mime,$extension]=validate_application_upload($_FILES['file']??null);
+[$temporary,$original,$mime,$extension]=validate_application_upload($_FILES['file']??null,true);
 $pdo=db();
 $pdo->beginTransaction();
 if (!getrow("SELECT id FROM users WHERE id=? AND is_active=1 FOR UPDATE",[$u['id']])) {
     $pdo->rollBack();
     fail('Account not available.',401);
+}
+if ($type==='academic_certificates' && (int)getrow(
+    "SELECT COUNT(*) AS total FROM application_documents WHERE application_id=? AND document_type='academic_certificates'",[$id]
+)['total']>=MAX_ACADEMIC_CERTIFICATES) {
+    $pdo->rollBack();
+    fail('An application can include up to four academic certificates.',422);
 }
 $file=store_application_upload($temporary,$extension);
 try {

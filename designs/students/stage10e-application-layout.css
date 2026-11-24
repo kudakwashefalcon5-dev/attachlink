@@ -188,3 +188,7 @@
   #listing-page .al10e-progress-fill,
   #listing-page .al10e-upload-field {transition: none;}
 }
+#listing-page #listing-apply:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}

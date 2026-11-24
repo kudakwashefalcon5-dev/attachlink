@@ -1,6 +1,6 @@
 <!DOCTYPE html><html data-theme="portal-1" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/>
 <style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link href="attachlink-common.css" rel="stylesheet"/><script src="attachlink-common.js"></script><title>AI Interview Assistant | AttachLink</title><link rel="stylesheet" href="../../assets/tailwind.min.css">
-<link href="interview-ai.css?v=12" rel="stylesheet"/><link rel="stylesheet" href="stage14-balanced-header.css?v=14">
+<link href="interview-ai.css?v=13" rel="stylesheet"/><link rel="stylesheet" href="stage14-balanced-header.css?v=14">
 <link href="interview-planner-chart.css" rel="stylesheet"><link rel="stylesheet" href="../../assets/attachlink-portal.css"></head><body class="bg-surface font-body-md text-on-surface"><header class="al-header"><div class="al-top"><a class="al-brand" href="dashboard.html"><img src="../employers/attachlink-logo.svg" alt="AttachLink" width="56" height="44"></a><nav aria-label="Student navigation" class="al-links"><a class="al-link" href="dashboard.html">Find Openings</a><a class="al-link" href="my-applications.html">My Applications<span class="al-count" data-al-app-count="">0</span></a><a class="al-link" href="messages.html">Messages</a><a class="al-link" href="saved-openings.html">Saved Openings<span class="al-count" data-al-save-count="">0</span></a><a aria-current="page" class="al-tools-nav" href="career-tools.html">Career Tools</a></nav><div class="al-right"><a class="al-iconlink" href="notifications.html">Alerts <span class="al-dot" data-al-unread="" hidden="">0</span></a><a class="al-iconlink" href="profile.html">● <span data-al-name="">My Profile</span></a></div></div><nav aria-label="Mobile student navigation" class="al-mobile"><a class="al-link" href="dashboard.html">Find Openings</a><a class="al-link" href="my-applications.html">My Applications<span class="al-count" data-al-app-count="">0</span></a><a class="al-link" href="messages.html">Messages</a><a class="al-link" href="saved-openings.html">Saved Openings<span class="al-count" data-al-save-count="">0</span></a><a class="al-link" href="notifications.html">Notifications</a><a aria-current="page" class="al-link" href="career-tools.html">Career Tools</a></nav></header><main class="al-page"><div class="al-demo-note">Interview coaching is for practice only. Do not enter sensitive documents or ID details.</div>
   <nav class="al-ct-subnav" aria-label="Career tools">
     <a href="interview-planner.html" aria-current="page">AI Interview Assistant</a>
@@ -12,7 +12,7 @@
       <div>
         <div class="al-ai-eyebrow">Career Tools · Interview Preparation</div>
         <h1>AI Interview Assistant</h1>
-        <p>Practise interview questions for industrial attachment opportunities, improve your answers, and build confidence. Real AI feedback becomes available once the server connection is configured.</p>
+        <p>Practise for an industrial attachment interview and get feedback on your answers.</p>
       </div>
       <span class="al-ai-state" id="al-ai-status" role="status">Connecting</span>
     </header>
@@ -20,7 +20,7 @@
       <section class="al-ai-conversation" aria-label="Interview assistant conversation">
         <div class="al-ai-thread" id="al-ai-thread" aria-live="polite" aria-relevant="additions text"></div>
         <div class="al-ai-actions" aria-label="Suggested prompts">
-          <button type="button" class="al-ai-chip" data-ai-prompt="Start a mock interview. Ask one question at a time.">Mock interview</button>
+          <button type="button" class="al-ai-chip" data-ai-mock data-ai-prompt="Start a mock interview. Ask one question at a time.">Mock interview</button>
           <button type="button" class="al-ai-chip" data-ai-prompt="Help me introduce myself professionally in an industrial attachment interview.">Self-introduction</button>
           <button type="button" class="al-ai-chip" data-ai-prompt="What are effective techniques for answering technical questions clearly?">Technical answers</button>
           <button type="button" class="al-ai-chip" data-ai-prompt="Teach me how to answer behavioural interview questions using the STAR method.">STAR method</button>
@@ -30,7 +30,7 @@
           <textarea id="al-ai-input" maxlength="1400" rows="2" required placeholder="Type your answer or ask for interview advice..."></textarea>
           <button type="submit" id="al-ai-send" class="al-ai-send" disabled>Send</button>
         </form>
-        <p class="al-ai-note">Do not enter national ID numbers, certificates, passwords or other sensitive information. AI feedback is guidance, not an employer decision.</p>
+        <p class="al-ai-note">AttachLink sends your messages and recent practice conversation to its AI provider. Keep passwords, ID numbers and other sensitive details out of the chat.</p>
       </section>
       <aside class="al-ai-panel" aria-label="Interview practice settings">
         <h2>Practice settings</h2>
@@ -46,11 +46,10 @@
         <button type="button" class="al-ai-secondary" id="al-ai-clear">New conversation</button>
         <div class="al-ai-setup" id="al-ai-setup" hidden>
           <strong>AI not yet connected</strong>
-          <p>Sample interview questions are available now. Your developer can enable AI feedback using a server-side API key; no key should be entered on this page.</p>
+          <p>You can still practise with sample interview questions.</p>
         </div>
         <div class="al-ai-help"><strong>How this works</strong>
-          Select a focus, try an interview question, and type your answer. Once the AI connection is enabled, the assistant gives feedback and follow-up questions.<br><br>
-          No calendar or interview booking is created.
+          Choose a focus, start a mock interview, and answer one question at a time. The coach gives feedback and asks a follow-up question.
         </div>
       </aside>
     </div>
@@ -77,6 +76,6 @@
     <div id="interview-items" class="mt-5" aria-live="polite"></div>
   </section>
 </main><footer class="al-footer">AttachLink Zimbabwe · Student portal</footer>
-<script src="interview-planner.js" defer></script><script src="interview-planner-chart.js" defer></script><script src="interview-ai.js?v=12"></script><script src="../../assets/attachlink-brand.js?v=14" data-logo-ext=".png"></script>
+<script src="interview-planner.js" defer></script><script src="interview-planner-chart.js?v=2" defer></script><script src="interview-ai.js?v=14"></script><script src="../../assets/attachlink-brand.js?v=14" data-logo-ext=".png"></script>
 <script src="../../assets/attachlink-connect.js?v=3" defer></script>
 </body></html>

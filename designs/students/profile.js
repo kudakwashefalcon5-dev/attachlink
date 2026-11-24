@@ -582,41 +582,128 @@
 })();
 
 (() => {
-  const form=document.getElementById('document-vault');
-  const status=document.getElementById('vault-status');
   const list=document.getElementById('vault-documents');
-  const button=form.querySelector('button');
+  const status=document.getElementById('vault-status');
+  const count=document.getElementById('vault-count');
+  const progress=document.getElementById('vault-progress');
+  if (!list) return;
+
   const endpoint='../../backend/api/student/document-vault.php';
-  const labels=Object.fromEntries([...form.elements.document_type.options].map(item=>[item.value,item.text]));
+  const saved=new Map();
+  let requiredTypes=[];
+  const element=(tag,text,className)=>{
+    const node=document.createElement(tag);
+    node.textContent=text;
+    if (className) node.className=className;
+    return node;
+  };
   async function request(url,options){
     const response=await fetch(url,{cache:'no-store',...options});
     const result=await response.json();
-    if(!response.ok||!result.ok) throw Error(result.message||'Documents are unavailable.');
+    if (!response.ok || !result.ok) throw Error(result.message||'Documents are unavailable.');
     return result;
   }
-  function display(documents){
-    const saved=new Map(documents.map(item=>[item.document_type,item.original_name]));
-    list.replaceChildren(...Object.entries(labels).map(([key,label])=>{
-      const row=document.createElement('li');
-      row.textContent=label+' - '+(saved.get(key)||'Still needed');
-      return row;
-    }));
+  function updateProgress(){
+    const savedTypes=new Set([...saved.values()].map(item=>item.document_type));
+    const missing=requiredTypes.filter(item=>!savedTypes.has(item.document_type));
+    progress.value=requiredTypes.length-missing.length;
+    count.textContent=progress.value+' of '+progress.max+' saved';
+    document.dispatchEvent(new CustomEvent('attachlink:profile-documents',{detail:{total:requiredTypes.length,missing}}));
   }
-  request(endpoint).then(({documents})=>{
-    display(documents);status.textContent='';button.disabled=false;
-  }).catch(error=>{status.textContent=error.message;});
-  form.addEventListener('submit',async event=>{
-    event.preventDefault();
-    button.disabled=true;
-    try{
-      const data=new FormData(form);
-      const {csrf_token}=await request('../../backend/api/auth/csrf.php');
-      data.set('csrf_token',csrf_token);
-      const {documents}=await request(endpoint,{method:'POST',body:data});
-      display(documents);
-      form.elements.file.value='';
-      status.textContent='Document saved.';
-    }catch(error){status.textContent=error.message;}
-    finally{button.disabled=false;}
+  function addSlot({document_type:key,label,description},slot=1,container=list,certificate=false){
+    const slotKey=key+':'+slot;
+    const suffix=key+(slot===1?'':'-'+slot);
+    const slotLabel=certificate?label+' '+slot:label;
+    const form=element('form','','al-document-slot');
+    const title=element('label',slotLabel);
+    const input=element('input','');
+    input.id='vault-file-'+suffix;
+    input.name='file';
+    input.type='file';
+    input.accept='.pdf,.jpg,.jpeg,.png,.doc,.docx';
+    input.required=true;
+    title.htmlFor=input.id;
+    const state=element('p','','al-document-state');
+    state.id='vault-state-'+suffix;
+    state.setAttribute('role','status');
+    input.setAttribute('aria-describedby',state.id);
+    const button=element('button','','al-btn al-btn-soft');
+    const remove=element('button','Remove file','al-btn al-btn-soft');
+    remove.type='button';
+    remove.setAttribute('aria-label','Remove file for '+slotLabel);
+    function updateSlot(){
+      const document=saved.get(slotKey);
+      state.dataset.saved=String(Boolean(document));
+      state.textContent=document?'Saved: '+document.original_name:certificate?'No file saved':'Required: No file saved';
+      button.textContent=document?'Replace file':'Save file';
+      button.setAttribute('aria-label',button.textContent+' for '+slotLabel);
+      remove.hidden=!document;
+    }
+    updateSlot();
+    form.append(title);
+    if (!certificate) {
+      const hint=element('p',description);
+      hint.id='vault-hint-'+suffix;
+      input.setAttribute('aria-describedby',hint.id+' '+state.id);
+      form.append(hint);
+    }
+    form.append(state,input,button);
+    if (certificate) form.append(remove);
+    container.append(form);
+
+    async function save(removing){
+      const data=removing?new FormData():new FormData(form);
+      if (removing) data.set('action','remove');
+      data.set('document_type',key);
+      data.set('slot',slot);
+      button.disabled=true;
+      remove.disabled=true;
+      input.disabled=true;
+      state.textContent=removing?'Removing...':'Saving...';
+      try{
+        const {csrf_token}=await request('../../backend/api/auth/csrf.php');
+        data.set('csrf_token',csrf_token);
+        const {documents}=await request(endpoint,{method:'POST',body:data});
+        const document=documents.find(item=>item.document_type===key&&Number(item.slot)===slot);
+        if (document) saved.set(slotKey,document);
+        else saved.delete(slotKey);
+        input.value='';
+        updateSlot();
+        updateProgress();
+      }catch(error){
+        updateSlot();
+        state.textContent+=' - '+error.message;
+      }finally{
+        button.disabled=false;
+        remove.disabled=false;
+        input.disabled=false;
+      }
+    }
+    form.addEventListener('submit',event=>{
+      event.preventDefault();
+      save(false);
+    });
+    remove.addEventListener('click',()=>save(true));
+  }
+  request(endpoint).then(({documents,required_documents:required})=>{
+    requiredTypes=required;
+    for (const document of documents) saved.set(document.document_type+':'+document.slot,document);
+    for (const item of required) {
+      if (item.max_files>1) {
+        const group=element('section','','al-document-group');
+        const heading=element('h3',item.label);
+        const slots=element('div','','al-document-grid');
+        group.append(heading,element('p',item.description),slots);
+        for (let slot=1;slot<=item.max_files;slot++) addSlot({...item,label:'Certificate'},slot,slots,true);
+        list.append(group);
+      } else addSlot(item);
+    }
+    progress.max=required.length;
+    progress.hidden=false;
+    updateProgress();
+    status.textContent='';
+  }).catch(error=>{
+    status.textContent=error.message;
+    document.dispatchEvent(new CustomEvent('attachlink:profile-documents',{detail:null}));
   });
 })();

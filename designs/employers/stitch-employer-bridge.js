@@ -69,7 +69,7 @@
     for(const a of $$('aside a')) {
       const t=a.textContent.replace(/\s+/g,' ').trim();
       if(/Dashboard/i.test(t))a.href='dashboard.html';
-      else if(/Openings/i.test(t))a.href='dashboard.html#stitch-openings';
+      else if(/Openings/i.test(t))a.href='openings.html';
       else if(/Applicants/i.test(t))a.href='opening-applicants.html';
       else if(/Company Profile/i.test(t))a.href='company-profile.html';
       else if(/Messages/i.test(t)){a.href='../../backend/stage10-inbox.html';}

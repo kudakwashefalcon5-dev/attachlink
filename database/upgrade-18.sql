@@ -1,0 +1,2 @@
+ALTER TABLE student_cvs
+    ADD COLUMN IF NOT EXISTS layout VARCHAR(16) CHARACTER SET ascii NOT NULL DEFAULT 'classic';

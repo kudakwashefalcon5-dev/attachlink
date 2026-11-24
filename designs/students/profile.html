@@ -14,7 +14,7 @@
 @media print{header,footer,.al-overlay,button,.al-demo-banner{display:none!important}main{padding-top:0!important}}
 </style><title>My Profile | AttachLink</title><link rel="stylesheet" href="../../assets/tailwind.min.css"><link href="attachlink-common.css" rel="stylesheet"/><script src="attachlink-common.js"></script><link rel="stylesheet" href="stitch-local.css"/><script defer src="stitch-local-icons.js"></script><link rel="stylesheet" href="stage14-balanced-header.css?v=14">
 <link rel="stylesheet" href="stage16-attachment-activity.css?v=1"><link rel="stylesheet" href="stage17-student-skills.css?v=1"><link rel="stylesheet" href="stage17b-profile-switches.css?v=2">
-<link rel="stylesheet" href="../../assets/attachlink-portal.css"></head><body class="bg-surface font-body-md text-body-md text-on-surface"><header class="al-header"><div class="al-top"><a class="al-brand" href="dashboard.html"><img src="../employers/attachlink-logo.svg" alt="AttachLink" width="56" height="44"></a><nav aria-label="Student navigation" class="al-links"><a class="al-link" href="dashboard.html">Find Openings</a><a class="al-link" href="my-applications.html">My Applications<span class="al-count" data-al-app-count="">0</span></a><a class="al-link" href="messages.html">Messages</a><a class="al-link" href="saved-openings.html">Saved Openings<span class="al-count" data-al-save-count="">0</span></a><a class="al-tools-nav" href="career-tools.html">Career Tools</a></nav><div class="al-right"><a class="al-iconlink" href="notifications.html">Alerts <span class="al-dot" data-al-unread="" hidden="">0</span></a><a class="al-iconlink" href="profile.html">● <span data-al-name="">My Profile</span></a></div></div><nav aria-label="Mobile student navigation" class="al-mobile"><a class="al-link" href="dashboard.html">Find Openings</a><a class="al-link" href="my-applications.html">My Applications<span class="al-count" data-al-app-count="">0</span></a><a class="al-link" href="messages.html">Messages</a><a class="al-link" href="saved-openings.html">Saved Openings<span class="al-count" data-al-save-count="">0</span></a><a class="al-link" href="notifications.html">Notifications</a><a class="al-link" href="career-tools.html">Career Tools</a></nav></header><main class="w-full bg-surface min-h-screen" style="padding-top:0"><div class="flex flex-col w-full">
+<link rel="stylesheet" href="../../assets/attachlink-portal.css"><link rel="stylesheet" href="profile-documents.css"></head><body class="bg-surface font-body-md text-body-md text-on-surface"><header class="al-header"><div class="al-top"><a class="al-brand" href="dashboard.html"><img src="../employers/attachlink-logo.svg" alt="AttachLink" width="56" height="44"></a><nav aria-label="Student navigation" class="al-links"><a class="al-link" href="dashboard.html">Find Openings</a><a class="al-link" href="my-applications.html">My Applications<span class="al-count" data-al-app-count="">0</span></a><a class="al-link" href="messages.html">Messages</a><a class="al-link" href="saved-openings.html">Saved Openings<span class="al-count" data-al-save-count="">0</span></a><a class="al-tools-nav" href="career-tools.html">Career Tools</a></nav><div class="al-right"><a class="al-iconlink" href="notifications.html">Alerts <span class="al-dot" data-al-unread="" hidden="">0</span></a><a class="al-iconlink" href="profile.html">● <span data-al-name="">My Profile</span></a></div></div><nav aria-label="Mobile student navigation" class="al-mobile"><a class="al-link" href="dashboard.html">Find Openings</a><a class="al-link" href="my-applications.html">My Applications<span class="al-count" data-al-app-count="">0</span></a><a class="al-link" href="messages.html">Messages</a><a class="al-link" href="saved-openings.html">Saved Openings<span class="al-count" data-al-save-count="">0</span></a><a class="al-link" href="notifications.html">Notifications</a><a class="al-link" href="career-tools.html">Career Tools</a></nav></header><main class="w-full bg-surface min-h-screen" style="padding-top:0"><div class="flex flex-col w-full">
 <!-- Subtle Gradient Ambient Depth -->
 <div class="relative w-full overflow-hidden">
 <div class="absolute -top-40 right-1/4 w-96 h-96 bg-primary-fixed/30 rounded-full blur-3xl pointer-events-none -z-10"></div>
@@ -233,6 +233,19 @@
 </div>
 </div>
 </section>
+<section class="al-document-packet" aria-labelledby="vault-title">
+  <div class="al-document-packet-header">
+    <div>
+      <h2 id="vault-title" tabindex="-1">Application documents</h2>
+      <p>Save every required document here before applying. AttachLink sends copies of this packet with each application you submit.</p>
+    </div>
+    <strong id="vault-count"></strong>
+  </div>
+  <progress id="vault-progress" aria-label="Application documents saved" hidden></progress>
+  <p class="al-document-formats">PDF, PNG, JPG, DOC or DOCX, up to 5 MB per file.</p>
+  <p id="vault-status" role="status">Loading saved documents...</p>
+  <div id="vault-documents" class="al-document-grid"></div>
+</section>
 </div>
 <!-- RIGHT COLUMN (35% width approx: col-span-4) -->
 <div class="lg:col-span-4 flex flex-col gap-space-xl">
@@ -258,24 +271,7 @@
 </dl>
 </section>
 <!-- Account Settings & Privacy -->
-<section class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm flex flex-col gap-space-md" aria-labelledby="vault-title">
-<h2 id="vault-title" class="font-headline-sm text-headline-sm">Application documents</h2>
-<p>Save your documents here to attach them when applying. A company can access the copies attached to its applications.</p>
-<form id="document-vault" class="flex flex-col gap-2">
-<label>Document type <select name="document_type" required>
-<option value="national_id">Certified copy of national ID</option>
-<option value="academic_certificates">Academic certificates</option>
-<option value="stamped_letter">Attachment letter</option>
-<option value="birth_certificate">Birth certificate</option>
-<option value="transcript">Academic transcripts</option>
-</select></label>
-<label>File <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png" required style="max-width:100%"></label>
-<p>PDF, JPG or PNG. Maximum 5 MB. Combine multiple certificates or transcripts into one PDF per category.</p>
-<button class="al-primary" type="submit" style="padding:10px;border-radius:9px" disabled>Save or replace document</button>
-</form>
-<p id="vault-status" role="status">Loading saved documents...</p>
-<ul id="vault-documents" style="overflow-wrap:anywhere"></ul>
-</section>
+
 <section class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm flex flex-col gap-space-lg">
 <div class="flex items-center gap-2.5">
 <span class="material-symbols-outlined text-[24px] text-primary">security</span>
@@ -329,7 +325,6 @@
 </div>
 </div>
 </div></main><footer class="w-full bg-surface-container-low mt-space-xl"><div class="max-w-7xl mx-auto px-6 lg:px-12 py-space-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-space-lg"><div class="flex flex-col gap-1"><div class="flex items-center gap-2"><span class="font-headline-sm text-headline-sm text-primary">AttachLink</span><span class="px-1.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-label-caps text-label-caps">ZW</span></div><p class="font-body-sm text-body-sm text-outline max-w-sm">Connecting Zimbabwean university students with premier industrial attachments and liaison coordinators nationwide.</p></div><div class="flex flex-wrap gap-space-lg font-label-md text-label-md text-on-surface-variant"><a class="hover:text-primary transition-colors" data-path="find-openings" href="dashboard.html">Browse Attachments</a><a class="hover:text-primary transition-colors" href="profile.html">Privacy &amp; Terms</a></div></div><div class="max-w-7xl mx-auto px-6 lg:px-12 pb-space-lg pt-space-sm flex flex-col sm:flex-row justify-between items-center font-body-sm text-body-sm text-outline gap-2"><p>© 2025 AttachLink Zimbabwe. Ministry of Higher &amp; Tertiary Education Alignment.</p><div class="flex items-center gap-4"><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary"></span>System Operational</span><span>Harare • Bulawayo • Mutare • Gweru</span></div></div></footer><div aria-labelledby="al-modal-title" aria-modal="true" class="al-overlay" id="al-modal" role="dialog"><div class="al-dialog"><h2 class="text-xl font-bold mb-4" id="al-modal-title">Edit Student Profile</h2><form id="al-form"><div class="al-fields" id="al-form-fields"></div><div class="al-actions"><button class="al-secondary" id="al-cancel" type="button">Cancel</button><button class="al-primary" type="submit">Save Changes</button></div></form></div></div><script src="student-session-identity.js?v=1"></script><script src="student-avatar.js?v=2"></script><script src="../../assets/attachlink-brand.js?v=14" data-logo-ext=".png"></script>
-<script defer src="profile.js?v=3"></script>
-
-<script src="../../assets/attachlink-connect.js?v=8" defer></script>
+<script src="../../assets/attachlink-connect.js?v=9" defer></script>
+<script defer src="profile.js?v=6"></script>
 </body></html>

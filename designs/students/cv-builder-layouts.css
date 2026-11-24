@@ -1,0 +1,53 @@
+.cv-builder-grid {
+  grid-template-columns: minmax(300px, 395px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.cv-layout-picker { margin: 0 0 1.25rem; }
+.cv-layout-picker legend { font-weight: 700; margin-bottom: .5rem; }
+.cv-layout-options { display: grid; gap: .4rem; }
+.cv-layout-options label {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .55rem .7rem;
+  border: 1px solid #dce8e4;
+  border-radius: .55rem;
+  cursor: pointer;
+}
+.cv-layout-options label:has(input:checked) { border-color: #08776b; background: #edf7f4; }
+.cv-layout-options strong, .cv-layout-options small { display: block; }
+.cv-layout-options small { color: #465b60; }
+
+#cv-preview { padding: clamp(20px, 4vw, 46px); }
+#cv-preview .cv-document-header { margin-bottom: 1.25rem; }
+#cv-preview .cv-document-header h2 { overflow-wrap: anywhere; }
+#cv-preview .cv-summary { white-space: pre-wrap; }
+#cv-preview .cv-section { margin-top: 1rem; min-width: 0; }
+#cv-preview .cv-section h3 { margin-top: 0; }
+
+#cv-preview[data-layout="modern"] .cv-document-header { border-left: 5px solid #254e68; padding-left: 1rem; }
+#cv-preview[data-layout="modern"] h3 { color: #254e68; border-color: #aabac7; }
+#cv-preview[data-layout="modern"] .cv-qualifications:has(.cv-section + .cv-section) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+#cv-preview[data-layout="executive"] { font-family: Georgia, "Times New Roman", serif; color: #24282e; }
+#cv-preview[data-layout="executive"] .cv-document-header { text-align: center; border-bottom: 2px solid #303741; padding-bottom: .9rem; }
+#cv-preview[data-layout="executive"] h2 { font-size: 30px; }
+#cv-preview[data-layout="executive"] h3 { color: #303741; border-color: #b7bcc3; }
+
+@media screen and (max-width: 900px) {
+  main .cv-builder-grid { grid-template-columns: 1fr; }
+}
+
+@media screen and (max-width: 430px) {
+  #cv-preview[data-layout="modern"] .cv-qualifications { display: block !important; }
+}
+
+@media print {
+  #cv-preview .cv-document-header, #cv-preview h3 { break-after: avoid; }
+  #cv-preview p, #cv-preview li { orphans: 2; widows: 2; }
+}

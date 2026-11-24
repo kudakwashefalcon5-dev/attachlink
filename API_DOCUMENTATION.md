@@ -16,15 +16,15 @@ Paths are relative to `backend/api/`. JSON mutations accept `csrf_token` in the 
 | student/avatar.php | GET status or image, POST multipart avatar, DELETE | Student owner |
 | student/skills.php | GET, POST action add/update/delete, id for existing item, name/category on write | Student owner |
 | student/applications.php | GET | Student owner |
-| student/apply-with-documents.php | POST multipart listing_id, cover_letter, national_id (certified copy), academic_certificates, stamped_letter, birth_certificate, and transcript. All five uploads are required, with a 5 MB limit per file | Student |
+| student/apply-with-documents.php | POST multipart listing_id and optional cover_letter. Copies the six required categories, including every saved academic certificate, into the application. Returns 422 with missing_documents if the packet is incomplete | Student |
 | student/documents.php | GET application_id, POST application_id/document_type/file | Student application owner |
-| student/document-vault.php | GET saved file names, POST multipart document_type and file. Submit with use_vault=1 to fill missing application uploads from the vault | Student owner |
+| student/document-vault.php | GET saved file names, slot numbers and required document checklist. POST multipart document_type, file and optional slot (default 1). Academic certificates support slots 1–4 and action=remove. Each category requires at least one file. Accepted formats are PDF, PNG, JPG, DOC and DOCX, up to 5 MB each | Student owner |
 | student/saved.php | GET, POST or DELETE opening_id | Student owner |
 | student/saved-listings.php | GET, POST listing_id and action save/remove | Student owner |
 | student/interviews.php | GET, POST interview details or DELETE id | Student owner |
-| student/interview-ai.php | GET service status | Student |
+| student/interview-ai.php | GET configuration status and CSRF token, POST practice message | Student |
 | student/preferences.php | GET, POST recruiter_visible (boolean), sectors, stipend, work_model, relocation | Student owner. SMS capability is reported separately. |
-| student/cv.php | GET, POST CV fields | Student owner |
+| student/cv.php | GET, POST CV fields and optional layout (classic, modern, executive) | Student owner |
 | employer/company.php | GET, POST name, description, website, industry and city | Employer company |
 | employer/profile.php | GET, POST representative name and company location/description | Employer company |
 | employer/alerts.php | GET inbox and applicant summaries | Employer company |
@@ -92,3 +92,17 @@ POST admin/verify-user-email.php accepts user_id and requires administrator auth
 Registration requires consent=true and consent_version=pilot-2026-11. The account records the accepted version and timestamp. POST student/delete-account.php accepts current_password and confirm=true and requires a student session and CSRF token. It deletes the student's records and invalidates sessions. Any file that could not be removed immediately enters the private purge queue.
 
 POST admin/clear-reset-quota.php takes user_id and clears the global daily reset limit with an audit event. IP limits remain. POST admin/admin-accounts.php takes action=create with first_name, last_name, email and password, or action=deactivate with user_id. Both actions require an active administrator and CSRF. GET admin/retention.php returns aggregate counts.
+
+## Student interview coaching
+
+Set `ATTACHLINK_INTERVIEW_AI_URL=https://api.groq.com/openai/v1/chat/completions`, `ATTACHLINK_INTERVIEW_AI_MODEL=openai/gpt-oss-20b` and `ATTACHLINK_INTERVIEW_AI_KEY` to your Groq API key in the server environment or local `backend/.env`. PHP must have cURL or HTTPS streams enabled. With the settings absent or the placeholder key in place, the student page offers sample questions. [Groq API reference](https://console.groq.com/docs/api-reference) · [Free plan limits](https://console.groq.com/docs/rate-limits)
+
+GET `student/interview-ai.php` returns `configured` and a `csrf_token` when configured. The configuration check does not contact the provider. POST accepts `csrf_token`, `message` (up to 1,400 characters), `track` (`general`, `technical`, `software` or `behavioural`) and optional `history` (up to eight entries with `role` equal to `user` or `assistant` and `text` up to 1,400 characters). A successful response contains `reply`. The endpoint allows six attempts per minute per session and returns 429 with `Retry-After` when the limit is reached. Provider failures return 502 or 503.
+
+The student page keeps the conversation in memory and sends the latest message and recent turns to the configured provider. AttachLink does not store the practice transcript.
+
+## Student Support Assistant
+
+Apply `upgrade-15` and set `ATTACHLINK_SUPPORT_AI=1` to enable automated replies using the configured chat provider. The student contacts response exposes `support_ai` when available. Student sends to Support can include `allow_support_ai: true`. The assistant handles greetings and acknowledgements locally, uses approved answers for common portal tasks, and sends eligible message text to the provider for general answers or human routing.
+
+Support sends return `support_result` as `ai_answered` or `needs_human`. When the assistant is enabled, questions that need a person get a handoff acknowledgement in the thread, including when the provider is unavailable. The original question stays pending for an administrator. Admin contacts include a `needs_human` count and appear first when review is pending. Admin thread messages expose their `support_status`. An admin reply clears pending review for earlier student messages in that thread. The student thread labels automated replies through `support_status: "ai_reply"`.

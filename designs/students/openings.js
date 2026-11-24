@@ -343,115 +343,95 @@ if ('attachment-details.html' === location.pathname.split('/').pop()) {
 
 }
 
-if ('attachment-details.html' === location.pathname.split('/').pop()) {
-/* AttachLink Stage 10D. Adds uploads to the EXISTING Stitch application card.
-   No original layout, CSS, listing details, or Save/Share code is replaced. */
-(()=>{'use strict';
-const $=id=>document.getElementById(id);
-function ready(){
- const apply=$('listing-apply'), cover=$('listing-cover-letter'), feedback=$('application-feedback');
- if(!apply||!cover||!feedback)return;
- const fields=[
-  ['national_id','Certified copy of national ID'],
-  ['academic_certificates','Academic certificates'],
-  ['stamped_letter','Attachment letter'],
-  ['birth_certificate','Birth certificate'],
-  ['transcript','Academic transcripts']
- ];
- const section=document.createElement('section');
- section.id='al-stage10d-documents';section.className='flex flex-col gap-3 rounded-xl bg-surface-container-low p-4';
- const heading=document.createElement('h3');heading.className='font-title-md text-title-md text-primary font-semibold';heading.textContent='Documents required for application';
- const info=document.createElement('p');info.className='font-body-sm text-body-sm text-on-surface-variant';info.textContent='All five uploads are required. If you have multiple certificates or transcripts, combine each group into one PDF. PDF, JPG or PNG, up to 5 MB per upload.';
- section.append(heading,info);
- const savedDocuments=new Map();
- const vaultLink=document.createElement('a');
- vaultLink.href='profile.html#vault-title';
- vaultLink.className='text-primary underline';
- vaultLink.textContent='Manage saved application documents';
- section.append(vaultLink);
- const inputs=new Map();
- const labels=new Map();
- for(const [key,title] of fields){
-  const label=document.createElement('label');label.className='flex flex-col gap-1 font-label-md text-label-md text-on-surface';
-  const span=document.createElement('span');span.textContent=title+' *';
-  const input=document.createElement('input');input.type='file';input.name=key;input.accept='.pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png';input.required=true;
-  input.className='w-full p-2 rounded-lg bg-surface-container-lowest text-on-surface border border-outline-variant';
-  label.append(span,input);section.append(label);inputs.set(key,input);labels.set(key,span);
- }
- fetch('../../backend/api/student/document-vault.php',{cache:'no-store'})
-  .then(response=>response.ok?response.json():null)
-  .then(result=>{
-   for(const document of result?.documents??[]) savedDocuments.set(document.document_type,document.original_name);
-   for(const [key,title] of fields){
-    if(!savedDocuments.has(key))continue;
-    labels.get(key).textContent=title+' - saved file will be attached unless you choose another';
-    inputs.get(key).required=false;
-   }
-  }).catch(()=>{});
- const progress=document.createElement('progress');
- progress.max=100;progress.hidden=true;
- progress.setAttribute('aria-label','Application upload progress');
- progress.className='w-full';
- section.append(progress);
- feedback.setAttribute('role','status');
- cover.insertAdjacentElement('afterend',section);
- function upload(url,data){
-  return new Promise((resolve,reject)=>{
-   const request=new XMLHttpRequest();
-   request.open('POST',url);
-   request.responseType='json';
-   request.setRequestHeader('Accept','application/json');
-   request.upload.onprogress=event=>{
-    if(event.lengthComputable){
-     progress.value=Math.floor(event.loaded/event.total*100);
-     feedback.textContent=progress.value===100?'Upload complete. Recording your application?':'Uploading documents ('+progress.value+'%)?';
-    }
-   };
-   request.onload=()=>{
-    if(request.status===201&&request.response?.ok)resolve(request.response);
-    else reject(Error(request.response?.message||(request.status===413?'The upload is too large. Use smaller files.':'The upload could not be saved. Please try again.')));
-   };
-   request.onerror=()=>reject(Error('The connection dropped during upload. Check your connection and try again.'));
-   request.send(data);
-  });
- }
- // Submit the application with its required document pack.
- document.addEventListener('click',async event=>{
-  const target=event.target instanceof Element?event.target.closest('#listing-apply'):null;
-  if(!target || !section.isConnected || apply.disabled)return;
-  event.preventDefault();event.stopImmediatePropagation();
-  const id=new URLSearchParams(location.search).get('id');
-  if(!id||!/^[1-9]\d*$/.test(id)){feedback.textContent='Choose an opening first.';return;}
-  const data=new FormData();data.set('listing_id',id);data.set('cover_letter',cover.value.trim());
-  if(savedDocuments.size)data.set('use_vault','1');
-  for(const [key,title] of fields){
-   const file=inputs.get(key).files[0];
-   if(!file&&!savedDocuments.has(key)){feedback.textContent='Please attach: '+title;inputs.get(key).focus();return;}
-   if(file){
-    if(!file.size||file.size>5*1024*1024){feedback.textContent=title+' must be between 1 byte and 5 MB.';inputs.get(key).focus();return;}
-    if(!/\.(pdf|jpe?g|png)$/i.test(file.name)||file.type&&!['application/pdf','image/jpeg','image/png'].includes(file.type)){
-     feedback.textContent=title+' must be a PDF, JPG or PNG file.';inputs.get(key).focus();return;
-    }
-    data.set(key,file,file.name);
-   }
-  }
-  apply.disabled=true;progress.value=0;progress.hidden=false;feedback.textContent='Uploading your application and document pack…';
-  try{
-   const base=new URL('../../backend/api/',location.href);
-   const tokenResponse=await fetch(new URL('auth/csrf.php',base),{credentials:'same-origin',cache:'no-store'});
-   const token=await tokenResponse.json();if(!tokenResponse.ok||!token.csrf_token)throw Error('Login session expired. Sign in again.');
-   data.set('csrf_token',token.csrf_token);
-   const result=await upload(new URL('student/apply-with-documents.php',base),data);
-   feedback.textContent='Application #'+result.application_id+' submitted with '+result.document_count+' private documents.';
-   apply.textContent='Application Submitted';
-   document.dispatchEvent(new Event('attachlink:application-submitted'));
-  }catch(error){feedback.textContent=error.message||String(error);apply.disabled=false;}
-  finally{progress.hidden=true;}
- },true);
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready,{once:true});else ready();
-})();
+if (location.pathname.split('/').pop()==='attachment-details.html') {
+  document.addEventListener('DOMContentLoaded',()=>{
+    const apply=document.getElementById('listing-apply');
+    const cover=document.getElementById('listing-cover-letter');
+    const feedback=document.getElementById('application-feedback');
+    if (!apply||!cover||!feedback) return;
 
+    const section=document.createElement('section');
+    section.id='al-application-packet';
+    section.className='flex flex-col gap-3 rounded-xl bg-surface-container-low p-4';
+    const heading=document.createElement('h3');
+    heading.className='font-semibold text-primary';
+    heading.textContent='Application document packet';
+    const summary=document.createElement('p');
+    summary.setAttribute('role','status');
+    const checklist=document.createElement('ul');
+    checklist.className='grid gap-1 text-sm';
+    const link=document.createElement('a');
+    link.href='profile.html#vault-title';
+    link.className='al-btn al-btn-soft';
+    link.textContent='Open profile documents';
+    section.append(heading,summary,checklist,link);
+    cover.insertAdjacentElement('afterend',section);
+    feedback.setAttribute('role','status');
+
+    const api=new URL('../../backend/api/',location.href);
+    let submitting=false, submitted=false;
+    async function loadPacket(){
+      if (submitting||submitted) return;
+      apply.disabled=true;
+      summary.textContent='Checking your saved documents...';
+      try{
+        const response=await fetch(new URL('student/document-vault.php',api),{cache:'no-store'});
+        const result=await response.json();
+        if (!response.ok||!result.ok) throw Error(result.message||'Could not check your saved documents.');
+        const saved=new Map();
+        for (const item of result.documents) saved.set(item.document_type,(saved.get(item.document_type)||0)+1);
+        const missing=result.required_documents.filter(item=>!saved.has(item.document_type));
+        checklist.replaceChildren(...result.required_documents.map(item=>{
+          const row=document.createElement('li');
+          const count=saved.get(item.document_type)||0;
+          row.textContent=(count?'Saved: ':'Required: ')+item.label
+            +(item.max_files>1?' ('+count+' of '+item.max_files+' files)':'');
+          return row;
+        }));
+        summary.textContent=missing.length
+          ? 'Save '+missing.length+' more '+(missing.length===1?'document':'documents')+' in My Profile to apply.'
+          : 'Your complete packet will be sent with this application.';
+        apply.disabled=missing.length>0;
+      }catch(error){
+        summary.textContent=error.message;
+      }
+    }
+
+    apply.addEventListener('click',async()=>{
+      feedback.hidden=false;
+      const id=new URLSearchParams(location.search).get('id');
+      if (!id||!/^[1-9]\d*$/.test(id)) {
+        feedback.textContent='Choose an opening first.';
+        return;
+      }
+      submitting=true;
+      apply.disabled=true;
+      feedback.textContent='Submitting your application...';
+      try{
+        const tokenResponse=await fetch(new URL('auth/csrf.php',api),{cache:'no-store'});
+        const token=await tokenResponse.json();
+        if (!tokenResponse.ok||!token.csrf_token) throw Error('Sign in again before applying.');
+        const body=new FormData();
+        body.set('listing_id',id);
+        body.set('cover_letter',cover.value.trim());
+        body.set('csrf_token',token.csrf_token);
+        const response=await fetch(new URL('student/apply-with-documents.php',api),{method:'POST',body});
+        const result=await response.json();
+        if (!response.ok||!result.ok) throw Error(result.message||'Application could not be submitted.');
+        submitted=true;
+        feedback.textContent='Application submitted with '+result.document_count+' documents.';
+        apply.textContent='Application submitted';
+        document.dispatchEvent(new Event('attachlink:application-submitted'));
+      }catch(error){
+        feedback.textContent=error.message;
+      }finally{
+        submitting=false;
+        if (!submitted) await loadPacket();
+      }
+    });
+    window.addEventListener('pageshow',event=>{if(event.persisted) loadPacket();});
+    loadPacket();
+  });
 }
 
 if ('saved-openings.html' === location.pathname.split('/').pop()) {

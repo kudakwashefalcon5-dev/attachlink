@@ -102,12 +102,17 @@ function rows(string $sql,array $args=[]): array {$s=db()->prepare($sql);$s->exe
 function execute(string $sql,array $args=[]): int {$s=db()->prepare($sql);$s->execute($args);return $s->rowCount();}
 function notify(int $userId,string $title,string $message,string $type='info'): void {execute('INSERT INTO notifications (user_id,title,message,type) VALUES (?,?,?,?)',[$userId,$title,$message,$type]);}
 
-function validate_application_upload(?array $file): array {
+function validate_application_upload(?array $file, bool $allowWord=false): array {
     if (($file['error'] ?? null) !== UPLOAD_ERR_OK || !is_string($file['tmp_name'] ?? null) || !is_uploaded_file($file['tmp_name'])) fail('A required document is missing or could not be uploaded.', 422);
     if ($file['size'] < 1 || $file['size'] > 5 * 1024 * 1024) fail('Documents must be between 1 byte and 5 MB.', 413);
     $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
-    $extension = ['application/pdf'=>'pdf','image/jpeg'=>'jpg','image/png'=>'png'][$mime] ?? null;
-    if (!$extension) fail('Only PDF, JPG and PNG documents are allowed.', 415);
+    $formats = ['application/pdf'=>'pdf','image/jpeg'=>'jpg','image/png'=>'png'];
+    if ($allowWord) {
+        $formats['application/msword']='doc';
+        $formats['application/vnd.openxmlformats-officedocument.wordprocessingml.document']='docx';
+    }
+    $extension = $formats[$mime] ?? null;
+    if (!$extension) fail($allowWord?'Only PDF, JPG, PNG, DOC and DOCX documents are allowed.':'Only PDF, JPG and PNG documents are allowed.',415);
     $name = basename(str_replace('\\', '/', $file['name']));
     return [$file['tmp_name'], mb_strcut($name, 0, 255, 'UTF-8'), $mime, $extension];
 }

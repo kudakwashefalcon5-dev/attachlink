@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Run staging regressions against disposable schemas on a local MariaDB test instance."""
 import base64
 import hashlib
@@ -90,7 +90,7 @@ def api(browser, url, endpoint, expected=200, data=None, uploads=None, headers=N
 
 def live_checks(scratch):
     api_root = "backend/api/"
-    fields = ("national_id", "academic_certificates", "stamped_letter", "birth_certificate", "transcript")
+    fields = ("national_id", "academic_certificates", "stamped_letter", "birth_certificate", "transcript", "cv")
     upload = "%PDF-1.4\n%%EOF\n"
     with config.server(PHP, PORT, ENV, scratch) as url:
         student, employer, admin = client(), client(), client()
@@ -102,16 +102,16 @@ def live_checks(scratch):
         print("PASSED authenticated Companies page and retired admin login redirect to the shared form.")
         apply = api_root + "student/apply-with-documents.php"
         vault = api_root + "student/document-vault.php"
-        for field in fields:
-            api(student, url, apply, 422, {"listing_id": 1}, {name: upload for name in fields if name != field})
+        missing = api(student, url, apply, 422, {"listing_id": 1}, {name: upload for name in fields})
+        assert len(missing["missing_documents"]) == 6
         api(student, url, vault, 415, {"document_type": fields[0]}, {"file": "invalid"})
         for field in fields:
             api(student, url, vault, 200, {"document_type": field}, {"file": upload})
-        assert len(api(student, url, vault)["documents"]) == 5
+        assert len(api(student, url, vault)["documents"]) == 6
         api(employer, url, vault, 403)
-        app = api(student, url, apply, 201, {"listing_id": 1, "use_vault": "1"}, {})
-        assert app["document_count"] == 5
-        print("PASSED all five direct uploads enforced; five saved vault files attached; invalid MIME and employer vault access rejected.")
+        app = api(student, url, apply, 201, {"listing_id": 1}, {})
+        assert app["document_count"] == 6
+        print("PASSED profile-only packet enforcement, six saved documents attached, invalid MIME and employer vault access rejected.")
         application_id = app["application_id"]
         detail = api_root + f"employer/applications.php?application_id={application_id}"
         prefs = api_root + "student/preferences.php"
@@ -124,11 +124,11 @@ def live_checks(scratch):
         assert [shared[key] for key in keys[:3]] == ["Engineering", "Hybrid", "Harare"] and keys[3] not in shared
         print("PASSED employer preference privacy, visible preferences, and stipend omission.")
         documents = api(employer, url, api_root + f"employer/documents.php?application_id={application_id}")["documents"]
-        assert len(documents) == 5
+        assert len(documents) == 6
         api(employer, url, api_root + f"documents/download.php?id={documents[0]['id']}")
         verification = api(employer, url, api_root + "company-files.php", 201, {"purpose": "verification"}, {"file": upload})
         api(admin, url, api_root + f"company-files.php?company_id=1&id={verification['id']}")
-        assert api(admin, url, api_root + "admin/retention.php")["status"]["saved_vault_documents"] == 5
+        assert api(admin, url, api_root + "admin/retention.php")["status"]["saved_vault_documents"] == 6
         downloads = api(admin, url, api_root + "admin/audit-log.php?action=document.download")["events"]
         assert {item["target_type"] for item in downloads} == {"application_document", "company_verification_document"}
         assert api(admin, url, api_root + "admin/audit-log.php?action=retention.view")["events"]
@@ -193,14 +193,14 @@ def main():
             scratch = Path(tmp)
             ENV.update(ATTACHLINK_DOCUMENT_STORAGE=str(scratch / "documents"), ATTACHLINK_MAIL_LOG=str(scratch / "mail.jsonl"))
             pending = cli("backend/check-config.php", ENV, 1)
-            assert "INVALID Database migrations" in pending and all(f"upgrade-{i}" in pending for i in range(10, 15))
+            assert "INVALID Database migrations" in pending and all(f"upgrade-{i}" in pending for i in range(10, 19))
             with config.server(PHP, PORT, ENV, scratch) as url:
                 api(client(), url, "backend/api/auth/login.php", 503, {"email": "student@example.invalid", "role": "student", "password": PASSWORD})
             output = cli("backend/jobs/migrate.php", ENV)
-            assert re.findall(r"Applied (upgrade-\d+)", output) == [f"upgrade-{i}" for i in range(10, 15)], output
+            assert re.findall(r"Applied (upgrade-\d+)", output) == [f"upgrade-{i}" for i in range(10, 19)], output
             assert "Detected upgrade-09" in output and not cli("backend/jobs/migrate.php", ENV).strip()
             assert "OK Database migrations" in cli("backend/check-config.php", ENV)
-            print("PASSED unversioned upgrade-09 detected; only upgrades 10 through 14 applied; rerun made no changes.")
+            print("PASSED unversioned upgrade-09 detected; only upgrades 10 through 18 applied; rerun made no changes.")
             digest = subprocess.check_output([PHP, "-r", "echo password_hash($argv[1], PASSWORD_BCRYPT);", PASSWORD], text=True)
             sql(f"CREATE USER '{DB_USER}'@'localhost' IDENTIFIED BY '{PASSWORD}'; GRANT ALL ON {DB}.* TO '{DB_USER}'@'localhost';")
             sql(f"INSERT INTO companies(id,name,verification_status) VALUES(1,'Fixture','verified'); INSERT INTO openings(id,company_id,title,description,status) VALUES(1,1,'Fixture','Fixture','published');", DB)

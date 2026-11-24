@@ -1,6 +1,5 @@
 /* Stage 10C: unblock the existing Stitch Messages link before Stage 8's legacy click handler. */
 (()=>{'use strict';
- const studentLogin='../students/login.html';
  const msgPath='messages.html';
  document.addEventListener('click',async e=>{
    if(!(e.target instanceof Element))return;
@@ -19,18 +18,6 @@
    }
    const button=e.target.closest('button');
    if(!button)return;
-   if(button.id==='employer-switch-account'){
-     e.preventDefault();e.stopImmediatePropagation();
-     if(!confirm('Sign out from this AttachLink account?'))return;
-     try{
-       const a=await fetch('../../backend/api/auth/csrf.php',{credentials:'same-origin',cache:'no-store'}).then(r=>r.json());
-       if(!a.csrf_token)throw Error('Could not retrieve session token.');
-       const res=await fetch('../../backend/api/auth/logout.php',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({csrf_token:a.csrf_token})});
-       if(!res.ok)throw Error('Sign out failed (HTTP '+res.status+').');
-       location.assign(studentLogin+'?logged_out=1');
-     }catch(err){alert(err.message);}
-     return;
-   }
    // Original applicant profile has a message button blocked by a legacy Stage 8 listener.
    if(location.pathname.endsWith('/applicant-profile.html')&&/^(chat\s*)?message$/i.test(button.textContent.replace(/\s+/g,' ').trim())){
      e.preventDefault();e.stopImmediatePropagation();

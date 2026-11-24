@@ -78,18 +78,22 @@ opening_id=call(employer, "employer/openings.php", data={"title":"QA deletion op
                                                       "description":"Disposable fixture","status":"published"})["id"]
 
 boundary="attachlink-phase3-fixture"
-fields={"csrf_token":call(student,"auth/csrf.php")["csrf_token"],"listing_id":str(opening_id)}
-parts=[f'--{boundary}\r\nContent-Disposition: form-data; name="{key}"\r\n\r\n{value}\r\n'.encode()
-       for key,value in fields.items()]
-parts.extend(f'--{boundary}\r\nContent-Disposition: form-data; name="{key}"; filename="fixture.pdf"\r\nContent-Type: application/pdf\r\n\r\n%PDF-1.4\n%%EOF\n\r\n'.encode()
-             for key in ("stamped_letter","academic_certificates","national_id","transcript","birth_certificate"))
-parts.append(f"--{boundary}--\r\n".encode())
-application_id=call(student,"student/apply-with-documents.php",201,(b"".join(parts),boundary))["application_id"]
+csrf=call(student,"auth/csrf.php")["csrf_token"]
+def multipart(fields, upload=False):
+    parts=[f'--{boundary}\r\nContent-Disposition: form-data; name="{key}"\r\n\r\n{value}\r\n'.encode()
+           for key,value in fields.items()]
+    if upload:
+        parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="file"; filename="fixture.pdf"\r\nContent-Type: application/pdf\r\n\r\n%PDF-1.4\n%%EOF\n\r\n'.encode())
+    parts.append(f"--{boundary}--\r\n".encode())
+    return b"".join(parts),boundary
+for field in ("cv","stamped_letter","academic_certificates","national_id","transcript","birth_certificate"):
+    call(student,"student/document-vault.php",200,multipart({"csrf_token":csrf,"document_type":field},True))
+application_id=call(student,"student/apply-with-documents.php",201,multipart({"csrf_token":csrf,"listing_id":str(opening_id)}))["application_id"]
 files=sql(f"SELECT stored_name FROM application_documents WHERE application_id={int(application_id)}").splitlines()
 storage=Path(os.environ["ATTACHLINK_DOCUMENT_STORAGE"])
-assert len(files)==5 and all((storage/file).is_file() for file in files)
+assert len(files)==6 and all((storage/file).is_file() for file in files)
 call(student,"student/withdraw-application.php",data={"application_id":application_id})
-print("PASSED consent enforced and recorded; five documents exist before account deletion.")
+print("PASSED consent enforced and recorded; six documents exist before account deletion.")
 
 bucket=hashlib.sha256(("forgot-global:"+student_email).encode()).hexdigest()
 sql(f"INSERT INTO login_attempts(bucket,window_id,attempts) VALUES('{bucket}',FLOOR(UNIX_TIMESTAMP()/86400),10)")

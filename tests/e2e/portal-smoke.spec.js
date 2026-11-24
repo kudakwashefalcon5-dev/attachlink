@@ -8,7 +8,7 @@ const api = '/backend/api/';
 const password = 'Portal smoke fixture password';
 const longName='Interdisciplinary'.repeat(5);
 const longMessage='M'.repeat(1000);
-const requiredDocuments=['stamped_letter','academic_certificates','national_id','transcript','birth_certificate'];
+const requiredDocuments=['cv','stamped_letter','academic_certificates','national_id','transcript','birth_certificate'];
 const expectedStatus = {student: 'students', employer: 'employers', admin: 'admin'};
 async function call(page, route, data) {
     let response;
@@ -45,6 +45,13 @@ async function prepare(browser, baseURL) {
     const pdf=Buffer.from('%PDF-1.4\n%%EOF\n');
     const maxPdf=Buffer.alloc(5*1024*1024,0x20);
     pdf.copy(maxPdf);
+    for (const document_type of requiredDocuments) {
+        const saved = await student.request.post(api+'student/document-vault.php',{
+            multipart:{csrf_token,document_type,file:{name:'fixture.pdf',mimeType:'application/pdf',buffer:maxPdf}},
+            timeout:60000
+        });
+        expect(saved.status()).toBe(200);
+    }
     let opening,application;
     for (let i=0;i<50;i++) {
         const id=(await call(employer,'employer/openings.php',{
@@ -52,9 +59,6 @@ async function prepare(browser, baseURL) {
             description:'Disposable opening',status:'published'
         })).id;
         const multipart={csrf_token,listing_id:String(id)};
-        for (const name of requiredDocuments) {
-            multipart[name]={name:'fixture.pdf',mimeType:'application/pdf',buffer:i===0?maxPdf:pdf};
-        }
         const submitted=await student.request.post(api+'student/apply-with-documents.php',{multipart,timeout:60000});
         expect(submitted.status(),'application '+(i+1)).toBe(201);
         const result=await submitted.json();

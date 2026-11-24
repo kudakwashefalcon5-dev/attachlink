@@ -30,8 +30,6 @@
           <div class="al-iv-days" data-iv-days role="group" aria-label="Interview calendar"></div>
         </div>
         <aside class="al-iv-side"><h3>Upcoming interviews</h3><div data-iv-upcoming aria-live="polite"></div>
-          <div class="al-iv-ai"><div class="al-iv-ai-head">✦ AI Interview Coach — Coming later</div>
-            <p>Future addition: personalised preparation plans, practice questions and feedback. AI is not enabled yet.</p></div>
         </aside>
       </div>
       <p class="al-iv-tip">Select a day with an interview to jump to its details. Use the existing form below to add, edit or export plans.</p>

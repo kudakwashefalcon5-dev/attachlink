@@ -2,12 +2,13 @@
 const root='../../backend/api/';const $=id=>document.getElementById(id);let active=null,me=null,contacts=[],busy=false,polling=false;
 async function request(path,data){const options={credentials:'same-origin',cache:'no-store',headers:{Accept:'application/json'}};if(data){const token=await request('auth/csrf.php');options.method='POST';options.headers['Content-Type']='application/json';options.body=JSON.stringify({...data,csrf_token:token.csrf_token});}const response=await fetch(root+path,options);let result;try{result=await response.json()}catch{throw Error('Backend returned a non-JSON response (HTTP '+response.status+')')}if(!response.ok||result.ok===false)throw Error(result.message||result.error||'HTTP '+response.status);return result;}
 function status(message,error=false){$('status').textContent=message;$('status').className=error?'error':'muted'}
-function drawContacts(){const el=$('contacts');el.replaceChildren();if(!contacts.length){el.textContent='No active student or company accounts found.';return}for(const c of contacts){const b=document.createElement('button');b.className=active===c.id?'selected':'';b.textContent=c.name||'Account '+c.id;const s=document.createElement('small');s.textContent=(c.role==='employer'?'Company':'Student')+(c.unread?' · '+c.unread+' unread':'');b.append(s);b.onclick=()=>{active=c.id;drawContacts();loadThread()};el.append(b)}}
+function drawContacts(){const el=$('contacts');el.replaceChildren();if(!contacts.length){el.textContent='No active student or company accounts found.';return}for(const c of contacts){const b=document.createElement('button');b.className=active===c.id?'selected':'';b.textContent=c.name||'Account '+c.id;const s=document.createElement('small');s.textContent=(c.role==='employer'?'Company':c.role==='admin'?'Support':'Student')+(c.unread?' · '+c.unread+' unread':'')+(Number(c.needs_human)?' · '+c.needs_human+' need a reply':'');b.append(s);b.onclick=()=>{active=c.id;drawContacts();loadThread()};el.append(b)}}
+const supportLabels={needs_human:'Needs a human reply',ai_answered:'Answered by AI',human_answered:'Answered by an administrator',ai_reply:'AI Support Assistant'};
 async function loadContacts(){const data=await request('messages.php');contacts=data.contacts||[];drawContacts()}
 const history=window.AttachLinkThreadHistory(request,message=>status(message,true));
 function renderThread(data, older=false) {
     const container=$('messages');
-    const signature=[data.contact.id,data.next_before,...data.messages.map(message=>message.id)].join(',');
+    const signature=[data.contact.id,data.next_before,...data.messages.map(message=>[message.id,message.support_status].join(':'))].join(',');
     if (container.dataset.lastId===signature) return;
     const height=container.scrollHeight;
     const top=container.scrollTop;
@@ -18,7 +19,8 @@ function renderThread(data, older=false) {
         bubble.className='bubble'+(Number(message.sender_id)===Number(data.me_id)?' mine':'');
         bubble.textContent=message.body;
         const time=document.createElement('small');
-        time.textContent=message.created_at;
+        const label=supportLabels[message.support_status];
+        time.textContent=label?label+' · '+message.created_at:message.created_at;
         bubble.append(time);
         container.append(bubble);
     }

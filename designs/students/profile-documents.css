@@ -1,0 +1,27 @@
+.al-document-packet {
+  padding: clamp(16px, 3vw, 28px);
+  background: white;
+  border: 1px solid #dce7e4;
+  border-radius: 18px;
+}
+
+#vault-title { scroll-margin-top: 110px; margin: 0 0 6px; font-size: 1.4rem; font-weight: 750; }
+.al-document-packet-header { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.al-document-packet-header p, .al-document-formats { color: #465b60; margin: 0; }
+.al-document-packet-header strong { color: #005b52; }
+.al-document-packet progress { width: 100%; margin-block: 12px; accent-color: #08776b; }
+.al-document-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 245px), 1fr)); gap: 12px; margin-top: 12px; }
+.al-document-slot { display: flex; flex-direction: column; gap: 8px; padding: 14px; background: #f7faf9; border: 1px solid #dce7e4; border-radius: 12px; min-width: 0; }
+.al-document-slot label { font-weight: 750; }
+.al-document-slot p { margin: 0; color: #465b60; overflow-wrap: anywhere; }
+.al-document-slot .al-document-state { color: #785111; font-weight: 650; }
+.al-document-slot .al-document-state[data-saved="true"] { color: #005b52; }
+.al-document-slot input { min-width: 0; width: 100%; margin-top: auto; font-size: .875rem; scroll-margin-top: 110px; }
+.al-document-slot input::file-selector-button { background: white; color: #005b52; border: 1px solid #9fbeb7; border-radius: 8px; padding: 7px 9px; margin-right: 8px; cursor: pointer; }
+.al-document-slot button { align-self: flex-start; }
+.al-document-slot button:disabled { opacity: .55; cursor: default; }
+.al-document-slot button[hidden] { display: none; }
+.al-document-group { grid-column: 1 / -1; }
+.al-document-group h3 { font-weight: 750; }
+.al-document-group p { color: #465b60; }
+#vault-status:empty { display: none; }

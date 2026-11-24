@@ -47,32 +47,29 @@ async function verify(page, email) {
 }
 
 async function apply(page, opening, throttled) {
-    await page.goto('/designs/students/attachment-details.html?id='+opening);
-    const fields = ['stamped_letter','academic_certificates','national_id','transcript','birth_certificate'];
-    const file = {name:'fixture.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4\n%'+ '0'.repeat(20000)+'\n%%EOF\n')};
+    const applyUrl = '/designs/students/attachment-details.html?id='+opening;
     const applyButton = page.locator('#listing-apply');
     if (throttled) {
-        await page.locator('input[name="stamped_letter"]').setInputFiles({...file,name:'fixture.txt',mimeType:'text/plain'});
-        for (const field of fields.slice(1)) await page.locator('input[name="'+field+'"]').setInputFiles(file);
-        await applyButton.click();
-        await expect(page.locator('#application-feedback')).toContainText('must be a PDF, JPG or PNG');
-        await page.locator('input[name="stamped_letter"]').setInputFiles({...file,buffer:Buffer.alloc(5*1024*1024+1)});
-        await applyButton.click();
-        await expect(page.locator('#application-feedback')).toContainText('must be between 1 byte and 5 MB');
+        await page.goto(applyUrl);
+        await expect(applyButton).toBeDisabled();
+        await page.getByRole('link',{name:'Open profile documents'}).click();
+        const fields = ['cv','stamped_letter','academic_certificates','national_id','transcript','birth_certificate'];
+        const file = {name:'fixture.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4\n%%EOF\n')};
+        const cv = page.locator('#vault-file-cv');
+        await cv.setInputFiles({...file,name:'fixture.txt',mimeType:'text/plain',buffer:Buffer.from('Invalid')});
+        await page.getByRole('button',{name:'Save file for CV',exact:true}).click();
+        await expect(page.locator('#vault-state-cv')).toContainText('Only PDF, JPG, PNG, DOC and DOCX');
+        for (const [index,field] of fields.entries()) {
+            const input = page.locator('#vault-file-'+field);
+            await input.setInputFiles(file);
+            await input.locator('..').getByRole('button').click();
+            await expect(page.locator('#vault-count')).toHaveText((index+1)+' of 6 saved');
+        }
     }
-    for (const field of fields) await page.locator('input[name="'+field+'"]').setInputFiles(file);
-    const device = throttled ? await page.context().newCDPSession(page) : null;
-    if (device) {
-        await device.send('Network.enable');
-        await device.send('Network.emulateNetworkConditions',{offline:false,latency:150,downloadThroughput:128000,uploadThroughput:24000,connectionType:'cellular3g'});
-    }
-    try {
-        await applyButton.click();
-        if (throttled) await expect(page.getByLabel('Application upload progress')).toBeVisible();
-        await expect(page.locator('#application-feedback')).toContainText('submitted with 5 private documents',{timeout:20000});
-    } finally {
-        await device?.detach();
-    }
+    await page.goto(applyUrl);
+    await expect(applyButton).toBeEnabled();
+    await applyButton.click();
+    await expect(page.locator('#application-feedback')).toContainText('submitted with 6 documents');
 }
 
 test('three portals complete the attachment and account recovery workflow', async ({browser},testInfo) => {

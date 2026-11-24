@@ -207,10 +207,12 @@ CREATE TABLE `messages` (
   `body` text NOT NULL,
   `is_read` tinyint(1) DEFAULT 0,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `support_status` enum('needs_human','ai_answered','human_answered','ai_reply') DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `sender_id` (`sender_id`),
   KEY `ix_message_inbox` (`recipient_id`,`sender_id`,`created_at`),
   KEY `ix_message_unread` (`recipient_id`,`is_read`,`id`),
+  KEY `ix_message_support` (`recipient_id`,`support_status`,`sender_id`,`id`),
   CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`recipient_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -248,6 +250,8 @@ CREATE TABLE `openings` (
   `stipend_usd` decimal(10,2) DEFAULT NULL,
   `available_positions` smallint(5) unsigned DEFAULT NULL,
   `required_skills` text DEFAULT NULL,
+  `intake_start_month` char(7) CHARACTER SET ascii DEFAULT NULL,
+  `intake_end_month` char(7) CHARACTER SET ascii DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `company_id` (`company_id`),
   KEY `ix_openings_status` (`status`,`deadline`),
@@ -316,6 +320,7 @@ CREATE TABLE `student_cvs` (
   `projects` text DEFAULT NULL,
   `awards` text DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `layout` varchar(16) CHARACTER SET ascii NOT NULL DEFAULT 'classic',
   PRIMARY KEY (`student_id`),
   CONSTRAINT `student_cvs_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -424,10 +429,11 @@ CREATE TABLE `users` (
 CREATE TABLE IF NOT EXISTS student_document_vault (
     student_id BIGINT UNSIGNED NOT NULL,
     document_type VARCHAR(32) CHARACTER SET ascii NOT NULL,
+    slot TINYINT UNSIGNED NOT NULL DEFAULT 1,
     original_name VARCHAR(255) NOT NULL,
     stored_name VARCHAR(255) NOT NULL,
     mime_type VARCHAR(100) NOT NULL,
-    PRIMARY KEY (student_id,document_type),
+    PRIMARY KEY (student_id,document_type,slot),
     CONSTRAINT fk_vault_student FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE IF NOT EXISTS admin_totp (
@@ -438,4 +444,4 @@ CREATE TABLE IF NOT EXISTS admin_totp (
     CONSTRAINT fk_totp_admin FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 SET FOREIGN_KEY_CHECKS=@attachlink_old_fk;
-INSERT IGNORE INTO schema_migrations(version) VALUES ('upgrade-02'),('upgrade-03'),('upgrade-04'),('upgrade-05'),('upgrade-06'),('upgrade-07'),('upgrade-08'),('upgrade-09'),('upgrade-10'),('upgrade-11'),('upgrade-12'),('upgrade-13'),('upgrade-14');
+INSERT IGNORE INTO schema_migrations(version) VALUES ('upgrade-02'),('upgrade-03'),('upgrade-04'),('upgrade-05'),('upgrade-06'),('upgrade-07'),('upgrade-08'),('upgrade-09'),('upgrade-10'),('upgrade-11'),('upgrade-12'),('upgrade-13'),('upgrade-14'),('upgrade-15'),('upgrade-16'),('upgrade-17'),('upgrade-18');

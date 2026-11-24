@@ -42,6 +42,10 @@ function detect_unversioned_migrations(PDO $pdo): array {
         'upgrade-12'=>str_contains($columns['application_documents']['document_type']??'',"'academic_certificates','birth_certificate'"),
         'upgrade-13'=>isset($columns['student_document_vault']['stored_name']),
         'upgrade-14'=>isset($columns['admin_totp']['encrypted_secret'],$columns['admin_totp']['recovery_hashes']),
+        'upgrade-15'=>isset($columns['messages']['support_status']) && in_array('ix_message_support',$indexes,true),
+        'upgrade-16'=>isset($columns['student_document_vault']['slot']),
+        'upgrade-17'=>isset($columns['openings']['intake_start_month'],$columns['openings']['intake_end_month']),
+        'upgrade-18'=>isset($columns['student_cvs']['layout']),
     ];
     return array_keys(array_filter($applied));
 }

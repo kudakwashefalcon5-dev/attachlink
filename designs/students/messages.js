@@ -4,7 +4,7 @@
   'use strict';
   const apiBase = new URL('../../backend/api/', location.href);
   const $ = id => document.getElementById(id);
-  let contacts = [], activeId = 0, myId = 0, csrf = null, sending = false;
+  let contacts = [], activeId = 0, myId = 0, csrf = null, sending = false, supportAi = false;
   const dom = {threads:$('thread-list'),heading:$('thread-heading'),list:$('message-list'),form:$('chat-form'),input:$('message-text')};
   if (!Object.values(dom).every(Boolean)) return;
   function el(tag,cls,txt){const x=document.createElement(tag);if(cls)x.className=cls;if(txt!==undefined)x.textContent=String(txt);return x;}
@@ -38,20 +38,26 @@
     const previousTop=dom.list.scrollTop;
     dom.input.disabled=!Number(data.contact.can_send);
     dom.form.querySelector('button[type="submit"]').disabled=dom.input.disabled;
-    myId=data.me_id;dom.heading.replaceChildren();dom.heading.append(el('h2','font-bold text-lg',data.contact.name),el('p','al-muted','Conversation · '+(data.contact.role==='admin'?'Support':data.contact.role)));
+    const description=data.contact.role==='admin'
+      ? (supportAi?'AI-assisted support · Ask for a person at any time':'Support')
+      : 'Conversation · '+data.contact.role;
+    myId=data.me_id;dom.heading.replaceChildren();dom.heading.append(el('h2','font-bold text-lg',data.contact.name),el('p','al-muted',description));
     dom.list.replaceChildren();
     if(!data.messages.length)dom.list.append(el('p','al-muted','No messages in this conversation yet.'));
     for(const m of [...data.messages].reverse()){
       const mine=Number(m.sender_id)===myId;
       const bubble=el('div','rounded-xl p-3 text-sm max-w-[86%]');
       bubble.style.alignSelf=mine?'flex-end':'flex-start'; bubble.style.background=mine?'#d6f4ef':'#f2f3ff';
-      const text=el('p','',m.body);text.style.whiteSpace='pre-wrap';bubble.append(text,el('p','al-muted mt-2',m.created_at||''));dom.list.append(bubble);
+      const text=el('p','',m.body);text.style.whiteSpace='pre-wrap';
+      if(m.support_status==='ai_reply')bubble.append(el('p','font-semibold mb-1','AI Support Assistant'));
+      bubble.append(text,el('p','al-muted mt-2',m.created_at||''));dom.list.append(bubble);
     }
     history.addButton(dom.list,data,renderMessages);
     dom.list.scrollTop=older?previousTop+dom.list.scrollHeight-previousHeight:dom.list.scrollHeight;
   }
   async function loadContacts(preserve=true){
     const result=await api('messages.php');
+    supportAi=result.support_ai===true;
     contacts=result.contacts||[];
     if(!preserve||!contacts.some(c=>c.id===activeId)){
       const requested=Number(new URLSearchParams(location.search).get('peer_id'));
@@ -70,7 +76,7 @@
       if(thread.messages.length)await api('messages.php',{action:'read',peer_id:id,through_id:thread.messages[0].id});
 
       await loadContacts();
-      status(Number(thread.contact.can_send)?'Conversation ready.':'This conversation is read-only.');
+      status(Number(thread.contact.can_send)?'':'This conversation is read-only.');
     }catch(err){status('Could not open conversation: '+err.message);}
   }
   async function init(){
@@ -82,14 +88,22 @@
       if(!activeId){status('Choose a contact first.');return;}
       const body=dom.input.value.trim();if(body.length<2){status('Enter at least two characters.');return;}
       sending=true;const b=dom.form.querySelector('button[type="submit"]');if(b)b.disabled=true;
-      try{await api('messages.php',{recipient_id:activeId,body});dom.input.value='';await openThread(activeId);status('Message delivered to the recipient’s AttachLink inbox.');}
+      try{
+        const peer=activeId;
+        const contact=contacts.find(item=>item.id===peer);
+        const result=await api('messages.php',{recipient_id:peer,body,allow_support_ai:supportAi&&contact?.role==='admin'});
+        if(activeId===peer){
+          dom.input.value='';
+          await openThread(peer);
+          status(result.support_result==='needs_human'?'Sent to an administrator for a reply.':result.support_result==='ai_answered'?'The AI Support Assistant replied.':'Message sent.');
+        }
+      }
       catch(err){status('Message not sent: '+err.message);}
       finally{sending=false;if(b)b.disabled=dom.input.disabled;}
     },true);
     const lead=document.querySelector('main .al-sub');if(lead)lead.textContent='Message employers linked to your applications or contact the AttachLink administrator.';
     const desc=dom.threads.parentElement.querySelector('.al-muted');if(desc)desc.textContent='Your authorized Conversations';
     const label=dom.form.querySelector('label');if(label)label.textContent='Your message';
-    const helper=dom.form.querySelector('span.al-muted');if(helper)helper.textContent='Your contact can read this in their inbox.';
     const button=dom.form.querySelector('button[type="submit"]');if(button)button.textContent='Send message';
     dom.input.placeholder='Write a message…';
     const note=document.querySelector('.al-demo-note');if(note)note.textContent='Messages are delivered in AttachLink.';

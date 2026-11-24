@@ -10,17 +10,6 @@ $opening = positive($_POST['listing_id'] ?? 0);
 $letter = $_POST['cover_letter'] ?? '';
 if (!is_string($letter) || strlen($letter) > 12000) fail('Invalid cover letter.');
 
-$files = [];
-$useVault=($_POST['use_vault']??null)==='1';
-foreach (REQUIRED_APPLICATION_DOCUMENTS as $field => [$type, $label]) {
-    $file = $_FILES[$field] ?? null;
-    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
-        if ($useVault) continue;
-        fail('Please upload '.$label.'.', 422);
-    }
-    $files[$field] = validate_application_upload($file);
-}
-
 $pdo = db();
 $saved = [];
 try {
@@ -35,16 +24,17 @@ try {
         require_verified_email($current);
     }
     $vault=[];
-    if ($useVault) {
-        foreach (rows('SELECT document_type,stored_name,original_name,mime_type FROM student_document_vault WHERE student_id=?',[$student['id']]) as $document) {
-            $vault[$document['document_type']]=$document;
-        }
-        foreach (REQUIRED_APPLICATION_DOCUMENTS as $field => [$type,$label]) {
-            if (!isset($files[$field]) && !isset($vault[$field])) {
-                $pdo->rollBack();
-                fail('Please upload '.$label.'.',422);
-            }
-        }
+    foreach (rows('SELECT document_type,stored_name,original_name,mime_type FROM student_document_vault WHERE student_id=? ORDER BY document_type,slot',[$student['id']]) as $document) {
+        $vault[$document['document_type']][]=$document;
+    }
+    $missing=[];
+    foreach (REQUIRED_APPLICATION_DOCUMENTS as $field=>[$type,$label]) {
+        if (!isset($vault[$field])) $missing[]=$label;
+    }
+    if ($missing) {
+        $pdo->rollBack();
+        out(['ok'=>false,'message'=>'Complete your application documents in My Profile before applying.',
+            'missing_documents'=>$missing],422);
     }
     $record = getrow("SELECT o.title,o.company_id FROM openings o JOIN companies c ON c.id=o.company_id WHERE o.id=? AND o.status='published' AND c.verification_status='verified' AND (o.deadline IS NULL OR o.deadline>=CURDATE()) FOR UPDATE", [$opening]);
     if (!$record) {
@@ -54,16 +44,12 @@ try {
     execute('INSERT INTO applications(opening_id,student_id,cover_letter) VALUES(?,?,?)', [$opening,$student['id'],trim($letter)]);
     $id = (int)$pdo->lastInsertId();
     foreach (REQUIRED_APPLICATION_DOCUMENTS as $field=>[$type]) {
-        if (isset($files[$field])) {
-            [$temporary,$original,$mime,$extension]=$files[$field];
-            $stored=store_application_upload($temporary,$extension);
-        } else {
-            $original=$vault[$field]['original_name'];
-            $mime=$vault[$field]['mime_type'];
-            $stored=copy_vault_document($vault[$field]['stored_name']);
+        foreach ($vault[$field] as $document) {
+            $stored=copy_vault_document($document['stored_name']);
+            $saved[]=$stored;
+            execute('INSERT INTO application_documents(application_id,document_type,original_name,stored_name,mime_type) VALUES(?,?,?,?,?)',
+                [$id,$type,$document['original_name'],$stored,$document['mime_type']]);
         }
-        $saved[] = $stored;
-        execute('INSERT INTO application_documents(application_id,document_type,original_name,stored_name,mime_type) VALUES(?,?,?,?,?)', [$id,$type,$original,$stored,$mime]);
     }
     notify((int)$student['id'], 'Application submitted', 'Your application for '.$record['title'].' was submitted.', 'application');
     foreach (rows("SELECT id FROM users WHERE role='employer' AND company_id=? AND is_active=1", [$record['company_id']]) as $employer) {
