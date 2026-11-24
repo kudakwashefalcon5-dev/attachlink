@@ -108,6 +108,8 @@ test('three portals complete the attachment and account recovery workflow', asyn
     await expect(student.locator('#verify-email-banner [role=status]')).toHaveText('Verification email queued.');
     await verify(student,studentEmail);
     await verify(employer,employerEmail);
+    const {towns}=await request(employer,'location-towns.php');
+    await request(employer,'company-location.php',{town_id:towns[0].id,province_id:towns[0].province_id});
     admin.on('dialog',dialog=>dialog.accept());
     await admin.goto('/designs/admin/verification-queue.html');
     await admin.locator('.submission-row').filter({hasText:company}).click();

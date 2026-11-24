@@ -40,3 +40,11 @@
 - Unknown-account dummy hashes use the same bcrypt generator and cost 11 as new passwords. After an eligible successful login, a lower-cost bcrypt hash is replaced conditionally using the old hash as the update guard. This keeps rehashing separate from password resets and preserves concurrently changed passwords and stronger hashes.
 - Database dumps and document archives stream directly into age. The backup host takes the public recipient only. Operators use an off-server identity for recovery and retain older keys until the matching ciphertext expires.
 - The login benchmark can require the Apache server header and the fpm-fcgi SAPI before it starts timing requests. This keeps PHP-FPM measurements distinct from development servers.
+## Company location, Stage 1
+
+- Use additive migration `upgrade-19` because `upgrade-13` already belongs to the document vault. Existing free-text addresses and already published openings keep their current values.
+- Use GeoNames Zimbabwe reference records for the ten provinces and 46 selected populated places. The stored points are approximate town references. They have not been field-verified and do not identify individual businesses. The source is the GeoNames country extract under CC BY 4.0.
+- Registration prepares an optional draft in the current browser tab. It is tied to the new account ID, sent to no registration or authentication endpoint, and saved to the server only by an explicit Company Profile action. Closing the tab can discard it.
+- Verified company proposals are stored separately from the effective location. Admin approval applies the proposal, and an approval timestamp preserves the verified state of the effective location while another proposal is pending. The audit log records the actor and before/after snapshots, including an employer actor role when applicable.
+- The self-hosted map picker can work without external tiles. When tiles are configured, previewing the map sends tile requests to the configured provider, which can infer the displayed area. Stage 1 stores no student location data.
+- Routing and drawn directions would require a routing service and traffic assumptions. Live tracking would create unnecessary privacy exposure. Geocoding search would require another provider and an address-matching review workflow.

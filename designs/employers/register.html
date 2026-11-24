@@ -1,7 +1,10 @@
 <!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Company registration | AttachLink</title><link rel="stylesheet" href="../../assets/tailwind.min.css">
-<link rel="stylesheet" href="../../assets/attachlink-auth.css"></head>
+<link rel="stylesheet" href="../../assets/attachlink-auth.css"><link rel="stylesheet" href="../../assets/vendor/leaflet/leaflet.css">
+<link rel="stylesheet" href="../../assets/company-location.css">
+<script defer src="../../assets/vendor/leaflet/leaflet.js"></script>
+<script defer src="../../assets/company-location.js"></script></head>
 <body class="al-auth">
 <main class="al-auth-card al-register">
   <a href="../students/login.html?role=employer"><img class="al-register-brand" src="attachlink-logo.svg" alt="AttachLink sign in"></a>
@@ -16,6 +19,11 @@
     <label>City<input name="city" autocomplete="address-level2"></label>
     <label>Industry<input name="industry"></label>
     <label class="full">Password<input type="password" name="password" minlength="10" required autocomplete="new-password"></label>
+    <details class="full">
+      <summary>Prepare your company location (optional)</summary>
+      <p class="al-auth-copy">You can skip this step. Review and save your location in Company Profile after signing in.</p>
+      <div id="registration-company-location"></div>
+    </details>
     <label class="full"><span><input type="checkbox" name="consent" required> I accept the <a href="../../privacy.html">Privacy Notice</a> and <a href="../../terms.html">Terms of Use</a>.</span></label>
     <p class="full al-auth-copy" id="company-status" role="status">Use a password with at least 10 characters.</p>
     <button class="full al-auth-primary" type="submit">Create Company Account</button>
@@ -23,6 +31,14 @@
   </form>
 </main>
 <script>
+let registrationLocation;
+document.addEventListener('DOMContentLoaded',()=>{
+  const picker=document.getElementById('registration-company-location');
+  const optional=picker.closest('details');
+  optional.addEventListener('toggle',async()=>{
+    if(optional.open&&!registrationLocation) registrationLocation=await window.AttachLinkLocation.mount(picker,{registration:true});
+  });
+});
 document.getElementById('company-registration').addEventListener('submit', async event => {
   event.preventDefault();
   const form = event.currentTarget;
@@ -39,7 +55,9 @@ document.getElementById('company-registration').addEventListener('submit', async
     const response = await fetch(root + 'register.php', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({...fields, consent: fields.consent === 'on', consent_version: 'pilot-2026-11', role: 'employer', csrf_token: token.csrf_token})});
     const result = await response.json();
     if (!response.ok || !result.ok) throw new Error(result.message || 'Could not create the account.');
-    status.textContent = result.message;
+    const locationDraft=registrationLocation?.draft();
+    window.AttachLinkLocation?.registerDraft(result.user_id,locationDraft);
+    status.textContent = result.message+(locationDraft?' Open Company Profile after signing in to save the location you prepared.':'');
     form.reset();
   } catch (error) {
     status.textContent = error.message;

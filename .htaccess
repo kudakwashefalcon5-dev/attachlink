@@ -1,10 +1,13 @@
 DirectoryIndex index.php
 Options -Indexes
 <IfModule mod_headers.c>
+    Header onsuccess unset Content-Security-Policy
+    Header onsuccess unset Permissions-Policy
     Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+    Header always set Content-Security-Policy "expr=default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: %{reqenv:ATTACHLINK_MAP_TILE_ORIGIN}; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" "expr=reqenv('ATTACHLINK_MAP_TILE_ORIGIN') =~ m#^https://[a-zA-Z0-9.-]+(?::[0-9]+)?$#"
     Header always set X-Frame-Options "DENY"
     Header always set Referrer-Policy "no-referrer"
-    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(self)"
     Header always set Strict-Transport-Security "max-age=31536000" "expr=%{HTTPS} == 'on' && reqenv('ATTACHLINK_ENV') == 'production'"
 </IfModule>
 

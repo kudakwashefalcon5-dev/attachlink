@@ -1,0 +1,14 @@
+.al-location { display: grid; gap: .75rem; color: #173b37; }
+.al-location h2 { font-size: 1.2rem; font-weight: 750; }
+.al-location label { display: grid; gap: .3rem; font-weight: 650; }
+.al-location label:has(input[type=checkbox]) { display: flex; align-items: start; }
+.al-location :is(select,input:not([type=checkbox]),textarea) { width: 100%; min-width: 0; padding: .55rem; border: 1px solid #adc5bf; border-radius: .5rem; background: white; }
+.al-location input[type=checkbox] { width: auto; margin: .25rem .35rem 0 0; }
+.al-location-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+.al-location button { background: #e8f4ef; color: #075c53; border: 1px solid #adc5bf; border-radius: .5rem; font-weight: 650; padding: .55rem .8rem; cursor: pointer; }
+.al-location button:disabled { opacity: .65; cursor: default; }
+.al-location-map { height: 250px; isolation: isolate; background: #e7f0ee; border: 1px solid #adc5bf; border-radius: .5rem; }
+.al-location [hidden] { display: none !important; }
+.al-location-state { color: #485954; }
+.al-location-warning { color: #79510b; }
+.al-location-panel { margin-top: 1rem; padding: 1rem; }

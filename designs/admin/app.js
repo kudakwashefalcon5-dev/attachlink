@@ -132,6 +132,21 @@
         card.append(title,badge);
         if(location)card.append(element('p','',location));
         if(company.description)card.append(element('p','',company.description));
+        const details=element('details','al-location-panel');
+        const locationSummary=element('summary');
+        const showLocation=record=>{
+          locationSummary.textContent=record.town_name
+            ? record.town_name+' · '+record.province_name+' · Location review: '+record.location_review_status
+            : 'Location not set · '+record.location_review_status;
+        };
+        showLocation(company);
+        details.append(locationSummary);
+        const locationPanel=element('div');
+        details.append(locationPanel);
+        details.addEventListener('toggle',()=>{
+          if(details.open)window.AttachLinkLocation.mount(locationPanel,{admin:true,companyId:company.id,onChange:showLocation});
+        });
+        card.append(details);
         list.append(card);
       }
       status.textContent=visible.length ? visible.length+' '+(visible.length===1?'company':'companies') : 'No companies match your filters.';
@@ -216,10 +231,19 @@
     if(item)text(byId('meta-host'),item.type==='listing'?item.organization:'Organization review');
     const notes=byId('liaison-endorsement-notes');if(notes)notes.value='';
     byId('verification-file-list')?.remove();
+    byId('verification-location')?.remove();
     if(item?.type==='organization'){
       const listing=element('div','al-stage9b-muted','Loading verification documents...');
       listing.id='verification-file-list';
       byId('inspect-subtitle')?.after(listing);
+      const locationDetails=element('details','al-location-panel');
+      locationDetails.id='verification-location';
+      const locationPanel=element('div');
+      locationDetails.append(element('summary','','Review company location'),locationPanel);
+      listing.after(locationDetails);
+      locationDetails.addEventListener('toggle',()=>{
+        if(locationDetails.open)window.AttachLinkLocation.mount(locationPanel,{admin:true,companyId:item.id});
+      });
       const url='company-files.php?company_id='+encodeURIComponent(item.id);
       api(url).then(result=>{
         if(selected!==item)return;

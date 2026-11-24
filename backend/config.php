@@ -8,6 +8,24 @@ function config_env(string $key,string $default=''): string {
     return $value===false?$default:$value;
 }
 
+function map_tile_settings(): array {
+    $url=trim(config_env('ATTACHLINK_MAP_TILE_URL'));
+    if ($url==='') return ['url'=>'','origin'=>'','attribution'=>''];
+    $attribution=trim(config_env('ATTACHLINK_MAP_ATTRIBUTION'));
+    if (!preg_match('~\A(https://[a-z0-9.-]+(?::[0-9]+)?)/[^\s<>"\x27]*\z~i',$url,$matches)
+        || !str_contains($url,'{z}') || !str_contains($url,'{x}') || !str_contains($url,'{y}') || $attribution==='') {
+        throw new ConfigException('Provide an HTTPS map tile URL with {z}, {x}, {y} and tile attribution.');
+    }
+    return ['url'=>$url,'origin'=>$matches[1],'attribution'=>$attribution];
+}
+
+function content_security_policy(): string {
+    $origin=map_tile_settings()['origin'];
+    return "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:"
+        .($origin===''?'':' '.$origin)
+        ."; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'";
+}
+
 function loopback_host(): bool {
     $host=$_SERVER['HTTP_HOST']??'';
     $peer=$_SERVER['REMOTE_ADDR']??'';

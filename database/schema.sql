@@ -86,6 +86,21 @@ CREATE TABLE `applications` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE IF NOT EXISTS provinces (
+    id INT UNSIGNED NOT NULL PRIMARY KEY,
+    name VARCHAR(120) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS towns (
+    id INT UNSIGNED NOT NULL PRIMARY KEY,
+    province_id INT UNSIGNED NOT NULL,
+    name VARCHAR(120) NOT NULL,
+    latitude DECIMAL(9,6) NOT NULL,
+    longitude DECIMAL(9,6) NOT NULL,
+    coordinate_source VARCHAR(30) NOT NULL,
+    attribution VARCHAR(255) NOT NULL,
+    UNIQUE KEY uq_town_province_name (province_id,name),
+    CONSTRAINT fk_town_province FOREIGN KEY (province_id) REFERENCES provinces(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `companies` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(180) NOT NULL,
@@ -97,12 +112,31 @@ CREATE TABLE `companies` (
   `verified_by` bigint(20) unsigned DEFAULT NULL,
   `verified_at` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
+  physical_address VARCHAR(255) DEFAULT NULL,
+  town_id INT UNSIGNED DEFAULT NULL,
+  latitude DECIMAL(9,6) DEFAULT NULL,
+  longitude DECIMAL(9,6) DEFAULT NULL,
+  accuracy_m DECIMAL(10,2) DEFAULT NULL,
+  location_precision ENUM('town','exact') DEFAULT NULL,
+  location_source ENUM('town_seed','employer_pin','employer_gps_once','admin','pasted_link') DEFAULT NULL,
+  location_review_status ENUM('none','pending','approved','rejected') NOT NULL DEFAULT 'none',
+  location_updated_at DATETIME DEFAULT NULL,
+  location_approved_at DATETIME DEFAULT NULL,
+  landmark_directions VARCHAR(300) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `ix_companies_status` (`verification_status`)
+  KEY `ix_companies_status` (`verification_status`),
+  KEY ix_companies_town (town_id),
+  KEY ix_companies_coordinates (latitude,longitude),
+  CONSTRAINT fk_companies_town FOREIGN KEY (town_id) REFERENCES towns(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE IF NOT EXISTS company_location_proposals (
+    company_id BIGINT UNSIGNED NOT NULL PRIMARY KEY,
+    details JSON NOT NULL,
+    CONSTRAINT fk_company_location_proposal FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `company_files` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `company_id` bigint(20) unsigned NOT NULL,
@@ -252,6 +286,10 @@ CREATE TABLE `openings` (
   `required_skills` text DEFAULT NULL,
   `intake_start_month` char(7) CHARACTER SET ascii DEFAULT NULL,
   `intake_end_month` char(7) CHARACTER SET ascii DEFAULT NULL,
+  accommodation ENUM('yes','no','unknown') NOT NULL DEFAULT 'unknown',
+  transport_allowance ENUM('yes','no','unknown') NOT NULL DEFAULT 'unknown',
+  meal_allowance ENUM('yes','no','unknown') NOT NULL DEFAULT 'unknown',
+  remote_option ENUM('no','hybrid','remote') NOT NULL DEFAULT 'no',
   PRIMARY KEY (`id`),
   KEY `company_id` (`company_id`),
   KEY `ix_openings_status` (`status`,`deadline`),
@@ -444,4 +482,64 @@ CREATE TABLE IF NOT EXISTS admin_totp (
     CONSTRAINT fk_totp_admin FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 SET FOREIGN_KEY_CHECKS=@attachlink_old_fk;
-INSERT IGNORE INTO schema_migrations(version) VALUES ('upgrade-02'),('upgrade-03'),('upgrade-04'),('upgrade-05'),('upgrade-06'),('upgrade-07'),('upgrade-08'),('upgrade-09'),('upgrade-10'),('upgrade-11'),('upgrade-12'),('upgrade-13'),('upgrade-14'),('upgrade-15'),('upgrade-16'),('upgrade-17'),('upgrade-18');
+-- GeoNames Zimbabwe extract, CC BY 4.0. https://www.geonames.org/export/
+INSERT IGNORE INTO provinces (id,name) VALUES
+(1105843,'Bulawayo'),
+(1105844,'Harare'),
+(887358,'Manicaland'),
+(886843,'Mashonaland Central'),
+(886842,'Mashonaland East'),
+(886841,'Mashonaland West'),
+(886761,'Masvingo'),
+(886748,'Matabeleland North'),
+(886747,'Matabeleland South'),
+(886119,'Midlands');
+INSERT IGNORE INTO towns (id,province_id,name,latitude,longitude,coordinate_source,attribution) VALUES
+(893549,887358,'Chipinge',-20.188330,32.623650,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/893549/'),
+(884979,887358,'Mutare',-18.970700,32.670860,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/884979/'),
+(882955,887358,'Penhalonga',-18.891120,32.697810,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/882955/'),
+(882100,887358,'Rusape',-18.527850,32.128430,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/882100/'),
+(890983,886119,'Gokwe',-18.204760,28.934900,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/890983/'),
+(890422,886119,'Gweru',-19.450000,29.816670,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/890422/'),
+(888710,886119,'Kwekwe',-18.928090,29.814860,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/888710/'),
+(882599,886119,'Redcliff',-19.033330,29.783330,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/882599/'),
+(881164,886119,'Shurugwi',-19.670160,30.005890,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/881164/'),
+(895061,886843,'Bindura',-17.301920,31.330560,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/895061/'),
+(891099,886843,'Glendale',-17.355140,31.067180,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/891099/'),
+(886384,886843,'Mazowe',-17.504040,30.973880,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/886384/'),
+(885800,886843,'Mount Darwin',-16.772510,31.583810,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/885800/'),
+(884798,886843,'Mvurwi',-17.033330,30.850000,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/884798/'),
+(881345,886843,'Shamva',-17.311590,31.575610,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/881345/'),
+(893172,886842,'Chivhu',-19.021120,30.892180,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/893172/'),
+(886990,886842,'Marondera',-18.185270,31.551930,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/886990/'),
+(885792,886842,'Mount Hampden',-17.741670,30.938890,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/885792/'),
+(885159,886842,'Murewa',-17.643220,31.784000,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/885159/'),
+(884927,886842,'Mutoko',-17.396990,32.226770,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/884927/'),
+(882009,886842,'Ruwa',-17.889720,31.244720,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/882009/'),
+(895417,886841,'Banket',-17.383330,30.400000,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/895417/'),
+(894413,886841,'Chakari',-18.062940,29.892460,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/894413/'),
+(894239,886841,'Chegutu',-18.130210,30.140740,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/894239/'),
+(893697,886841,'Chinhoyi',-17.366670,30.200000,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/893697/'),
+(13132735,886841,'Harare Western Suburbs',-17.841500,30.876740,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/13132735/'),
+(889453,886841,'Kadoma',-18.333280,29.915340,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/889453/'),
+(889215,886841,'Kariba',-16.516670,28.800000,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/889215/'),
+(889191,886841,'Karoi',-16.809930,29.692470,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/889191/'),
+(886146,886841,'Mhangura',-16.893870,30.168280,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/886146/'),
+(884141,886841,'Norton',-17.883330,30.700000,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/884141/'),
+(889942,886748,'Hwange',-18.364460,26.498770,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/889942/'),
+(889723,886748,'Inyati',-19.675630,28.846870,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/889723/'),
+(888225,886748,'Lupane',-18.931490,27.806960,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/888225/'),
+(879431,886748,'Victoria Falls',-17.932850,25.830660,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/879431/'),
+(895269,886747,'Beitbridge',-22.216670,30.000000,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/895269/'),
+(890516,886747,'Gwanda',-20.936220,29.006980,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/890516/'),
+(882859,886747,'Plumtree',-20.483330,27.816670,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/882859/'),
+(893485,886761,'Chiredzi',-21.050000,31.666670,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/893485/'),
+(886864,886761,'Mashava',-20.036650,30.482250,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/886864/'),
+(886763,886761,'Masvingo',-20.063730,30.827660,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/886763/'),
+(878549,886761,'Zvishavane',-20.326740,30.066480,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/878549/'),
+(894701,1105843,'Bulawayo',-20.150000,28.583330,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/894701/'),
+(1106542,1105844,'Chitungwiza',-18.012740,31.075550,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/1106542/'),
+(1085510,1105844,'Epworth',-17.890000,31.147500,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/1085510/'),
+(890299,1105844,'Harare',-17.827720,31.053370,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/890299/');
+
+INSERT IGNORE INTO schema_migrations(version) VALUES ('upgrade-02'),('upgrade-03'),('upgrade-04'),('upgrade-05'),('upgrade-06'),('upgrade-07'),('upgrade-08'),('upgrade-09'),('upgrade-10'),('upgrade-11'),('upgrade-12'),('upgrade-13'),('upgrade-14'),('upgrade-15'),('upgrade-16'),('upgrade-17'),('upgrade-18'),('upgrade-19');

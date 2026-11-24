@@ -136,7 +136,7 @@ def live_checks(scratch):
         api(student, url, vault, 200, {"document_type": fields[0]}, {"file": upload})
         cli("backend/jobs/purge-documents.php", ENV)
         storage = Path(ENV["ATTACHLINK_DOCUMENT_STORAGE"])
-        assert len(list(storage.glob("*.pdf"))) == 11
+        assert len(list(storage.glob("*.pdf"))) == 2 * len(fields) + 1
         api(student, url, api_root + "student/delete-account.php", data={"confirm": True, "current_password": PASSWORD})
         assert len(list(storage.glob("*.pdf"))) == 1
         assert sql("SELECT COUNT(*) FROM student_document_vault", DB) == "0"
@@ -193,14 +193,14 @@ def main():
             scratch = Path(tmp)
             ENV.update(ATTACHLINK_DOCUMENT_STORAGE=str(scratch / "documents"), ATTACHLINK_MAIL_LOG=str(scratch / "mail.jsonl"))
             pending = cli("backend/check-config.php", ENV, 1)
-            assert "INVALID Database migrations" in pending and all(f"upgrade-{i}" in pending for i in range(10, 19))
+            assert "INVALID Database migrations" in pending and all(f"upgrade-{i}" in pending for i in range(10, 20))
             with config.server(PHP, PORT, ENV, scratch) as url:
                 api(client(), url, "backend/api/auth/login.php", 503, {"email": "student@example.invalid", "role": "student", "password": PASSWORD})
             output = cli("backend/jobs/migrate.php", ENV)
-            assert re.findall(r"Applied (upgrade-\d+)", output) == [f"upgrade-{i}" for i in range(10, 19)], output
+            assert re.findall(r"Applied (upgrade-\d+)", output) == [f"upgrade-{i}" for i in range(10, 20)], output
             assert "Detected upgrade-09" in output and not cli("backend/jobs/migrate.php", ENV).strip()
             assert "OK Database migrations" in cli("backend/check-config.php", ENV)
-            print("PASSED unversioned upgrade-09 detected; only upgrades 10 through 18 applied; rerun made no changes.")
+            print("PASSED unversioned upgrade-09 detected; only upgrades 10 through 19 applied; rerun made no changes.")
             digest = subprocess.check_output([PHP, "-r", "echo password_hash($argv[1], PASSWORD_BCRYPT);", PASSWORD], text=True)
             sql(f"CREATE USER '{DB_USER}'@'localhost' IDENTIFIED BY '{PASSWORD}'; GRANT ALL ON {DB}.* TO '{DB_USER}'@'localhost';")
             sql(f"INSERT INTO companies(id,name,verification_status) VALUES(1,'Fixture','verified'); INSERT INTO openings(id,company_id,title,description,status) VALUES(1,1,'Fixture','Fixture','published');", DB)

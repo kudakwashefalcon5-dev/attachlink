@@ -191,6 +191,8 @@ try{
     $null=Post $employer employer/openings.php 400 @{id=$opening;title='Invalid';description='QA';available_positions=0}
     $null=Post $otherEmployer employer/openings.php 404 @{id=$opening;title='Unauthorized';description='QA'}
     $null=Post $employer employer/openings.php 403 @{action='submit';listing_id=$opening}
+    $town=(Call $employer GET location-towns.php 200).towns[0]
+    $null=Post $employer company-location.php 200 @{town_id=$town.id;province_id=$town.province_id}
     $null=Post $admin admin/companies.php 200 @{company_id=$company.id;status='verified'}
     $null=Post $employer employer/openings.php 403 @{action='submit';listing_id=$opening}
     Verify $employer $employerEmail

@@ -48,3 +48,8 @@ Apply after upgrade 09. Adds nullable HTML bodies and stable Message-IDs to the 
 database/schema.sql is the complete fresh-install schema. The original baseline is retained as a test fixture. Run php backend/jobs/migrate.php on existing installs. The runner serializes migrations and records each successfully completed upgrade in schema_migrations. Back up before upgrading because MariaDB DDL can commit independently.
 
 Upgrade 11 adds consent_at and consent_version for new registrants, plus the document_purge_queue used to finish account deletion if a file cannot be removed immediately. Older users retain null consent fields. The retention report counts old records and pending removals without printing personal data.
+## Company location data
+
+`upgrade-19` adds `provinces` and `towns`, effective location columns on `companies`, the `company_location_proposals` table, and accommodation, transport, meal and remote fields on `openings`. It preserves existing company address fields and does not backfill coordinates from free text. Fresh installs include the same GeoNames reference seed. Stage 1 adds no student coordinates or town fields.
+
+To regenerate the reference INSERT statements from a source checkout, download the GeoNames Zimbabwe `ZW.zip` country extract and run `python scripts/geonames-zw-seed.py path/to/ZW.zip`. The generated SQL preserves the stable GeoNames IDs and includes GeoNames CC BY 4.0 attribution per town. The points are town references. Check local accuracy before relying on a point in a real deployment.

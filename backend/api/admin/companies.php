@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/../../bootstrap.php';$u=user('admin');
-if($_SERVER['REQUEST_METHOD']==='GET')out(['ok'=>true,'companies'=>rows("SELECT c.id,c.name,c.description,c.website,c.industry,c.city,c.verification_status,c.created_at FROM companies c ORDER BY (c.verification_status='pending') DESC,c.created_at DESC LIMIT 200")]);
+if($_SERVER['REQUEST_METHOD']==='GET')out(['ok'=>true,'companies'=>rows("SELECT c.id,c.name,c.description,c.website,c.industry,c.city,c.verification_status,c.created_at,c.location_review_status,t.name AS town_name,p.name AS province_name FROM companies c LEFT JOIN towns t ON t.id=c.town_id LEFT JOIN provinces p ON p.id=t.province_id ORDER BY (c.location_review_status='pending') DESC,(c.verification_status='pending') DESC,c.created_at DESC LIMIT 200")]);
 method('POST');$a=body();protect($a);$id=positive($a['company_id']??0);$status=(string)($a['status']??'');if(!in_array($status,['pending','verified','rejected'],true))fail('Invalid status.');
 if(!getrow('SELECT id FROM companies WHERE id=?',[$id]))fail('Company not found.',404);
 $reason=$a['note']??'';

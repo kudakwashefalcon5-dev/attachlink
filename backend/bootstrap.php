@@ -16,11 +16,11 @@ set_exception_handler(static function (Throwable $error): void {
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 header('X-Content-Type-Options: nosniff');
-header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
 header('X-Frame-Options: DENY');
 header('Referrer-Policy: no-referrer');
-header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
+header('Permissions-Policy: camera=(), microphone=(), geolocation=(self)');
 require_once __DIR__.'/config.php';
+header('Content-Security-Policy: '.content_security_policy());
 require_once __DIR__.'/lib/Accounts.php';
 require_once __DIR__.'/lib/Migrations.php';
 if ($issue=app_environment_issue()) throw new ConfigException($issue);

@@ -10,6 +10,11 @@ if ($path==='/designs/admin/login.html') {
     header('Location: ../students/login.html?role=admin', true, 302);
     return true;
 }
+if ($path==='/designs/employers/register.html') {
+    require_once __DIR__.'/config.php';
+    header('Content-Security-Policy: '.content_security_policy());
+    header('Permissions-Policy: camera=(), microphone=(), geolocation=(self)');
+}
 if (preg_match('~^/designs/(students|employers|admin)/([a-z-]+)\.html$~',$path,$match)
     && !in_array($match[2],['login','register'],true)) {
     $_GET['page']=$match[2];

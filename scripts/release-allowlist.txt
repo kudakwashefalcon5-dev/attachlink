@@ -18,6 +18,10 @@
 /assets/*.js
 /assets/fonts/*.woff2
 /assets/fonts/*.txt
+/assets/vendor/leaflet/leaflet.js
+/assets/vendor/leaflet/leaflet.css
+/assets/vendor/leaflet/LICENSE.txt
+/assets/vendor/leaflet/images/*.png
 /designs/students/*.html
 /designs/students/*.js
 /designs/students/*.css

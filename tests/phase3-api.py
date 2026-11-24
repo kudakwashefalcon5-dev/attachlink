@@ -73,6 +73,8 @@ assert "pending_file_removals" in call(admin, "admin/retention.php")["status"]
 for identity in (student_id, employer_id):
     call(admin, "admin/verify-user-email.php", data={"user_id":identity})
 company_id=call(employer, "employer/company.php")["company"]["id"]
+town=call(employer, "location-towns.php")["towns"][0]
+call(employer, "company-location.php", data={"town_id":town["id"],"province_id":town["province_id"]})
 call(admin, "admin/companies.php", data={"company_id":company_id,"status":"verified"})
 opening_id=call(employer, "employer/openings.php", data={"title":"QA deletion opening "+str(suffix),
                                                       "description":"Disposable fixture","status":"published"})["id"]

@@ -17,6 +17,11 @@ try {
     exit(1);
 }
 report_setting('ATTACHLINK_ENV',app_environment_issue(),config_env('ATTACHLINK_ENV'),'Detected '.APP_ENV.'.');
+require_once __DIR__.'/lib/CompanyLocation.php';
+foreach (['ATTACHLINK_ZW_LOCATION_BOUNDS'=>'location_bounds','ATTACHLINK_LOCATION_MAX_KM'=>'location_distance_limit','ATTACHLINK_MAP_TILE_URL'=>'map_tile_settings'] as $key=>$check) {
+    try { $check(); report_setting($key,null,'','Valid location setting.'); }
+    catch (ConfigException $error) { report_setting($key,$error->getMessage(),'invalid',''); }
+}
 if (APP_ENV==='production') {
     require_once __DIR__.'/lib/AdminTotp.php';
     try {
@@ -61,6 +66,9 @@ if ($pdo!==null) {
         $pdo->query('SELECT html_body,message_id FROM email_outbox LIMIT 0')->closeCursor();
         $pdo->query('SELECT bucket FROM login_attempts LIMIT 0')->closeCursor();
         $pdo->query('SELECT stored_name FROM document_purge_queue LIMIT 0')->closeCursor();
+        $pdo->query('SELECT town_id,location_review_status FROM companies LIMIT 0')->closeCursor();
+        $pdo->query('SELECT province_id,coordinate_source,attribution FROM towns LIMIT 0')->closeCursor();
+        $pdo->query('SELECT details FROM company_location_proposals LIMIT 0')->closeCursor();
         report_setting('Database schema',null,'','Account and outbox tables are ready.');
     } catch (Throwable) {
         report_setting('Database schema','Check ATTACHLINK_DB_NAME and apply the required migrations.','invalid','');

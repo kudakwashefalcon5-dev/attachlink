@@ -160,6 +160,10 @@ if (location.pathname.split('/').pop() !== 'messages.html') {
     mount(`<div class="flex items-center justify-between gap-space-md mb-space-xl"><div><h1 class="font-headline-lg text-headline-lg">Manage my openings</h1><p class="s8-note">${escape(overview.organization.name)}</p></div>${btn('Post New Opening','id="s8-new"')}</div>
       <div class="s8-card"><nav aria-label="Filter openings" class="s8-flex mb-4">${filters.map(([href,label,selected])=>`<a href="${href}" class="${selected?'s8-action':'s8-action-soft'}"${selected?' aria-current="page"':''}>${escape(label)}</a>`).join('')}</nav><div style="overflow:auto"><table class="s8-table"><thead><tr><th>Position / city</th><th>Status</th><th>Company verification</th><th>Stipend</th><th>Closing</th><th>Manage</th></tr></thead><tbody>${visible.map(openingRow).join('')||`<tr><td colspan="6">${activeOnly?'No published openings yet.':'No openings yet.'}</td></tr>`}</tbody></table></div></div>`);
     $('#s8-new').onclick=()=>location.href='post-edit-opening.html';
+    if(!overview.organization.town_id) {
+      alertBox(active.length?'Add your company location before publishing again. Existing published openings stay visible.':'Add your company location before publishing an opening.');
+      $('#s8-message').append(' ',Object.assign(document.createElement('a'),{href:'company-profile.html#company-location',textContent:'Open Company Location',className:'underline'}));
+    }
     $$('[data-opening-action]').forEach(button=>{
       button.onclick=async()=>{
         const action=button.dataset.openingAction;
@@ -225,6 +229,16 @@ if (location.pathname.split('/').pop() !== 'messages.html') {
     const org=overview.organization;
     mount(`<div class="mb-space-xl"><div class="font-label-sm text-primary">Company profile</div><h1 class="font-headline-lg text-headline-lg">${escape(org.name)}</h1><p class="s8-muted">Company verification: ${escape(org.verification_status)}. This is not proof of official accreditation.</p></div>
     <div class="s8-grid"><div class="flex flex-col gap-space-lg"><div class="s8-card"><h2>Registered Entity Profile</h2><div class="grid grid-cols-1 sm:grid-cols-2 gap-space-lg"><div><p class="s8-muted">Organization name</p><strong>${escape(org.name)}</strong></div><div><p class="s8-muted">Location</p>${escape(org.location||'Not supplied')}</div><div><p class="s8-muted">Employer contact</p>${escape(overview.user.first_name+' '+overview.user.last_name)}</div><div><p class="s8-muted">Position</p>${escape(org.job_title||'Not supplied')}</div></div><div class="mt-space-lg"><p class="s8-muted">Organization description</p><p style="white-space:pre-wrap">${escape(org.description||'No description stored yet.')}</p></div></div><div class="s8-card"><h2>Verification and Compliance</h2><p class="s8-note"></p><div id="s8-company-files"></div><p></p></div></div><div class="flex flex-col gap-space-lg"><div class="s8-card"><h2>Company overview</h2><p class="text-sm">Organization ID: ${escape(org.id)}</p><p class="text-sm mt-2">Verification: ${status(org.verification_status)}</p><p class="text-sm mt-2">Openings: ${int(overview.counts.all_listings)}</p><p class="text-sm mt-2">Applications: ${int(overview.counts.total_applications)}</p></div><div class="s8-card"><h2>Edit Company Details</h2><form id="s8-company-edit"></form></div></div></div>`);
+    const locationPanel=document.createElement('section');
+    locationPanel.id='company-location';
+    locationPanel.className='s8-card al-location-panel';
+    const heading=document.createElement('h2');
+    heading.textContent='Company Location';
+    const locationForm=document.createElement('div');
+    locationPanel.append(heading,locationForm);
+    $('#s8-content').append(locationPanel);
+    window.AttachLinkLocation.mount(locationForm,{accountId:overview.user.id});
+    if(window.location.hash==='#company-location')locationPanel.scrollIntoView();
     const edit=$('#s8-company-edit');
     for(const [key,title] of [['name','Company name'],['city','City'],['industry','Industry'],['website','Website'],['description','Description']]){
       const label=document.createElement('label');
@@ -292,6 +306,7 @@ if (location.pathname.split('/').pop() !== 'messages.html') {
     const title=$('#input-title'), department=$('#input-department'), city=$('#input-location');
     const description=$('#input-description'), requirements=$('#s8-requirements'), skills=$('#input-required-skills');
     const positions=$('#slot-counter'), stipend=$('#input-stipend'), deadline=$('#input-deadline');
+    const benefitFields=['accommodation','transport_allowance','meal_allowance','remote_option'];
     const intakeMonth=$('#input-start-month'), intakeYear=$('#input-start-year'), intakeEnd=$('#input-end-date');
     const save=$('#btn-save-opening'), publish=$('#btn-publish');
     const activePanel=$('#editor-active-openings');
@@ -325,6 +340,7 @@ if (location.pathname.split('/').pop() !== 'messages.html') {
       positions.value=editing.available_positions??'';
       stipend.value=editing.stipend_usd??'';
       deadline.value=editing.closing_date||'';
+      for(const key of benefitFields)$('#opening-'+key).value=editing[key];
       const [year,month]=(editing.intake_start_month||'').split('-');
       intakeMonth.value=['01','08'].includes(month)?month:'';
       intakeYear.value=year||'';
@@ -332,6 +348,10 @@ if (location.pathname.split('/').pop() !== 'messages.html') {
       updateIntakeEnd();
     }
     updateActions();
+    if(!overview.organization.town_id) {
+      alertBox(published?'Add a company location before publishing another opening. This published opening stays visible.':'Add a company location before publishing. You can still save a draft.');
+      $('#s8-message').append(' ',Object.assign(document.createElement('a'),{href:'company-profile.html#company-location',textContent:'Open Company Location',className:'underline'}));
+    }
 
     form.addEventListener('submit',async event=>{
       event.preventDefault();
@@ -349,6 +369,7 @@ if (location.pathname.split('/').pop() !== 'messages.html') {
         intake_start_month:intakeEnd.value?intakeYear.value+'-'+intakeMonth.value:''
       };
       if (positions.value) data.available_positions=Number(positions.value);
+      for(const key of benefitFields)data[key]=$('#opening-'+key).value;
       if (id) data.listing_id=Number(id);
       if (publishing) data.status='published';
       save.disabled=publish.disabled=true;

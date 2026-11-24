@@ -40,6 +40,8 @@ async function prepare(browser, baseURL) {
         await call(admin,'admin/verify-user-email.php',{user_id:user.id});
     }
     const {company}=await call(employer,'employer/company.php');
+    const {towns}=await call(employer,'location-towns.php');
+    await call(employer,'company-location.php',{town_id:towns[0].id,province_id:towns[0].province_id});
     await call(admin,'admin/companies.php',{company_id:company.id,status:'verified',note:'Disposable browser fixture'});
     const {csrf_token}=await call(student,'auth/csrf.php');
     const pdf=Buffer.from('%PDF-1.4\n%%EOF\n');

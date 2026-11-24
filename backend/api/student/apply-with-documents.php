@@ -36,7 +36,7 @@ try {
         out(['ok'=>false,'message'=>'Complete your application documents in My Profile before applying.',
             'missing_documents'=>$missing],422);
     }
-    $record = getrow("SELECT o.title,o.company_id FROM openings o JOIN companies c ON c.id=o.company_id WHERE o.id=? AND o.status='published' AND c.verification_status='verified' AND (o.deadline IS NULL OR o.deadline>=CURDATE()) FOR UPDATE", [$opening]);
+    $record = getrow("SELECT o.title,o.company_id FROM openings o JOIN companies c ON c.id=o.company_id WHERE o.id=? AND o.status='published' AND c.verification_status='verified' AND EXISTS(SELECT 1 FROM users company_user WHERE company_user.company_id=c.id AND company_user.role='employer' AND company_user.is_active=1) AND (o.deadline IS NULL OR o.deadline>=CURDATE()) FOR UPDATE", [$opening]);
     if (!$record) {
         $pdo->rollBack();
         fail('Opening is not accepting applications.', 404);
