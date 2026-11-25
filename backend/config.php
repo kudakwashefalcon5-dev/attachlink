@@ -392,6 +392,7 @@ function mail_setting_issues(): array {
         return [];
     }
     $settings=smtp_settings();
+    $brevo=strcasecmp(rtrim($settings['ATTACHLINK_SMTP_HOST'],'.'),'smtp-relay.brevo.com')===0;
     $tests=[
         'ATTACHLINK_SMTP_HOST'=>[filter_var($settings['ATTACHLINK_SMTP_HOST'],FILTER_VALIDATE_DOMAIN,FILTER_FLAG_HOSTNAME),'Provide a valid SMTP hostname.'],
         'ATTACHLINK_SMTP_EHLO'=>[filter_var($settings['ATTACHLINK_SMTP_EHLO'],FILTER_VALIDATE_DOMAIN,FILTER_FLAG_HOSTNAME) && str_contains($settings['ATTACHLINK_SMTP_EHLO'],'.') && !filter_var($settings['ATTACHLINK_SMTP_EHLO'],FILTER_VALIDATE_IP),'Provide a fully qualified EHLO hostname.'],
@@ -399,8 +400,10 @@ function mail_setting_issues(): array {
         'ATTACHLINK_SMTP_PORT'=>[filter_var($settings['ATTACHLINK_SMTP_PORT'],FILTER_VALIDATE_INT,['options'=>['min_range'=>1,'max_range'=>65535]]),'Provide a port from 1 to 65535.'],
         'ATTACHLINK_SMTP_AUTH'=>[in_array($settings['ATTACHLINK_SMTP_AUTH'],['LOGIN','PLAIN'],true),'Choose LOGIN or PLAIN.'],
         'ATTACHLINK_SMTP_FROM'=>[filter_var($settings['ATTACHLINK_SMTP_FROM'],FILTER_VALIDATE_EMAIL),'Provide a valid sender address.'],
-        'ATTACHLINK_SMTP_USERNAME'=>[$settings['ATTACHLINK_SMTP_PASSWORD']==='' || $settings['ATTACHLINK_SMTP_USERNAME']!=='','Provide a username when a password is set.'],
-        'ATTACHLINK_SMTP_PASSWORD'=>[$settings['ATTACHLINK_SMTP_USERNAME']==='' || $settings['ATTACHLINK_SMTP_PASSWORD']!=='','Provide a password when a username is set.'],
+        'ATTACHLINK_SMTP_USERNAME'=>[$settings['ATTACHLINK_SMTP_USERNAME']!=='' || (!$brevo && $settings['ATTACHLINK_SMTP_PASSWORD']===''),
+            $brevo?'Provide your Brevo SMTP login.':'Provide a username when a password is set.'],
+        'ATTACHLINK_SMTP_PASSWORD'=>[$settings['ATTACHLINK_SMTP_PASSWORD']!=='' || (!$brevo && $settings['ATTACHLINK_SMTP_USERNAME']===''),
+            $brevo?'Provide your Brevo SMTP key.':'Provide a password when a username is set.'],
         'SMTP runtime'=>[extension_loaded('openssl') && is_readable(__DIR__.'/../vendor/autoload.php'),'SMTP requires OpenSSL and Composer dependencies.'],
     ];
     $issues=[];

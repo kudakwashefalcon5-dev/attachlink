@@ -56,7 +56,9 @@ $attempts[] = $now;
 $_SESSION['interview_ai_attempts'] = $attempts;
 session_write_close();
 
-$result = request_chat_reply($provider, $messages, 800, 25);
+// A fresh mock interview should get a fresh opening question.
+$startInterview = !$history && $message==='Start a mock interview. Ask one question at a time.';
+$result = request_chat_reply($provider, $messages, 800, 25, cache:!$startInterview);
 if ($result['status'] !== 200) fail('The AI coach could not respond. Please try again.', 503);
 if ($result['reply'] === null) fail('The AI coach returned no reply. Please try again.', 502);
 out(['ok'=>true, 'reply'=>$result['reply']]);

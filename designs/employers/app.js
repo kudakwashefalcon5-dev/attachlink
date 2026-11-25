@@ -208,15 +208,46 @@ if (location.pathname.split('/').pop() !== 'messages.html') {
     ];
     mount(`<div class="mb-space-md">${link('opening-applicants.html?listing_id='+encodeURIComponent(a.listing_id),'← Applicants')} <span class="s8-muted"> / Application #${escape(a.application_id)}</span></div>
     <div class="s8-grid"><div class="flex flex-col gap-space-lg"><div class="s8-card"><div class="flex items-center justify-between mb-space-lg"><div><h1 class="font-headline-lg text-headline-lg">${escape(name)}</h1><p class="s8-note">${escape(a.institution||'Institution not provided')} • ${escape(a.programme||'Programme not provided')} • ${escape(a.study_level||'')}</p></div>${status(a.status)}</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md text-sm"><div><div class="s8-muted">Email</div><div>${escape(a.email||'—')}</div></div><div><div class="s8-muted">Student city</div>${escape(a.student_city||'Not specified')}</div><div><div class="s8-muted">Opening</div>${escape(a.listing_title)}</div><div><div class="s8-muted">Applied on</div>${escape(a.submitted_at||'—')}</div></div></div>
+    <section class="s8-card" aria-labelledby="s8-documents-title"><h2 id="s8-documents-title">Application documents</h2><ul id="s8-documents" class="grid gap-2"></ul></section>
     <div class="s8-card"><h2>Placement Preferences</h2><dl class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">${preferences.map(([label,value])=>`<div style="overflow-wrap:anywhere"><dt class="s8-muted">${escape(label)}</dt><dd>${escape(value||'Not specified')}</dd></div>`).join('')}</dl></div>
     <div class="s8-card"><h2>Application Cover Letter</h2><div class="bg-surface-container-low p-space-md rounded-xl" style="white-space:pre-wrap;overflow-wrap:anywhere">${escape(a.cover_letter||'No cover letter supplied.')}</div></div>
     <div class="s8-card"><h2>Review History</h2>${(hist.events||[]).map(ev=>`<div class="border-b border-surface-container-low pb-space-sm mb-space-sm"><div class="s8-flex">${status(ev.previous_status||'initial')} → ${status(ev.new_status)}</div><p class="s8-muted">${escape(ev.changed_by||'Employer')} • ${escape(ev.created_at)}</p>${ev.note?`<p class="text-sm mt-1">${escape(ev.note)}</p>`:''}</div>`).join('')||'<p class="s8-note">No recorded employer review events.</p>'}</div></div>
     <div class="flex flex-col gap-space-lg"><div class="s8-card"><h2>Review Application</h2><p class="s8-note mb-space-md">Current status: ${escape(a.status)}.</p>${next.length ? `<label class="font-semibold block mb-1" for="s8-next">Next decision</label><select class="s8-field mb-space-md" id="s8-next">${next.map(v=>`<option value="${v}">${v}</option>`).join('')}</select><label class="font-semibold block mb-1" for="s8-note">Review note</label><textarea class="s8-field mb-space-md" rows="4" id="s8-note" placeholder="Reason required for rejection"></textarea>${btn('Save Review Decision','id="s8-save"')}<div class="s8-note mt-2">Rejecting requires at least 10 characters.</div>`:'<p class="s8-alert">This application has a final status or cannot be advanced further.</p>'}</div>
-    <div class="s8-card"><h2>Applicant Documents</h2><p class="s8-note"></p><div id="s8-documents"></div><p></p></div></div></div>`);
-    const documents = $("#s8-documents");
-    for (const doc of docs.documents) { const a=document.createElement("a"); a.href=API+"/documents/download.php?id="+encodeURIComponent(doc.id); a.textContent=doc.original_name; documents.append(a,document.createElement("br")); }
-    if (!docs.documents.length) documents.textContent="No documents uploaded.";
-    documents.insertAdjacentHTML("beforeend", link("messages.html?with="+encodeURIComponent(a.student_id),"Message applicant"));
+    <div class="s8-card">${link('messages.html?peer_id='+encodeURIComponent(a.student_id),'Message applicant')}</div></div></div>`);
+    const documents=$('#s8-documents');
+    const labels={
+      cv:'CV', attachment_letter:'School attachment letter', id:'National ID',
+      birth_certificate:'Birth certificate', academic_certificates:'Academic certificate',
+      transcript:'Academic transcript', o_level:'O-Level certificate', a_level:'A-Level certificate',
+      other_certificate:'Other certificate'
+    };
+    const totals=new Map();
+    const indexes=new Map();
+    for (const doc of docs.documents) totals.set(doc.document_type,(totals.get(doc.document_type)||0)+1);
+    for (const doc of docs.documents) {
+      const type=doc.document_type;
+      const index=(indexes.get(type)||0)+1;
+      indexes.set(type,index);
+      const label=Object.hasOwn(labels,type)?labels[type]:'Supporting document';
+      const title=totals.get(type)>1?label+' '+index:label;
+      const item=document.createElement('li');
+      item.className='rounded-lg bg-surface-container-low p-3';
+      const heading=document.createElement('strong');
+      heading.textContent=title;
+      heading.className='block';
+      const download=document.createElement('a');
+      download.href=API+'/documents/download.php?id='+encodeURIComponent(doc.id);
+      download.className='text-primary underline';
+      download.textContent=doc.original_name||'Download file';
+      download.setAttribute('aria-label','Download '+title+': '+download.textContent);
+      item.append(heading,download);
+      documents.append(item);
+    }
+    if (!docs.documents.length) {
+      const empty=document.createElement('li');
+      empty.textContent='No documents were attached to this application.';
+      documents.append(empty);
+    }
     if(next.length)$('#s8-save').onclick=async()=>{
       const b=$('#s8-save');b.disabled=true;
       try { const decision=$('#s8-next').value,note=$('#s8-note').value;

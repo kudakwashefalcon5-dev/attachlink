@@ -10,3 +10,6 @@ Use HTTPS for the employer's one-time device location. The town and manual pin c
 The map picker has no external tile provider by default. For a tile-backed map, set `ATTACHLINK_MAP_TILE_URL` to an HTTPS template containing `{z}`, `{x}`, and `{y}` and set `ATTACHLINK_MAP_ATTRIBUTION`. In Apache, also set the request environment variable `ATTACHLINK_MAP_TILE_ORIGIN` to that exact HTTPS origin (with port if applicable). For example, in the virtual host use `SetEnv ATTACHLINK_MAP_TILE_ORIGIN https://your-tile-host.example` and verify the browser CSP on the deployed site. Use a provider or self-hosted tiles for public traffic. The public OpenStreetMap tile service is unsuitable for heavy production traffic.
 
 Rebuild with `python scripts/build-release.py` and verify with `python scripts/build-release.py --verify dist/attachlink.zip`.
+## AI reply cache
+
+Both assistants share a 10 MiB APCu cache. Enable the APCu PHP extension for the web runtime and set `apc.shm_size=10M` in its `php.ini`, then restart the web server. Allocate this pool to AttachLink if it needs a dedicated 10 MiB budget. The assistants continue to work if APCu is unavailable. CLI PHP can use `-d apc.enable_cli=1` when testing the cache.

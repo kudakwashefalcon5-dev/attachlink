@@ -3,12 +3,16 @@
 
   const portals = {
     student: {description: 'Find openings and manage your applications.', registration: 'register.html', label: 'Create Student Account'},
-    employer: {description: 'Manage your company, openings and applicants.', registration: '../employers/register.html', label: 'Create Company Account'},
-    admin: {description: 'Manage company verification, placements and support.'}
+    employer: {description: 'Manage your company, openings and applicants.', registration: '../employers/register.html', label: 'Create Company Account'}
   };
   const parameters = new URLSearchParams(location.search);
   const requested = parameters.get('role');
-  const aliases = {company: 'employer', recruiter: 'employer', administrator: 'admin'};
+  const admin = document.body.dataset.signinRole === 'admin';
+  if (!admin && ['admin','administrator'].includes(requested)) {
+    location.replace('../admin/sign-in.html'+location.search);
+    return;
+  }
+  const aliases = {company: 'employer', recruiter: 'employer'};
   const initial = Object.hasOwn(portals, requested) ? requested : (Object.hasOwn(aliases, requested) ? aliases[requested] : 'student');
   const selector = document.querySelector('.al-role');
   const form = document.getElementById('signin-form');
@@ -16,8 +20,7 @@
   const register = document.getElementById('register-link');
   const password = document.getElementById('password');
   const reveal = document.getElementById('reveal-password');
-  const getRole = () => selector.querySelector('input:checked').value;
-  selector.querySelector('input[value="' + initial + '"]').checked = true;
+  const getRole = () => admin ? 'admin' : selector.querySelector('input:checked').value;
 
   function displayRole() {
     const portal = portals[getRole()];
@@ -32,8 +35,11 @@
     }
     status.textContent = '';
   }
-  selector.addEventListener('change', displayRole);
-  displayRole();
+  if (selector) {
+    selector.querySelector('input[value="' + initial + '"]').checked = true;
+    selector.addEventListener('change', displayRole);
+    displayRole();
+  }
   if (parameters.has('session')) status.textContent = 'Your session ended. Sign in to continue.';
 
   reveal.addEventListener('click', () => {
@@ -56,7 +62,7 @@
     const role = getRole();
     const fields = Object.fromEntries(new FormData(form));
     submit.disabled = true;
-    selector.disabled = true;
+    if (selector) selector.disabled = true;
     status.textContent = 'Signing in...';
     try {
       const {csrf_token} = await request('csrf.php');
@@ -127,7 +133,7 @@
     } catch (error) {
       status.textContent = error.message;
       submit.disabled = false;
-      selector.disabled = false;
+      if (selector) selector.disabled = false;
     }
   });
   form.querySelector('button[type="submit"]').disabled = false;

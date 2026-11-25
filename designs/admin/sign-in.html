@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Administrator sign in | AttachLink</title>
+  <link rel="stylesheet" href="../../assets/attachlink-auth.css?v=2">
+  <script src="../../assets/attachlink-signin.js?v=3" defer></script>
+</head>
+<body class="al-auth" data-signin-role="admin">
+  <main class="al-auth-card al-admin-card">
+    <a href="../../" aria-label="AttachLink home"><img class="al-register-brand" src="../employers/attachlink-logo.svg" alt="AttachLink"></a>
+    <h1>Administrator sign in</h1>
+    <form method="post" id="signin-form">
+      <label for="email">Email</label>
+      <input class="al-auth-input" id="email" name="email" type="email" autocomplete="username" maxlength="190" required>
+      <label for="password">Password</label>
+      <div class="al-auth-password">
+        <input class="al-auth-input" id="password" name="password" type="password" autocomplete="current-password" required>
+        <button type="button" class="al-auth-reveal" id="reveal-password" aria-controls="password">Show</button>
+      </div>
+      <button class="al-auth-primary" type="submit" disabled>Sign in</button>
+      <p id="signin-status" role="status" aria-live="polite"></p>
+    </form>
+    <p><a href="../../account-recovery.php">Forgot your password?</a></p>
+    <a class="al-auth-secondary" href="../students/login.html">Student and company sign in</a>
+  </main>
+</body>
+</html>

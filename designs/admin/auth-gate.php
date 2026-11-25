@@ -11,11 +11,11 @@ if (!is_string($page) || !in_array($page, $allowed, true)) {
     http_response_code(404); exit('Page not found.');
 }
 $id = (int)($_SESSION['user_id'] ?? 0);
-if (!$id || (APP_ENV==='production' && empty($_SESSION['admin_totp_verified']))) { header('Location: ../students/login.html?role=admin', true, 302); exit; }
+if (!$id || (APP_ENV==='production' && empty($_SESSION['admin_totp_verified']))) { header('Location: sign-in.html?session=expired', true, 302); exit; }
 $account = getrow('SELECT role, is_active, password_changed_at FROM users WHERE id = ?', [$id]);
 if (!$account || $account['password_changed_at'] !== ($_SESSION['password_changed_at'] ?? null) || !(int)$account['is_active']) {
     unset($_SESSION['user_id']);
-    header('Location: ../students/login.html?role=admin', true, 302); exit;
+    header('Location: sign-in.html?session=expired', true, 302); exit;
 }
 if ($account['role'] !== 'admin') {
     http_response_code(403); exit('Access denied: wrong portal.');

@@ -99,7 +99,7 @@ Set `ATTACHLINK_INTERVIEW_AI_URL=https://api.groq.com/openai/v1/chat/completions
 
 GET `student/interview-ai.php` returns `configured` and a `csrf_token` when configured. The configuration check does not contact the provider. POST accepts `csrf_token`, `message` (up to 1,400 characters), `track` (`general`, `technical`, `software` or `behavioural`) and optional `history` (up to eight entries with `role` equal to `user` or `assistant` and `text` up to 1,400 characters). A successful response contains `reply`. The endpoint allows six attempts per minute per session and returns 429 with `Retry-After` when the limit is reached. Provider failures return 502 or 503.
 
-The student page keeps the conversation in memory and sends the latest message and recent turns to the configured provider. AttachLink does not store the practice transcript.
+The student page keeps the conversation in memory and sends the latest message and recent turns to the configured provider. AttachLink does not persist the practice transcript. With APCu enabled and capped at 10 MiB, the interview and support assistants share an in-memory reply cache. Identical requests can reuse a successful reply within the same login session for up to five minutes. Fresh mock interviews bypass the cache.
 
 ## Student Support Assistant
 

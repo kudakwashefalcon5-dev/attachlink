@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sign in | AttachLink</title><link rel="stylesheet" href="../../assets/tailwind.min.css">
-<link rel="stylesheet" href="../../assets/attachlink-auth.css">
-<script src="../../assets/attachlink-signin.js?v=2" defer></script>
+<link rel="stylesheet" href="../../assets/attachlink-auth.css?v=2">
+<script src="../../assets/attachlink-signin.js?v=3" defer></script>
 </head>
 <body class="al-auth">
 <main class="al-auth-layout">
@@ -17,7 +17,6 @@
     <fieldset class="al-role"><legend>Choose your portal</legend>
       <label><input type="radio" name="role" value="student" checked><span>Student</span></label>
       <label><input type="radio" name="role" value="employer"><span>Company</span></label>
-      <label><input type="radio" name="role" value="admin"><span>Administrator</span></label>
     </fieldset>
     <p id="portal-description" class="al-auth-copy"></p>
     <form method="post" id="signin-form">
@@ -34,5 +33,6 @@
     <a class="al-auth-secondary" id="register-link" href="register.html">Create Student Account</a>
   </section>
 </main>
+<a class="al-admin-entry" href="../admin/sign-in.html" target="_blank" rel="noopener" aria-label="Administrator sign in (opens in a new window)">Administrator sign in</a>
 </body>
 </html>

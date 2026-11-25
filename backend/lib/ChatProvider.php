@@ -15,7 +15,13 @@ function chat_provider_config(): ?array {
     return $configured ? compact('endpoint', 'model', 'key', 'hasCurl') : null;
 }
 
-function request_chat_reply(array $provider, array $messages, int $maxTokens, int $timeout, ?float $temperature = null): array {
+function chat_cache_memory_bytes(): int {
+    if (!function_exists('apcu_enabled') || !apcu_enabled()) return 0;
+    $memory=apcu_sma_info(true);
+    return is_array($memory)?(int)($memory['num_seg']*$memory['seg_size']):0;
+}
+
+function request_chat_reply(array $provider, array $messages, int $maxTokens, int $timeout, ?float $temperature = null, bool $cache = true): array {
     ['endpoint'=>$endpoint, 'model'=>$model, 'key'=>$key, 'hasCurl'=>$hasCurl] = $provider;
     $payload = ['model'=>$model, 'messages'=>$messages];
     if ($temperature !== null) $payload['temperature'] = $temperature;
@@ -28,6 +34,15 @@ function request_chat_reply(array $provider, array $messages, int $maxTokens, in
 
     $headers = ['Authorization: Bearer '.$key, 'Content-Type: application/json'];
     $json = json_encode($payload, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
+    $cacheKey=null;
+    if ($cache && session_id()!=='') {
+        $bytes=chat_cache_memory_bytes();
+        if ($bytes>0 && $bytes<=10*1024*1024) {
+            $cacheKey='attachlink-ai-v1:'.hash_hmac('sha256',__DIR__."\0".session_id()."\0".$endpoint."\0".$json,$key);
+            $cached=apcu_fetch($cacheKey);
+            if (is_string($cached)) return ['status'=>200,'reply'=>$cached];
+        }
+    }
     if ($hasCurl) {
         $request = curl_init($endpoint);
         curl_setopt_array($request, [
@@ -64,6 +79,10 @@ function request_chat_reply(array $provider, array $messages, int $maxTokens, in
     }
 
     $result = json_decode($response, true);
-    $reply = $result['choices'][0]['message']['content'] ?? $result['choices'][0]['message']['refusal'] ?? null;
+    $content = $result['choices'][0]['message']['content'] ?? null;
+    if ($cacheKey!==null && is_string($content) && trim($content)!=='' && strlen($content)<=8192) {
+        apcu_add($cacheKey,trim($content),300);
+    }
+    $reply = $content ?? $result['choices'][0]['message']['refusal'] ?? null;
     return ['status'=>$status, 'reply'=>is_string($reply) && trim($reply) !== '' ? trim($reply) : null];
 }
