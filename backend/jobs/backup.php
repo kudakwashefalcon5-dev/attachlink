@@ -83,6 +83,7 @@ function backup_encrypt(string $target,string $recipient,callable $write): void 
 
 try {
     require_once __DIR__.'/../config.php';
+    require_once __DIR__.'/../lib/JobHeartbeat.php';
     if ($issue=app_environment_issue()) throw new ConfigException($issue);
     $mode=$argv[1]??'all';
     if (!in_array($mode,['all','database','documents'],true)) throw new ConfigException('Usage: php backend/jobs/backup.php [all|database|documents]');
@@ -121,6 +122,7 @@ try {
             throw new RuntimeException('Could not remove an expired encrypted backup.');
         }
     }
+    if ($mode==='all') record_job_heartbeat(connect_database(),'backup');
 } catch (Throwable $error) {
     fwrite(STDERR,($error instanceof PDOException?'Backup failed. Check the database settings.':$error->getMessage())."\n");
     exit(1);

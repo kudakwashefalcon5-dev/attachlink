@@ -1,10 +1,12 @@
 <?php
 declare(strict_types=1);
 if (PHP_SAPI!=='cli') { http_response_code(404); exit; }
-require_once __DIR__.'/../lib/Mailer.php';
-$sendFailed=false;
+$processed=0;
+$failedCount=0;
 try {
     require_once __DIR__.'/../config.php';
+    require_once __DIR__.'/../lib/Mailer.php';
+    require_once __DIR__.'/../lib/JobHeartbeat.php';
     if ($issue=app_environment_issue()) throw new ConfigException($issue);
     require_valid_settings(mail_setting_issues());
     $transport=mail_transport_name()==='log'?new LogMailTransport(mail_log_path()):new PhpMailerTransport();
@@ -23,6 +25,7 @@ try {
             $pdo->commit();
             break;
         }
+        $processed++;
         if ($job['expired']) {
             $expired->execute([$job['id']]);
             $pdo->commit();
@@ -32,19 +35,25 @@ try {
         try {
             $transport->send($job);
         } catch (Throwable $error) {
-            $sendFailed=true;
+            $failedCount++;
             $attempt=$job['attempts']+1;
             $failed->execute([$attempt,60*(2**($attempt-1)),$attempt,$attempt,$attempt,$job['id']]);
             $pdo->commit();
-            fwrite(STDERR,'Mail delivery failed for outbox row '.$job['id'].".\n");
+            fwrite(STDERR,json_encode(['event'=>'email_delivery_failed','outbox_id'=>(int)$job['id']])."\n");
             continue;
         }
         $sent->execute([$job['id']]);
         $pdo->commit();
     }
+    if ($failedCount===0) record_job_heartbeat($pdo,'send-emails');
 } catch (Throwable $error) {
     if (isset($pdo)&&$pdo->inTransaction()) $pdo->rollBack();
     fwrite(STDERR,($error instanceof ConfigException?$error->getMessage():'Mail job failed. Check the outbox and database.')."\n");
+    $failedCount++;
+    fwrite(STDERR,json_encode(['event'=>'job_finished','job'=>'send-emails','processed'=>$processed,'failures'=>$failedCount,'status'=>'failed'])."\n");
     exit(1);
 }
-exit($sendFailed?1:0);
+$status=$failedCount===0?'succeeded':'failed';
+$summary=json_encode(['event'=>'job_finished','job'=>'send-emails','processed'=>$processed,'failures'=>$failedCount,'status'=>$status]);
+fwrite($failedCount===0?STDOUT:STDERR,$summary."\n");
+exit($failedCount===0?0:1);

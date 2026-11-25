@@ -45,6 +45,15 @@
   font-size: clamp(1.55rem, 3vw, 2rem);
 }
 .admin-overview .al-metric-label { line-height: 1.35; }
+.admin-job-health { margin-top: 1.5rem; }
+.admin-job-health h3 { margin: 0 0 .65rem; font-size: .92rem; font-weight: 700; }
+.admin-job-health-alert { margin: 0 0 .75rem; padding: .65rem .8rem; border: 1px solid #b45309; border-radius: .5rem; color: #7c2d12; background: #fff7ed; }
+.admin-job-health-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: .65rem; }
+.admin-job-health-item { display: grid; grid-template-columns: 1fr auto; gap: .35rem .7rem; padding: .8rem; border: 1px solid var(--al-border); border-radius: .65rem; background: #fff; }
+.admin-job-health-item.is-stale { border-color: #fdba74; }
+.admin-job-health-item p { grid-column: 1 / -1; margin: 0; color: var(--al-soft); font-size: .85rem; }
+.admin-job-health-state { color: #166534; font-size: .8rem; font-weight: 700; }
+.admin-job-health-state.is-stale { color: #9a3412; }
 @media (max-width: 480px) {
   .admin-overview .al-metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 }

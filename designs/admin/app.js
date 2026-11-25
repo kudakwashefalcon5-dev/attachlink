@@ -196,6 +196,24 @@
       group.append(ui.node('h3','',label),ui.metrics(metrics.map(([name,icon,key])=>[name,icon,data.counts[key]])));
       section.append(group);
     }
+    const jobs=Array.isArray(data.jobs)?data.jobs:[];
+    const staleJobs=jobs.filter(job=>job.stale);
+    const health=element('section','admin-job-health');
+    health.setAttribute('aria-labelledby','admin-job-health-title');
+    const healthTitle=element('h3','','Scheduled job health');
+    healthTitle.id='admin-job-health-title';
+    health.append(healthTitle);
+    if(staleJobs.length)health.append(element('p','admin-job-health-alert',staleJobs.length+' scheduled job(s) are stale or have never completed successfully.'));
+    const jobList=element('div','admin-job-health-list');
+    for(const job of jobs){
+      const card=element('article','admin-job-health-item'+(job.stale?' is-stale':''));
+      card.append(element('strong','',job.label));
+      card.append(element('span',job.stale?'admin-job-health-state is-stale':'admin-job-health-state',job.stale?'Stale':'Healthy'));
+      card.append(element('p','',job.last_successful_at?'Last successful run: '+job.last_successful_at:'No successful run recorded.'));
+      jobList.append(card);
+    }
+    health.append(jobList);
+    section.append(health);
     if(container)container.replaceWith(section);else q('main')?.prepend(section);
     const verifyButton=findText('button','Initiate Verification');
     if(verifyButton)verifyButton.onclick=()=>location.href='verification-queue.html';

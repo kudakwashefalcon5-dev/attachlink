@@ -48,9 +48,9 @@ try:
                    ATTACHLINK_DB_PASS="", ATTACHLINK_DOCUMENT_STORAGE=temporary)
         def cli(path):
             return subprocess.run([PHP,path],cwd=ROOT,env=env,capture_output=True,text=True)
-        assert "Pending: upgrade-19" in cli("backend/check-config.php").stdout
+        assert "Pending: upgrade-19, upgrade-20" in cli("backend/check-config.php").stdout
         migration = cli("backend/jobs/migrate.php")
-        assert migration.returncode == 0 and migration.stdout.strip() == "Applied upgrade-19", migration
+        assert migration.returncode == 0 and migration.stdout.strip().splitlines() == ["Applied upgrade-19", "Applied upgrade-20"], migration
         assert cli("backend/jobs/migrate.php").stdout.strip() == ""
         assert "OK Database migrations" in cli("backend/check-config.php").stdout
     sql((ROOT / "database/upgrade-19.sql").read_bytes(), UPGRADED)
@@ -60,7 +60,7 @@ try:
         assert definition(UPGRADED) == definition(FRESH), table
     assert sql("SELECT COUNT(*) FROM provinces", UPGRADED) == "10"
     assert int(sql("SELECT COUNT(*) FROM towns", UPGRADED)) >= 40
-    print("PASSED upgrade-18 to 19, repeat migration, fresh schema parity, legacy data, town seed and check-config.")
+    print("PASSED upgrade-18 to 20, repeat migration, fresh schema parity, legacy data, town seed and check-config.")
 finally:
     for name in created:
         sql("DROP DATABASE "+name)

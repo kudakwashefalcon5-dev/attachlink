@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__.'/../../bootstrap.php';
+require_once __DIR__.'/../../lib/JobHeartbeat.php';
 user('admin');
 method('GET');
 $accounts=getrow("SELECT COUNT(CASE WHEN role='student' THEN 1 END) AS students,COUNT(CASE WHEN role='employer' THEN 1 END) AS employers FROM users");
@@ -9,4 +10,4 @@ $applications=getrow("SELECT COUNT(*) AS total,COUNT(CASE WHEN status='accepted'
 $placements=(int)getrow('SELECT COUNT(*) AS n FROM placements')['n'];
 $support=(int)getrow("SELECT COUNT(DISTINCT m.sender_id) AS n FROM messages m JOIN users u ON u.id=m.recipient_id WHERE u.role='admin' AND m.is_read=0")['n'];
 $counts=$accounts+['companies_pending'=>$companies['pending'],'companies_verified'=>$companies['verified_in_database'],'openings'=>$openings['unexpired_published'],'applications'=>$applications['total'],'accepted_applications'=>$applications['accepted'],'placements'=>$placements,'pending_support_conversations'=>$support];
-out(['ok'=>true,'counts'=>$counts,'account_totals'=>$accounts,'organization_totals'=>$companies,'listing_totals'=>$openings,'application_totals'=>$applications]);
+out(['ok'=>true,'counts'=>$counts,'jobs'=>job_heartbeat_status(db()),'account_totals'=>$accounts,'organization_totals'=>$companies,'listing_totals'=>$openings,'application_totals'=>$applications]);

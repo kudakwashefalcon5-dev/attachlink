@@ -345,6 +345,14 @@ CREATE TABLE `schema_migrations` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `job_heartbeats` (
+  `job_name` varchar(64) CHARACTER SET ascii NOT NULL,
+  `last_successful_at` datetime NOT NULL,
+  PRIMARY KEY (`job_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `student_cvs` (
   `student_id` bigint(20) unsigned NOT NULL,
   `full_name` varchar(200) DEFAULT NULL,
@@ -542,4 +550,4 @@ INSERT IGNORE INTO towns (id,province_id,name,latitude,longitude,coordinate_sour
 (1085510,1105844,'Epworth',-17.890000,31.147500,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/1085510/'),
 (890299,1105844,'Harare',-17.827720,31.053370,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/890299/');
 
-INSERT IGNORE INTO schema_migrations(version) VALUES ('upgrade-02'),('upgrade-03'),('upgrade-04'),('upgrade-05'),('upgrade-06'),('upgrade-07'),('upgrade-08'),('upgrade-09'),('upgrade-10'),('upgrade-11'),('upgrade-12'),('upgrade-13'),('upgrade-14'),('upgrade-15'),('upgrade-16'),('upgrade-17'),('upgrade-18'),('upgrade-19');
+INSERT IGNORE INTO schema_migrations(version) VALUES ('upgrade-02'),('upgrade-03'),('upgrade-04'),('upgrade-05'),('upgrade-06'),('upgrade-07'),('upgrade-08'),('upgrade-09'),('upgrade-10'),('upgrade-11'),('upgrade-12'),('upgrade-13'),('upgrade-14'),('upgrade-15'),('upgrade-16'),('upgrade-17'),('upgrade-18'),('upgrade-19'),('upgrade-20');

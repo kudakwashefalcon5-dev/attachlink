@@ -108,6 +108,7 @@ if ($pdo!==null) {
         $pdo->query('SELECT town_id,location_review_status FROM companies LIMIT 0')->closeCursor();
         $pdo->query('SELECT province_id,coordinate_source,attribution FROM towns LIMIT 0')->closeCursor();
         $pdo->query('SELECT details FROM company_location_proposals LIMIT 0')->closeCursor();
+        $pdo->query('SELECT job_name,last_successful_at FROM job_heartbeats LIMIT 0')->closeCursor();
         report_setting('Database schema',null,'','Account and outbox tables are ready.');
     } catch (Throwable) {
         report_setting('Database schema','Check ATTACHLINK_DB_NAME and apply the required migrations.','invalid','');
