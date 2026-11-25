@@ -11,7 +11,14 @@ function Request($Method,$Path,$Payload){
         $request.Content=[System.Net.Http.StringContent]::new(($Payload | ConvertTo-Json -Compress),[Text.Encoding]::UTF8,'application/json')
     }
     $response=$client.SendAsync($request).GetAwaiter().GetResult()
-    [pscustomobject]@{Code=[int]$response.StatusCode;Body=$response.Content.ReadAsStringAsync().GetAwaiter().GetResult();Location=$response.Headers.Location}
+    $nosniff=''
+    if($response.Headers.Contains('X-Content-Type-Options')){$nosniff=$response.Headers.GetValues('X-Content-Type-Options') -join ', '}
+    $cacheControl=''
+    if($response.Headers.Contains('Cache-Control')){$cacheControl=$response.Headers.CacheControl.ToString()}
+    $result=[pscustomobject]@{Code=[int]$response.StatusCode;Body=$response.Content.ReadAsStringAsync().GetAwaiter().GetResult();Location=$response.Headers.Location;Nosniff=$nosniff;CacheControl=$cacheControl}
+    $response.Dispose()
+    $request.Dispose()
+    $result
 }
 function Check($Name,$Actual,$Expected){
     if($Actual -ne $Expected){throw "$Name expected $Expected, got $Actual"}
@@ -19,11 +26,23 @@ function Check($Name,$Actual,$Expected){
 }
 try{
     Check 'Home portal redirect' (Request GET '').Code 302
+    $asset=Request GET 'assets/attachlink-brand.js'
+    Check 'Static asset served' $asset.Code 200
+    Check 'Static asset nosniff' $asset.Nosniff 'nosniff'
+    Check 'Static asset uses bounded public caching' ($asset.CacheControl -match '\bpublic\b' -and $asset.CacheControl -match '\bmax-age=3600\b' -and $asset.CacheControl -match '\bmust-revalidate\b') $true
+    $publicPage=Request GET 'privacy.html'
+    Check 'Public HTML is not cached' ($publicPage.CacheControl -match 'no-store') $true
     foreach($portal in 'students','employers','admin'){
-        Check "$portal page requires login" (Request GET "designs/$portal/dashboard.html").Code 302
+        $page=Request GET "designs/$portal/dashboard.html"
+        Check "$portal page requires login" $page.Code 302
+        Check "$portal page is not cached" ($page.CacheControl -match 'no-store') $true
+        Check "$portal page uses nosniff" $page.Nosniff 'nosniff'
     }
     foreach($route in 'auth/me.php','student/avatar.php','student/skills.php','student/applications.php','student/saved-listings.php','employer/overview.php','admin/settings.php','admin/placements.php','messages.php','documents/download.php?id=1'){
-        Check "$route requires login" (Request GET "backend/api/$route").Code 401
+        $response=Request GET "backend/api/$route"
+        Check "$route requires login" $response.Code 401
+        Check "$route is not cached" ($response.CacheControl -match 'no-store') $true
+        Check "$route uses nosniff" $response.Nosniff 'nosniff'
     }
     $envResponse=Request GET 'backend/.env'
     Check 'Local environment file denied' ($envResponse.Code -in 403,404) $true

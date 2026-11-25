@@ -20,7 +20,25 @@ Use a VPS with Apache and PHP, TLS certificates, an application-specific databas
 - Run php backend/check-config.php as the service account. It checks configuration, DB and schema readiness, document writability and mail transport settings without sending mail or printing secrets.
 - Set ATTACHLINK_ADMIN_TOTP_KEY to a secret 32-byte key encoded as 64 hexadecimal characters. Keep it in the deployment secret store and retain a protected recovery copy apart from database backups. Administrators enroll an authenticator on their first production sign-in and should store the ten single-use recovery codes offline. Restoring database records requires the same key.
 
-The CSP restricts scripts, styles, fonts and connections to the application origin. Inline scripts and styles are still used by the current portal templates. Apache applies framing, referrer and permissions restrictions. PHP emits HSTS on production HTTPS responses. For HSTS on static files, configure ATTACHLINK_ENV=production in Apache's TLS virtual host or set the header at the TLS terminator. Confirm the entire installation is HTTPS before enabling HSTS.
+The CSP restricts scripts, styles, fonts and connections to the application origin. `script-src 'unsafe-inline'` remains temporarily because the templates below still contain inline scripts and event-handler attributes. The removal plan is to move these scripts and handlers to same-origin JavaScript files, use a cryptographically random per-response nonce only for any unavoidable dynamic script, and then remove `unsafe-inline` from both the PHP and Apache policies. A static/reusable nonce is not acceptable. Re-run the inventory and browser checks before removing the directive. `style-src 'unsafe-inline'` is a separate remaining style migration.
+
+Remaining inline script blocks (relative paths, 1-based source lines):
+
+| File | Line | Purpose |
+|---|---:|---|
+| `backend/admin-login.html` | 1 | Administrator login redirect |
+| `designs/admin/attachees-directory.html` | 832 | Drawer and directory micro-interactions |
+| `designs/admin/placements-registry.html` | 788 | Placement bulk-selection behavior |
+| `designs/admin/verification-queue.html` | 431 | Verification queue demo state and interactions |
+| `designs/employers/register.html` | 33 | Company registration and optional location behavior |
+| `designs/students/account.html` | 80 | Student account loading and editing |
+| `designs/students/dashboard.html` | 139 | Dashboard tab interaction |
+| `designs/students/dashboard.html` | 154 | Authenticated student identity hydration |
+| `designs/students/register.html` | 277 | Student registration validation and submission |
+
+Inline JavaScript event-handler attributes also remain: 40 in `designs/admin/attachees-directory.html` (lines 201, 202, 253, 255, 261, 268, 269, 320, 322, 328, 335, 336, 387, 389, 395, 402, 403, 454, 456, 463, 470, 471, 522, 524, 530, 537, 538, 589, 591, 594, 598, 605, 606, 657, 659, 665, 725, 811, 815, 818), 21 in `designs/admin/verification-queue.html` (lines 52, 55, 58, 66, 75, 77, 101, 125, 152, 176, 200, 224, 277, 280, 380, 383, 386, 389, 398, 402, 408), and one in `designs/admin/system-settings.html` (line 22). These must be replaced with registered event listeners; nonces do not authorize inline event-handler attributes.
+
+Apache adds `X-Content-Type-Options: nosniff`, one-hour public caching for static assets, and `Cache-Control: no-store` for HTML and PHP responses. Authenticated portal pages, API responses and downloads remain non-cacheable. `tests/http-smoke.ps1` checks these response classes. PHP emits HSTS on production HTTPS responses. For HSTS on static files, configure ATTACHLINK_ENV=production in Apache's TLS virtual host or set the header at the TLS terminator. Confirm the entire installation is HTTPS before enabling HSTS.
 
 Run the mail job every minute and the document purge job every five minutes as the service account. Use absolute PHP and script paths and collect stderr. The mail job retries and returns exit 1 if any send fails. A worker crash after relay acceptance can result in duplicate delivery with the same Message-ID. Review the outbox and document purge queue if a job repeatedly fails.
 
