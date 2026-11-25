@@ -220,6 +220,7 @@ CREATE TABLE `login_attempts` (
   `bucket` char(64) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
   `window_id` bigint(20) unsigned NOT NULL,
   `attempts` int(10) unsigned NOT NULL,
+  `window_seconds` int(10) unsigned NOT NULL DEFAULT 900,
   PRIMARY KEY (`bucket`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -303,7 +304,7 @@ CREATE TABLE `password_resets` (
   `user_id` bigint(20) unsigned NOT NULL,
   `expires_at` datetime NOT NULL,
   `used_at` datetime DEFAULT NULL,
-  `requested_ip` varchar(45) NOT NULL,
+  `requested_ip` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`token_hash`),
   KEY `user_id` (`user_id`,`used_at`),
   CONSTRAINT `password_resets_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
@@ -550,4 +551,4 @@ INSERT IGNORE INTO towns (id,province_id,name,latitude,longitude,coordinate_sour
 (1085510,1105844,'Epworth',-17.890000,31.147500,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/1085510/'),
 (890299,1105844,'Harare',-17.827720,31.053370,'geonames','GeoNames (CC BY 4.0), https://www.geonames.org/890299/');
 
-INSERT IGNORE INTO schema_migrations(version) VALUES ('upgrade-02'),('upgrade-03'),('upgrade-04'),('upgrade-05'),('upgrade-06'),('upgrade-07'),('upgrade-08'),('upgrade-09'),('upgrade-10'),('upgrade-11'),('upgrade-12'),('upgrade-13'),('upgrade-14'),('upgrade-15'),('upgrade-16'),('upgrade-17'),('upgrade-18'),('upgrade-19'),('upgrade-20');
+INSERT IGNORE INTO schema_migrations(version) VALUES ('upgrade-02'),('upgrade-03'),('upgrade-04'),('upgrade-05'),('upgrade-06'),('upgrade-07'),('upgrade-08'),('upgrade-09'),('upgrade-10'),('upgrade-11'),('upgrade-12'),('upgrade-13'),('upgrade-14'),('upgrade-15'),('upgrade-16'),('upgrade-17'),('upgrade-18'),('upgrade-19'),('upgrade-20'),('upgrade-21');

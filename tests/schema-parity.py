@@ -33,6 +33,13 @@ def import_schema(schema, file):
 
 
 import_schema(upgrade, "tests/fixtures/schema-baseline.sql")
+subprocess.run([args.mysql, *connection, upgrade, "-e",
+                "CREATE TABLE IF NOT EXISTS login_attempts(bucket CHAR(64) CHARACTER SET ascii PRIMARY KEY,"
+                "window_id BIGINT UNSIGNED NOT NULL,attempts INT UNSIGNED NOT NULL);"
+                "INSERT INTO login_attempts(bucket,window_id,attempts) VALUES"
+                "(REPEAT('a',64),FLOOR(UNIX_TIMESTAMP()/86400),1),"
+                "(REPEAT('b',64),FLOOR(UNIX_TIMESTAMP()/3600),1),"
+                "(REPEAT('c',64),FLOOR(UNIX_TIMESTAMP()/900),1)"], check=True)
 environment = {key: value for key, value in os.environ.items() if not key.startswith("ATTACHLINK_")}
 environment.update(ATTACHLINK_ENV="development", ATTACHLINK_DB_HOST="127.0.0.1",
                    ATTACHLINK_DB_PORT=str(args.port), ATTACHLINK_DB_NAME=upgrade, ATTACHLINK_DB_USER="root",
@@ -40,6 +47,11 @@ environment.update(ATTACHLINK_ENV="development", ATTACHLINK_DB_HOST="127.0.0.1",
 migration = [args.php, "backend/jobs/migrate.php"]
 subprocess.run(migration, env=environment, cwd=ROOT, check=True)
 assert not subprocess.check_output(migration, env=environment, cwd=ROOT).strip(), "Migration rerun applied changes"
+window_seconds = subprocess.check_output(
+    [args.mysql, *connection, "-N", upgrade, "-e",
+     "SELECT GROUP_CONCAT(window_seconds ORDER BY bucket) FROM login_attempts WHERE bucket IN (REPEAT('a',64),REPEAT('b',64),REPEAT('c',64))"],
+    text=True).strip()
+assert window_seconds == "86400,3600,900", window_seconds
 import_schema(fresh, "database/schema.sql")
 
 

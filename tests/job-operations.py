@@ -85,16 +85,18 @@ try:
                            ATTACHLINK_DOCUMENT_STORAGE=str(storage),
                            ATTACHLINK_MAIL_LOG=str(work / "mail" / "mail.jsonl"))
 
-        query("DELETE FROM schema_migrations WHERE version='upgrade-20'; DROP TABLE job_heartbeats")
+        query("DELETE FROM schema_migrations WHERE version IN ('upgrade-20','upgrade-21'); DROP TABLE job_heartbeats")
         migration = php("backend/jobs/migrate.php", environment)
-        assert migration.stdout.strip() == "Applied upgrade-20", migration
-        assert query("SELECT version FROM schema_migrations WHERE version='upgrade-20'") == "upgrade-20"
+        assert migration.stdout.strip().splitlines() == ["Applied upgrade-20", "Applied upgrade-21"], migration
+        assert query("SELECT COUNT(*) FROM schema_migrations WHERE version IN ('upgrade-20','upgrade-21')") == "2"
         assert not php("backend/jobs/migrate.php", environment).stdout.strip()
 
         migration_lock = "attachlink-migrate:" + hashlib.sha256(database.encode()).hexdigest()[:40]
         assert_lock_refused(migration_lock, "backend/jobs/migrate.php", environment, work, "Another migration is running.")
         purge_lock = "attachlink-purge:" + hashlib.sha256(database.encode()).hexdigest()[:40]
         assert_lock_refused(purge_lock, "backend/jobs/purge-documents.php", environment, work, "Another document purge job is running.")
+        retention_lock = "attachlink-retention:" + hashlib.sha256(database.encode()).hexdigest()[:40]
+        assert_lock_refused(retention_lock, "backend/jobs/purge-retention.php", environment, work, "Another data retention purge is running.")
 
         purge = php("backend/jobs/purge-documents.php", environment)
         assert not purge.stderr, purge
@@ -116,14 +118,42 @@ try:
         assert query("SELECT last_successful_at FROM job_heartbeats WHERE job_name='send-emails'") == previous_heartbeat
         query("DELETE FROM email_outbox WHERE recipient='invalid-address'")
 
+        query("INSERT INTO users(role,first_name,last_name,email,password_hash) VALUES('student','Retention','Fixture','retention-fixture@example.invalid','not-used')")
+        student_id = query("SELECT id FROM users WHERE email='retention-fixture@example.invalid'")
+        query(f"INSERT INTO password_resets(token_hash,user_id,expires_at,requested_ip) VALUES(REPEAT('a',64),{student_id},NOW()-INTERVAL 31 DAY,'192.0.2.1'),(REPEAT('b',64),{student_id},NOW()-INTERVAL 8 DAY,'192.0.2.2'),(REPEAT('c',64),{student_id},NOW()-INTERVAL 1 DAY,'192.0.2.3')")
+        query(f"INSERT INTO email_verifications(token_hash,user_id,expires_at) VALUES(REPEAT('d',64),{student_id},NOW()-INTERVAL 31 DAY),(REPEAT('e',64),{student_id},NOW()-INTERVAL 1 DAY)")
+        query("INSERT INTO login_attempts(bucket,window_id,window_seconds,attempts) VALUES(REPEAT('f',64),FLOOR(UNIX_TIMESTAMP()/900)-1,900,1),(REPEAT('g',64),FLOOR(UNIX_TIMESTAMP()/900),900,1)")
+        query("INSERT INTO email_outbox(recipient,subject,body,html_body,sent_at,expires_at) VALUES('retention-old@example.invalid','old body','old text','<p>old</p>',NOW()-INTERVAL 31 DAY,NOW()-INTERVAL 31 DAY),('retention-expired@example.invalid','expired body','expired text','<p>expired</p>',NULL,NOW()-INTERVAL 31 DAY),('retention-recent@example.invalid','recent body','recent text','<p>recent</p>',NOW()-INTERVAL 1 DAY,NOW()-INTERVAL 1 DAY)")
+        query("INSERT INTO admin_audit_log(admin_id,action,target_type,detail,created_at) VALUES(1,'document.download','application_document','{}',NOW()-INTERVAL 366 DAY),(1,'document.download','application_document','{}',NOW()-INTERVAL 1 DAY),(1,'admin.update','user','{}',NOW()-INTERVAL 366 DAY)")
+        retention = php("backend/jobs/purge-retention.php", environment)
+        retention_summary = json.loads(retention.stdout.strip())
+        assert retention_summary["job"] == "purge-retention" and retention_summary["status"] == "succeeded", retention
+        assert retention_summary["counts"] == {
+            "reset_ips_cleared": 1, "password_resets_deleted": 1, "email_verifications_deleted": 1,
+            "login_attempts_deleted": 1, "email_bodies_cleared": 2, "document_access_audit_deleted": 1,
+        }, retention
+        assert query("SELECT requested_ip FROM password_resets WHERE token_hash=REPEAT('b',64)") == "NULL"
+        assert query("SELECT requested_ip FROM password_resets WHERE token_hash=REPEAT('c',64)") == "192.0.2.3"
+        assert query("SELECT COUNT(*) FROM password_resets WHERE token_hash=REPEAT('a',64)") == "0"
+        assert query("SELECT COUNT(*) FROM email_verifications WHERE token_hash=REPEAT('d',64)") == "0"
+        assert query("SELECT COUNT(*) FROM email_verifications WHERE token_hash=REPEAT('e',64)") == "1"
+        assert query("SELECT COUNT(*) FROM login_attempts WHERE bucket=REPEAT('f',64)") == "0"
+        assert query("SELECT COUNT(*) FROM login_attempts WHERE bucket=REPEAT('g',64)") == "1"
+        assert query("SELECT COUNT(*) FROM email_outbox WHERE recipient IN ('retention-old@example.invalid','retention-expired@example.invalid') AND (body<>'' OR html_body IS NOT NULL)") == "0"
+        assert query("SELECT COUNT(*) FROM email_outbox WHERE recipient='retention-recent@example.invalid' AND body='recent text' AND html_body='<p>recent</p>'") == "1"
+        assert query("SELECT COUNT(*) FROM admin_audit_log WHERE action='document.download' AND created_at<NOW()-INTERVAL 365 DAY") == "0"
+        assert query("SELECT COUNT(*) FROM admin_audit_log WHERE action='admin.update' AND created_at<NOW()-INTERVAL 365 DAY") == "1"
+        assert query("SELECT job_name FROM job_heartbeats WHERE job_name='purge-retention'") == "purge-retention"
+
         status_script = "require 'backend/config.php'; require 'backend/lib/JobHeartbeat.php'; echo json_encode(job_heartbeat_status(connect_database()));"
         status_result = subprocess.run([args.php, "-r", status_script], cwd=ROOT, env=environment,
                                        capture_output=True, text=True, check=True)
         statuses = {job["job"]: job for job in json.loads(status_result.stdout)}
         assert statuses["send-emails"]["stale"] is False
         assert statuses["purge-documents"]["stale"] is False
+        assert statuses["purge-retention"]["stale"] is False
         assert statuses["backup"]["stale"] is True
-        print("PASSED migration step recording and locking, purge locking and heartbeat, email failure summary, and stale-job status.")
+        print("PASSED migration and job locks, retention cutoffs, email failure summary, and scheduled-job heartbeats.")
 finally:
     if created:
         subprocess.run([*mysql, "-e", "DROP DATABASE " + database], check=True)

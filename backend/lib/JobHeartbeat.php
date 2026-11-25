@@ -13,6 +13,7 @@ function job_heartbeat_status(PDO $pdo): array {
     $thresholds=[
         'send-emails'=>['label'=>'Email worker','stale_after_seconds'=>300],
         'purge-documents'=>['label'=>'Document purge','stale_after_seconds'=>900],
+        'purge-retention'=>['label'=>'Data retention purge','stale_after_seconds'=>259200],
         'backup'=>['label'=>'Backup','stale_after_seconds'=>129600],
     ];
     $rows=$pdo->query('SELECT job_name,last_successful_at,TIMESTAMPDIFF(SECOND,last_successful_at,NOW()) AS age_seconds FROM job_heartbeats')->fetchAll();

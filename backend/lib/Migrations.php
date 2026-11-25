@@ -48,6 +48,7 @@ function detect_unversioned_migrations(PDO $pdo): array {
         'upgrade-18'=>isset($columns['student_cvs']['layout']),
         'upgrade-19'=>isset($columns['companies']['town_id'],$columns['towns'],$columns['company_location_proposals'],$columns['openings']['remote_option']),
         'upgrade-20'=>isset($columns['job_heartbeats']),
+        'upgrade-21'=>isset($columns['login_attempts']['window_seconds']),
     ];
     return array_keys(array_filter($applied));
 }

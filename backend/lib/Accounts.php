@@ -24,7 +24,7 @@ function attempt_limit(array $limits, int $seconds, callable $attempt, ?callable
         foreach ($limits as $bucket => $limit) {
             [$limit,$period]=is_array($limit)?$limit:[$limit,$seconds];
             $window=intdiv(time(),$period);
-            execute('INSERT INTO login_attempts(bucket,window_id,attempts) VALUES(?,?,0) ON DUPLICATE KEY UPDATE attempts=IF(window_id=VALUES(window_id),attempts,0),window_id=VALUES(window_id)', [$bucket,$window]);
+            execute('INSERT INTO login_attempts(bucket,window_id,window_seconds,attempts) VALUES(?,?,?,0) ON DUPLICATE KEY UPDATE attempts=IF(window_id=VALUES(window_id),attempts,0),window_id=VALUES(window_id),window_seconds=VALUES(window_seconds)', [$bucket,$window,$period]);
             if ((int)getrow('SELECT attempts FROM login_attempts WHERE bucket=?', [$bucket])['attempts'] >= $limit) {
                 $pdo->rollBack();
                 if ($blocked) $blocked($bucket);
