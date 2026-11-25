@@ -131,7 +131,145 @@ function connect_database(): PDO {
 }
 
 function application_storage(): string {
-    return config_env('ATTACHLINK_DOCUMENT_STORAGE') ?: __DIR__.'/storage/documents';
+    return config_env('ATTACHLINK_DOCUMENT_STORAGE')
+        ?: sys_get_temp_dir().DIRECTORY_SEPARATOR.'attachlink-storage'.DIRECTORY_SEPARATOR.'documents';
+}
+
+function path_is_absolute(string $path): bool {
+    return str_starts_with($path,'/') || preg_match('/\A[A-Za-z]:[\\\\\/]/',$path)===1 || str_starts_with($path,'\\\\');
+}
+
+function resolved_path_for_validation(string $path): ?string {
+    $candidate=$path;
+    $suffix=[];
+    while (!file_exists($candidate) && !is_link($candidate)) {
+        $parent=dirname($candidate);
+        if ($parent===$candidate) break;
+        array_unshift($suffix,basename($candidate));
+        $candidate=$parent;
+    }
+    $resolved=realpath($candidate);
+    if ($resolved===false) return null;
+    return $suffix
+        ? rtrim($resolved,'\\/').DIRECTORY_SEPARATOR.implode(DIRECTORY_SEPARATOR,$suffix)
+        : $resolved;
+}
+
+function document_root_path(): string {
+    return !empty($_SERVER['DOCUMENT_ROOT'])?$_SERVER['DOCUMENT_ROOT']:dirname(__DIR__);
+}
+
+function application_storage_issues(?string $documentRoot=null): array {
+    $path=application_storage();
+    if (!path_is_absolute($path)) return ['ATTACHLINK_DOCUMENT_STORAGE'=>'Use an absolute path outside the document root.'];
+    if (is_link($path) || (file_exists($path) && !is_dir($path))) {
+        return ['ATTACHLINK_DOCUMENT_STORAGE'=>'Use a regular private storage directory, not a file or symbolic link.'];
+    }
+    $resolved=resolved_path_for_validation($path);
+    $rootPath=$documentRoot??document_root_path();
+    $root=resolved_path_for_validation($rootPath);
+    if ($resolved===null || $root===null) {
+        return ['ATTACHLINK_DOCUMENT_STORAGE'=>'The storage and document root paths must resolve.'];
+    }
+    if (path_is_within_directory($resolved,$root)) {
+        return ['ATTACHLINK_DOCUMENT_STORAGE'=>'Document storage must be outside the document root.'];
+    }
+    $directory=$path;
+    while (!is_dir($directory)) {
+        $parent=dirname($directory);
+        if ($parent===$directory) return ['ATTACHLINK_DOCUMENT_STORAGE'=>'The storage directory or its parent must exist.'];
+        $directory=$parent;
+    }
+    if (!is_writable($directory)) return ['ATTACHLINK_DOCUMENT_STORAGE'=>'The storage directory must be writable.'];
+    if (is_dir($path) && PHP_OS_FAMILY!=='Windows') {
+        $permissions=@fileperms($path);
+        if ($permissions===false || ($permissions&0077)!==0) {
+            return ['ATTACHLINK_DOCUMENT_STORAGE'=>'The storage directory must not be accessible to group or other users.'];
+        }
+    }
+    return [];
+}
+
+function trusted_proxy_setting_issues(): array {
+    $configured=config_env('ATTACHLINK_TRUSTED_PROXIES');
+    if (trim($configured)==='') return [];
+    $proxies=array_map('trim',explode(',',$configured));
+    foreach ($proxies as $proxy) {
+        if ($proxy==='' || filter_var($proxy,FILTER_VALIDATE_IP)===false) {
+            return ['ATTACHLINK_TRUSTED_PROXIES'=>'Provide comma-separated exact IPv4 or IPv6 proxy addresses.'];
+        }
+    }
+    return [];
+}
+
+function ai_provider_setting_issues(): array {
+    $support=config_env('ATTACHLINK_SUPPORT_AI');
+    $endpoint=trim(config_env('ATTACHLINK_INTERVIEW_AI_URL'));
+    $model=trim(config_env('ATTACHLINK_INTERVIEW_AI_MODEL'));
+    $key=trim(config_env('ATTACHLINK_INTERVIEW_AI_KEY'));
+    $issues=[];
+    if ($support!=='' && !in_array($support,['0','1'],true)) {
+        $issues['ATTACHLINK_SUPPORT_AI']='Choose 0 or 1.';
+    }
+    $configured=$endpoint!=='' || $model!=='' || $key!=='';
+    if (!$configured) {
+        if ($support==='1') $issues['ATTACHLINK_SUPPORT_AI']='Provider URL, model and API key are required when support AI is enabled.';
+        return $issues;
+    }
+    $parts=parse_url($endpoint);
+    $host=is_array($parts)?($parts['host']??''):'';
+    if (!filter_var($endpoint,FILTER_VALIDATE_URL) || ($parts['scheme']??null)!=='https'
+        || $host==='' || isset($parts['user']) || isset($parts['pass']) || isset($parts['query']) || isset($parts['fragment'])) {
+        $issues['ATTACHLINK_INTERVIEW_AI_URL']='Provide an HTTPS provider URL without credentials, query or fragment.';
+    }
+    if ($model==='' || strlen($model)>200 || preg_match('/[\r\n]/',$model)) {
+        $issues['ATTACHLINK_INTERVIEW_AI_MODEL']='Provide a model name of at most 200 characters.';
+    }
+    if ($key==='' || $key==='replace_with_your_real_key' || preg_match('/[\r\n]/',$key)) {
+        $issues['ATTACHLINK_INTERVIEW_AI_KEY']='Provide a non-placeholder provider API key.';
+    }
+    if (!function_exists('curl_init') && (!(bool)ini_get('allow_url_fopen') || !in_array('https',stream_get_wrappers(),true))) {
+        $issues['AI provider transport']='Enable PHP cURL or HTTPS streams to use the provider.';
+    }
+    return $issues;
+}
+
+function backup_setting_issues(?string $documentRoot=null): array {
+    $directory=config_env('ATTACHLINK_BACKUP_DIR');
+    $recipient=config_env('ATTACHLINK_BACKUP_RECIPIENT');
+    $days=config_env('ATTACHLINK_BACKUP_DAYS','30');
+    $enabled=APP_ENV==='production' || $directory!=='' || $recipient!=='';
+    $issues=[];
+    if (filter_var($days,FILTER_VALIDATE_INT,['options'=>['min_range'=>1,'max_range'=>3650]])===false) {
+        $issues['ATTACHLINK_BACKUP_DAYS']='Choose a retention period from 1 to 3650 days.';
+    }
+    if (!$enabled) return $issues;
+    if ($directory==='') {
+        $issues['ATTACHLINK_BACKUP_DIR']='Set an existing private backup directory outside the document root.';
+    } elseif (!path_is_absolute($directory) || is_link($directory) || !is_dir($directory) || !is_writable($directory)) {
+        $issues['ATTACHLINK_BACKUP_DIR']='Set an existing writable private backup directory using an absolute path.';
+    } else {
+        $resolved=realpath($directory);
+        $root=resolved_path_for_validation($documentRoot??document_root_path());
+        $application=realpath(dirname(__DIR__));
+        if ($resolved===false || $root===null || path_is_within_directory($resolved,$root)
+            || ($application!==false && path_is_within_directory($resolved,$application))) {
+            $issues['ATTACHLINK_BACKUP_DIR']='Backup storage must be outside the application and document roots.';
+        } elseif (PHP_OS_FAMILY!=='Windows') {
+            $permissions=@fileperms($directory);
+            if ($permissions===false || ($permissions&0077)!==0) {
+                $issues['ATTACHLINK_BACKUP_DIR']='The backup directory must not be accessible to group or other users.';
+            }
+        }
+    }
+    if (!preg_match('/\Aage1[0-9a-z]{58}\z/',$recipient)) {
+        $issues['ATTACHLINK_BACKUP_RECIPIENT']='Provide the age public recipient used for backups.';
+    }
+    foreach (['ATTACHLINK_AGE'=>config_env('ATTACHLINK_AGE','age'),
+              'ATTACHLINK_MYSQLDUMP'=>config_env('ATTACHLINK_MYSQLDUMP','mysqldump')] as $name=>$command) {
+        if ($command==='' || preg_match('/[\r\n\x00]/',$command)) $issues[$name]='Provide a valid executable name or path.';
+    }
+    return $issues;
 }
 
 function mail_transport_name(): string {

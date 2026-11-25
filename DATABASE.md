@@ -10,7 +10,7 @@ The schema uses InnoDB and utf8mb4.
 | student_skills | One user to many skills through the indexed student foreign key. |
 | openings | Company foreign key and composite status/deadline index. |
 | applications | Opening and student foreign keys. Unique opening/student pair. |
-| application_documents | Application foreign key. Metadata points to a private file in backend/storage/documents. |
+| application_documents | Application foreign key. Metadata points to a private file in ATTACHLINK_DOCUMENT_STORAGE, outside the document root. |
 | saved_openings | Student and opening foreign keys form a composite primary key. |
 | notifications | User foreign key and composite user/read index. |
 | messages | Sender and recipient foreign keys and composite recipient/sender/date index. |

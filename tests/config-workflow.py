@@ -169,7 +169,10 @@ def run(args):
         assert production["ATTACHLINK_DB_PASS"] not in checked.stdout + checked.stderr
         print("PASSED check-config reports MISSING and exits nonzero without exposing secrets")
 
-        local = subprocess.run([args.php, "-d", f"mysqli.default_port={args.db_port}", "backend/check-config.php"],
+        local = subprocess.run([args.php, "-d", f"mysqli.default_port={args.db_port}", "-d", "upload_max_filesize=5M",
+                                "-d", "post_max_size=46M", "-d", "max_file_uploads=9", "-d", "session.gc_maxlifetime=43200",
+                                "-d", f"session.save_path={scratch}", "-d", f"upload_tmp_dir={scratch}",
+                                "backend/check-config.php"],
                                env={**env, "ATTACHLINK_DOCUMENT_STORAGE": str(scratch / "documents")},
                                cwd=ROOT, capture_output=True, text=True, check=False)
         assert local.returncode == 0 and "OK Database connection " in local.stdout, local.stdout
