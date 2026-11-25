@@ -13,14 +13,15 @@ For standalone QA, install the locked application dependencies with composer ins
 
 Use a VPS with Apache and PHP, TLS certificates, an application-specific database account and private storage. Apache with the shipped .htaccess rules is the only supported web server; nginx and Caddy are unsupported. Direct HTTP traffic to HTTPS before handing it to PHP. Pass a trusted HTTPS indication to PHP when terminating TLS at a reverse proxy. Keep ATTACHLINK_TRUSTED_PROXIES empty for direct Apache access or list the exact managed proxy addresses. Campus NAT users share the IP login bucket.
 
-- ATTACHLINK_ENV=production and ATTACHLINK_BASE_URL must be the canonical HTTPS URL including the installation path.
+- Set ATTACHLINK_ENV=production and ATTACHLINK_BASE_URL to the canonical HTTPS URL including the installation path. Development mode is accepted for CLI or HTTP requests whose peer and Host are loopback only; a remote host fails closed. Production admin accounts must complete TOTP, and production session cookies always have the Secure attribute.
 - ATTACHLINK_DB_USER must be non-root and ATTACHLINK_DB_PASS non-empty. Configure ATTACHLINK_DB_HOST, ATTACHLINK_DB_PORT and ATTACHLINK_DB_NAME as appropriate.
 - Set ATTACHLINK_DOCUMENT_STORAGE to a writable private absolute path outside the Apache DocumentRoot. In development, the default is a per-machine temporary directory; production must configure persistent storage. The checker rejects storage inside the document root. Deny direct access to backend/storage, which contains avatars. Set writable PHP session and upload temporary directories, `session.gc_maxlifetime` to at least 43200 seconds, `upload_max_filesize` to at least 5 MB, `post_max_size` above 45 MB, and `max_file_uploads` to at least nine.
 - ATTACHLINK_TRUSTED_PROXIES accepts only comma-separated exact IPv4 or IPv6 addresses. Leave it empty unless the service is behind an explicitly trusted proxy. AI provider settings are optional; when configured, the URL must use HTTPS and URL, model and key must be complete. Set ATTACHLINK_SUPPORT_AI=1 only when those provider settings are ready.
 - Production check-config requires ATTACHLINK_BACKUP_DIR and a valid age public ATTACHLINK_BACKUP_RECIPIENT. The backup directory must already exist, be private/writable and be outside the application and document roots. Set ATTACHLINK_BACKUP_DAYS from 1 to 3650.
 - Set ATTACHLINK_MAIL_TRANSPORT=smtp for real delivery. Set ATTACHLINK_SMTP_HOST, ATTACHLINK_SMTP_EHLO and ATTACHLINK_SMTP_FROM. STARTTLS defaults to port 587 and implicit TLS to 465. Set the relay's LOGIN or PLAIN mechanism and both credentials if required. The PHP CLI needs OpenSSL and the locked PHPMailer dependencies.
-- Run php backend/check-config.php as the service account. It checks configuration, DB and schema readiness, pending migrations, document and backup locations, PHP upload/session settings, trusted proxies, optional AI/map settings, TOTP and mail transport safety without sending mail or printing secrets. It exits non-zero if any check fails.
-- Set ATTACHLINK_ADMIN_TOTP_KEY to a secret 32-byte key encoded as 64 hexadecimal characters. Keep it in the deployment secret store and retain a protected recovery copy apart from database backups. Administrators enroll an authenticator on their first production sign-in and should store the ten single-use recovery codes offline. Restoring database records requires the same key.
+- Run php backend/check-config.php as the service account. It checks DB/schema readiness and pending migrations; exact trusted-proxy IPs; AI URL, model, key and HTTPS consistency; map tile URL/origin; backup directory, recipient and retention; document/avatar storage outside the document root; PHP upload limits, session path and lifetime; mail transport; and the production TOTP key. It never prints secrets and exits non-zero on any failure.
+- Set ATTACHLINK_ADMIN_TOTP_KEY to a secret 32-byte key encoded as 64 hexadecimal characters. Keep it in the deployment secret store and retain a protected recovery copy apart from database backups. Administrators enroll an authenticator on their first production sign-in and should store the ten single-use recovery codes offline. Restoring database records requires the same key; see OPERATIONS.md for the lost-device recovery procedure.
+- Use ATTACHLINK_MAIL_TRANSPORT=smtp for production. The development-only log transport is rejected outside development; web startup returns a generic 503 and logs the configuration reason, and check-config.php fails. In development, mail-log directories/files are private (0700/0600 on POSIX), outside the application and document roots; links and tokens are redacted by default, with only a token's final six characters shown. Entries older than 24 hours are removed on the next log write. On Windows, restrict the directory and file with an ACL to the development account.
 
 The CSP restricts scripts, styles, fonts and connections to the application origin. `script-src 'unsafe-inline'` remains temporarily because the templates below still contain inline scripts and event-handler attributes. The removal plan is to move these scripts and handlers to same-origin JavaScript files, use a cryptographically random per-response nonce only for any unavoidable dynamic script, and then remove `unsafe-inline` from both the PHP and Apache policies. A static/reusable nonce is not acceptable. Re-run the inventory and browser checks before removing the directive. `style-src 'unsafe-inline'` is a separate remaining style migration.
 
@@ -42,29 +43,49 @@ Inline JavaScript event-handler attributes also remain: 40 in `designs/admin/att
 
 Apache adds `X-Content-Type-Options: nosniff`, one-hour public caching for static assets, and `Cache-Control: no-store` for HTML and PHP responses. Authenticated portal pages, API responses and downloads remain non-cacheable. `tests/http-smoke.ps1` checks these response classes. PHP emits HSTS on production HTTPS responses. For HSTS on static files, configure ATTACHLINK_ENV=production in Apache's TLS virtual host or set the header at the TLS terminator. Confirm the entire installation is HTTPS before enabling HSTS.
 
-Run the mail job every minute and the document purge job every five minutes as the service account. Use absolute PHP and script paths and collect stderr. The mail job retries and returns exit 1 if any send fails. A worker crash after relay acceptance can result in duplicate delivery with the same Message-ID. Review the outbox and document purge queue if a job repeatedly fails.
+Run all scheduled commands as the application service account with the deployment environment available. The migration runner is manual: run it once during a deployment/maintenance window; it refuses concurrent runs and records each completed migration step. The document and retention purge jobs also refuse overlapping runs. Email delivery returns non-zero and emits a structured failure count when a send fails. A worker crash after relay acceptance can result in duplicate delivery with the same Message-ID. The admin overview shows each job's last successful run and alerts when it is stale or has never succeeded: email after 5 minutes, document purge after 15 minutes, backup after 36 hours, and retention purge after 72 hours. Repeated failures should be investigated from the job logs and the corresponding outbox, purge queue, or backup directory. See OPERATIONS.md for the retention periods and records affected by the daily purge.
+
+Example Linux crontab entries (replace `/srv/attachlink/current` and `/usr/bin/php` with the installed release and PHP CLI paths; create `/var/log/attachlink` writable by the service account):
+
+```cron
+* * * * * /usr/bin/php /srv/attachlink/current/public/backend/jobs/send-emails.php >> /var/log/attachlink/send-emails.log 2>&1
+*/5 * * * * /usr/bin/php /srv/attachlink/current/public/backend/jobs/purge-documents.php >> /var/log/attachlink/purge-documents.log 2>&1
+15 2 * * * /usr/bin/php /srv/attachlink/current/public/backend/jobs/purge-retention.php >> /var/log/attachlink/purge-retention.log 2>&1
+45 2 * * * /usr/bin/php /srv/attachlink/current/public/backend/jobs/backup.php all >> /var/log/attachlink/backup.log 2>&1
+```
+
+On Windows, create equivalent tasks under the service account (set its environment/secrets and configure each task to run whether or not the account is logged on). These PowerShell examples use `C:\AttachLink\current\public` and `C:\xampp\php\php.exe`; substitute the installed paths and account:
+
+```powershell
+schtasks.exe /Create /TN "AttachLink Send Emails" /SC MINUTE /MO 1 /TR "C:\xampp\php\php.exe C:\AttachLink\current\public\backend\jobs\send-emails.php" /RU "DOMAIN\attachlink" /F
+schtasks.exe /Create /TN "AttachLink Purge Documents" /SC MINUTE /MO 5 /TR "C:\xampp\php\php.exe C:\AttachLink\current\public\backend\jobs\purge-documents.php" /RU "DOMAIN\attachlink" /F
+schtasks.exe /Create /TN "AttachLink Purge Retention" /SC DAILY /ST 02:15 /TR "C:\xampp\php\php.exe C:\AttachLink\current\public\backend\jobs\purge-retention.php" /RU "DOMAIN\attachlink" /F
+schtasks.exe /Create /TN "AttachLink Backup" /SC DAILY /ST 02:45 /TR "C:\xampp\php\php.exe C:\AttachLink\current\public\backend\jobs\backup.php all" /RU "DOMAIN\attachlink" /F
+```
 
 Publish the relay's SPF record, enable provider DKIM signing, and publish DMARC for the From domain. Verify alignment on delivered test messages. Begin with a monitoring DMARC policy before considering enforcement. [Sender authentication guidance](https://support.google.com/mail/answer/81126)
 
 ## Release and backups
 
-Extract the release into a versioned deployment directory with this layout, then point Apache's DocumentRoot only at `public/`:
+Extract the release into a versioned deployment directory and point Apache's DocumentRoot only at `public/`. The release archive layout is:
 
 ```text
 attachlink-release/
-|-- public/                 Apache DocumentRoot; application pages, assets and API routes
-|   |-- backend/api/        Intentional HTTP entry points
-|   |-- backend/jobs/       CLI-only; direct HTTP access denied
-|   |-- backend/lib/        PHP runtime; direct HTTP access denied
-|   |-- backend/storage/    Private runtime area; direct HTTP access denied
-|   |-- vendor/             PHP runtime dependencies; direct HTTP access denied
+|-- public/                 Apache DocumentRoot; the only web-reachable tree
+|   |-- backend/            Runtime and API; only backend/api/ has HTTP entry points
+|   |   |-- jobs/           CLI only; direct HTTP access denied
+|   |   |-- lib/            PHP runtime; direct HTTP access denied
+|   |   `-- storage/        Private runtime area; direct HTTP access denied
+|   |-- vendor/             Composer runtime; direct HTTP access denied
+|   |-- composer.json       Direct HTTP access denied
+|   |-- composer.lock       Direct HTTP access denied
 |   `-- .htaccess           Required access-control and response-header rules
-|-- database/               Schema and migrations; never web reachable
-|-- docs/                   Operations documentation; never web reachable
-`-- *.md                    Release documentation; never web reachable
+|-- database/               Schema and migrations; outside DocumentRoot
+|-- docs/                   Operations documentation; outside DocumentRoot
+`-- *.md                    Release documentation; outside DocumentRoot
 ```
 
-The release archive includes backend runtime files and Composer dependencies below `public/` so PHP can load them. Only `backend/api/` is an intended backend HTTP entry point; Apache denies direct requests for jobs, libraries, configuration, storage and vendor files. Keep `ATTACHLINK_DOCUMENT_STORAGE`, avatars, backups, sessions and `.env` outside `public/`. The source-checkout `.htaccess` additionally denies database, docs, tests, scripts, dist, test-results, node_modules, `.git` and `dev-router.php` paths; this is defense-in-depth and does not make the repository root an acceptable production DocumentRoot. Run `python tests/deployment-layout.py` before a release to probe both layouts over a local Apache instance. Run PHP jobs and the configuration checker from the extracted `public/` directory. In the production TLS virtual host, add `Header always set Strict-Transport-Security "max-age=31536000"` to cover static responses and Apache-generated errors.
+Only `public/` is web-reachable. The release intentionally places backend runtime files, `vendor/`, and Composer metadata below `public/` for PHP loading, so Apache must honor the shipped access rules; only `backend/api/` is an intended backend HTTP entry point. Keep document/avatar storage, backups, sessions and deployment secrets out of the web tree where possible. Before release, `python tests/deployment-layout.py` requests `/database/schema.sql`, `/docs/`, `/vendor/autoload.php`, `/composer.lock`, `/backend/.env`, `/backend/storage/`, `/dist/`, `/test-results/`, `/node_modules/`, `/.git/` and `/dev-router.php` against both the release layout and repository layout; every request must return 403 or 404. The source checkout is not an acceptable production DocumentRoot. Run PHP jobs and the configuration checker from the extracted `public/` directory. In the production TLS virtual host, add `Header always set Strict-Transport-Security "max-age=31536000"` to cover static responses and Apache-generated errors.
 
 Run composer install --no-dev --optimize-autoloader, npm ci, and npm run build:css from the source checkout. Run scripts/build-release.ps1 on Windows or sh scripts/build-release.sh on Linux to create dist/attachlink.zip. The builder and verifier use scripts/release-allowlist.txt and scripts/release-excludes.txt. Use -Verify path on PowerShell or --verify path on Linux to check an existing ZIP.
 
@@ -78,14 +99,49 @@ The release vendors Leaflet 1.9.4 in `assets/vendor/leaflet/leaflet.js`. It is l
 
 Install age on the backup host and set ATTACHLINK_AGE if it is outside PATH. On an offline or otherwise restricted restore workstation, run age-keygen to generate the identity. Put only the printed public age1 recipient in ATTACHLINK_BACKUP_RECIPIENT on the backup host. Store the private identity off the server, with a second protected recovery copy and access limited to authorized restore operators. Record the recipient and key version in the backup runbook. When rotating, keep old identities available until every backup encrypted to them has expired.
 
-Set ATTACHLINK_BACKUP_DIR to a private existing directory outside the document root. ATTACHLINK_MYSQLDUMP selects a compatible dump utility. ATTACHLINK_BACKUP_DAYS defaults to 30. Run php backend/jobs/backup.php all during maintenance for a consistent pair. The job streams plaintext directly into age and publishes .sql.age and .tar.age files. The tar includes application and company documents and student avatars. Database-only and document-only modes are also available. Each artifact is published only after encryption succeeds. Treat matching successful database and file snapshots as a pair. Retention removes matching encrypted backups only. Move any legacy plaintext backups into restricted storage and encrypt or dispose of them under the agreed retention policy.
+Set ATTACHLINK_BACKUP_DIR to a private existing directory outside the application, document and file-storage roots. ATTACHLINK_MYSQLDUMP selects a compatible dump utility. ATTACHLINK_BACKUP_DAYS defaults to 30. Run `php backend/jobs/backup.php all`; the job recursively archives application documents, student vault files, company verification files, logos, avatars and otherwise-unclassified storage files, including nested paths. Symbolic links and missing database-referenced files cause the run to fail.
+
+Each successful run publishes one directory named `attachlink-backup-<UTC timestamp>-<random id>/` containing matching encrypted `attachlink-db-<id>.sql.age` and `attachlink-files-<id>.tar.age` artifacts. Both artifacts are first written to a private staging directory and made visible together by a directory rename; do not treat files from different directories as a pair. The encrypted tar contains `manifest.json` with per-kind file counts and checksums; it also records the plaintext database dump size and checksum. The backup heartbeat is updated only after the pair is published. The job removes expired pair directories according to ATTACHLINK_BACKUP_DAYS.
+
+Transfer complete pairs off-server into an incoming directory on the backup host, then rename there after transfer completes. For example, with `PAIR=/srv/attachlink-backups/attachlink-backup-YYYYMMDD-HHMMSS-xxxxxxxx`:
+
+```sh
+NAME=$(basename "$PAIR")
+ssh backup-user@backup.example 'mkdir -p /srv/backups/attachlink/.incoming'
+rsync -a -- "$PAIR/" "backup-user@backup.example:/srv/backups/attachlink/.incoming/$NAME/"
+(
+  cd "$PAIR" &&
+  sha256sum *.age
+) | ssh backup-user@backup.example "cd /srv/backups/attachlink/.incoming/$NAME && sha256sum -c -"
+ssh backup-user@backup.example "mv -- /srv/backups/attachlink/.incoming/$NAME /srv/backups/attachlink/$NAME"
+```
+
+Restrict the remote directory to restore operators, retain the encrypted pair under the off-server retention policy, and verify transferred artifact checksums before deleting the source copy. Keep the private age identity off the application and backup servers.
 
 ### Restore drill
 
-1. Copy the encrypted pair to an isolated restore workstation and verify it belongs to the same snapshot. Retrieve the private identity there using the approved recovery process.
-2. Decrypt before importing or extracting. Run `age -d -i /secure/restore-identity -o snapshot.sql attachlink-db-SNAPSHOT.sql.age` and `age -d -i /secure/restore-identity -o snapshot.tar attachlink-files-SNAPSHOT.tar.age`. Stage decrypted data only in an encrypted, access-controlled temporary volume. Keep the identity off the web and backup servers.
-3. Inspect the tar member paths and extract documents and avatars into separate private directories. Import the SQL into an empty staging database with the MariaDB client. Copy documents to ATTACHLINK_DOCUMENT_STORAGE and avatars to backend/storage/avatars.
-4. Match permissions, run the checker and migrations, then test sign-in, an existing application, its authorized download and document purge. Record recovery time and findings. Review deletion requests made after the snapshot before reopening service. Remove temporary decrypted copies after the drill.
+Perform a restore drill at least quarterly, and after backup-format or key-rotation changes:
+
+1. Copy one complete encrypted pair to an isolated restore workstation and verify both artifact checksums. Retrieve the matching private age identity through the approved recovery process; never place it on the application or backup server.
+2. Decrypt both files into an encrypted, access-controlled temporary volume, preserving the database dump's exact filename:
+
+   ```sh
+   age -d -i /secure/restore-identity -o /secure/restore/attachlink-db-ID.sql /secure/pair/attachlink-db-ID.sql.age
+   age -d -i /secure/restore-identity -o /secure/restore/attachlink-files-ID.tar /secure/pair/attachlink-files-ID.tar.age
+   tar -tf /secure/restore/attachlink-files-ID.tar
+   mkdir -p /secure/restore/files
+   tar -xf /secure/restore/attachlink-files-ID.tar -C /secure/restore/files
+   ```
+
+3. Import the SQL dump into an empty isolated staging database, configure the verifier's database environment to use it, and run from the release `public/` directory:
+
+   ```sh
+   mysql --database=attachlink_restore < /secure/restore/attachlink-db-ID.sql
+   php backend/jobs/verify-restore.php /secure/restore/files /secure/restore/attachlink-db-ID.sql
+   ```
+
+   The verifier checks the database dump checksum, every kind's manifest count and checksum, the actual extracted file hashes, the restored database references, and inventory completeness. Do not reopen service if verification fails.
+4. Copy the verified `documents/` and `avatars/` trees into the configured private storage locations, apply service-account permissions, run `php backend/check-config.php`, and test sign-in, an existing application, its authorized download and document purge. Review deletion requests made after the snapshot before reopening service. Record recovery time and findings, then securely remove temporary decrypted copies.
 
 See STAGING_CHECKLIST.md for the pilot launch gates and OPERATIONS.md for administrator procedures.
 
