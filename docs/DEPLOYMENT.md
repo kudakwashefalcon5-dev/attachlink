@@ -68,6 +68,12 @@ The release archive includes backend runtime files and Composer dependencies bel
 
 Run composer install --no-dev --optimize-autoloader, npm ci, and npm run build:css from the source checkout. Run scripts/build-release.ps1 on Windows or sh scripts/build-release.sh on Linux to create dist/attachlink.zip. The builder and verifier use scripts/release-allowlist.txt and scripts/release-excludes.txt. Use -Verify path on PowerShell or --verify path on Linux to check an existing ZIP.
 
+### Dependency audits
+
+Before every release, with network access from the repository root, run `composer audit --locked` and `npm audit`. Do not publish if either command reports an advisory or cannot complete; review and resolve advisories, update the relevant lockfile, then rerun both audits. This project has no dependency-audit CI workflow, so release operators must run and record these checks locally.
+
+The release vendors Leaflet 1.9.4 in `assets/vendor/leaflet/leaflet.js`. It is licensed under the BSD 2-Clause License; retain `assets/vendor/leaflet/LICENSE.txt` in the release.
+
 ### Encrypted backups and key handling
 
 Install age on the backup host and set ATTACHLINK_AGE if it is outside PATH. On an offline or otherwise restricted restore workstation, run age-keygen to generate the identity. Put only the printed public age1 recipient in ATTACHLINK_BACKUP_RECIPIENT on the backup host. Store the private identity off the server, with a second protected recovery copy and access limited to authorized restore operators. Record the recipient and key version in the backup runbook. When rotating, keep old identities available until every backup encrypted to them has expired.

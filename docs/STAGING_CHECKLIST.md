@@ -2,6 +2,7 @@
 
 Record the date, operator, evidence and PASSED, FAILED or NOT TESTED status beside each item before launch.
 
+- [ ] Before every release, run `composer audit --locked` and `npm audit` online from the repository root. Record both outputs and do not release while advisories remain.
 - [ ] Deliver a real verification and reset message to Gmail and to a university email address. Confirm the intended canonical HTTPS links, expiry and text/HTML rendering.
 - [ ] Inspect Authentication-Results on delivered mail. Document passing SPF, DKIM and DMARC alignment for the pilot From domain.
 - [ ] Confirm the mail worker and document purge jobs run under the service account. Observe retry and recovery in staging and set alerts for failures or a growing queue.
