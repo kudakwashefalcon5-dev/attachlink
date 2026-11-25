@@ -137,6 +137,11 @@ if ($storageIssue===null) {
     if (!$canWrite) $storageIssue='The document storage directory must permit safe file creation and removal.';
 }
 report_setting('ATTACHLINK_DOCUMENT_STORAGE',$storageIssue,'checked','Private directory is outside the document root and writable.');
+if (config_env('ATTACHLINK_AVATAR_STORAGE')!=='') {
+    $avatarIssues=avatar_storage_issues();
+    $avatarIssue=$avatarIssues?reset($avatarIssues):null;
+    report_setting('ATTACHLINK_AVATAR_STORAGE',$avatarIssue,'checked','Private directory is outside the document root and writable.');
+}
 
 $uploadBytes=php_limit_bytes((string)ini_get('upload_max_filesize'));
 $postBytes=php_limit_bytes((string)ini_get('post_max_size'));

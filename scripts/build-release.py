@@ -43,7 +43,8 @@ def excluded(name):
             for rule in rules("release-excludes.txt"))
         or any(part in {"tests", "test-results", "design-references", "backups", "release", ".git", "node_modules"}
                for part in parts)
-        or any(part in {"debug.log", "dashboard1.html"} or "backup" in part and not lower == "backend/jobs/backup.php"
+        or any(part in {"debug.log", "dashboard1.html"} or "backup" in part
+               and lower not in {"backend/jobs/backup.php", "backend/lib/backupmanifest.php"}
                for part in parts)
         or any(part.startswith(".env") and lower != "backend/.env.example" for part in parts)
     )

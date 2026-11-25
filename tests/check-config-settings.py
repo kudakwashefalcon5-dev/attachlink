@@ -58,6 +58,8 @@ def base_environment(scratch):
     document_root.mkdir(exist_ok=True)
     storage = scratch / "private-storage"
     storage.mkdir(exist_ok=True)
+    avatars = scratch / "private-avatars"
+    avatars.mkdir(exist_ok=True)
     backup = scratch / "private-backups"
     backup.mkdir(exist_ok=True)
     return {
@@ -68,6 +70,7 @@ def base_environment(scratch):
         "ATTACHLINK_DB_USER": "qa",
         "ATTACHLINK_DB_PASS": SECRET,
         "ATTACHLINK_DOCUMENT_STORAGE": str(storage),
+        "ATTACHLINK_AVATAR_STORAGE": str(avatars),
         "ATTACHLINK_MAIL_TRANSPORT": "log",
         "ATTACHLINK_MAIL_LOG": str(scratch / "private-mail" / "mail.jsonl"),
     }, document_root, storage, backup
@@ -108,6 +111,7 @@ def main():
             "OK ATTACHLINK_BACKUP_RECIPIENT ",
             "OK ATTACHLINK_BACKUP_DAYS ",
             "OK ATTACHLINK_DOCUMENT_STORAGE ",
+            "OK ATTACHLINK_AVATAR_STORAGE ",
             "OK PHP upload_max_filesize ",
             "OK PHP post_max_size ",
             "OK PHP max_file_uploads ",
@@ -127,6 +131,7 @@ def main():
             ATTACHLINK_INTERVIEW_AI_MODEL="",
             ATTACHLINK_MAP_TILE_URL="http://tiles.example.invalid/{z}/{x}/{y}.png",
             ATTACHLINK_DOCUMENT_STORAGE=str(ROOT / "assets"),
+            ATTACHLINK_AVATAR_STORAGE=str(ROOT / "assets"),
             ATTACHLINK_BACKUP_DIR=str(ROOT / "docs"),
             ATTACHLINK_BACKUP_RECIPIENT="not-an-age-recipient",
         )
@@ -138,6 +143,7 @@ def main():
             "MISSING ATTACHLINK_INTERVIEW_AI_MODEL ",
             "INVALID ATTACHLINK_MAP_TILE_ORIGIN ",
             "INVALID ATTACHLINK_DOCUMENT_STORAGE ",
+            "INVALID ATTACHLINK_AVATAR_STORAGE ",
             "INVALID ATTACHLINK_BACKUP_DIR ",
             "INVALID ATTACHLINK_BACKUP_RECIPIENT ",
             "INVALID PHP upload_max_filesize ",

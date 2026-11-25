@@ -135,6 +135,10 @@ function application_storage(): string {
         ?: sys_get_temp_dir().DIRECTORY_SEPARATOR.'attachlink-storage'.DIRECTORY_SEPARATOR.'documents';
 }
 
+function avatar_storage(): string {
+    return config_env('ATTACHLINK_AVATAR_STORAGE') ?: __DIR__.'/storage/avatars';
+}
+
 function path_is_absolute(string $path): bool {
     return str_starts_with($path,'/') || preg_match('/\A[A-Za-z]:[\\\\\/]/',$path)===1 || str_starts_with($path,'\\\\');
 }
@@ -185,6 +189,33 @@ function application_storage_issues(?string $documentRoot=null): array {
         $permissions=@fileperms($path);
         if ($permissions===false || ($permissions&0077)!==0) {
             return ['ATTACHLINK_DOCUMENT_STORAGE'=>'The storage directory must not be accessible to group or other users.'];
+        }
+    }
+    return [];
+}
+
+function avatar_storage_issues(?string $documentRoot=null): array {
+    if (config_env('ATTACHLINK_AVATAR_STORAGE')==='') return [];
+    $path=avatar_storage();
+    if (!path_is_absolute($path) || is_link($path) || (file_exists($path) && !is_dir($path))) {
+        return ['ATTACHLINK_AVATAR_STORAGE'=>'Use an absolute, regular storage directory, not a file or symbolic link.'];
+    }
+    $resolved=resolved_path_for_validation($path);
+    $root=resolved_path_for_validation($documentRoot??document_root_path());
+    if ($resolved===null || $root===null || path_is_within_directory($resolved,$root)) {
+        return ['ATTACHLINK_AVATAR_STORAGE'=>'Avatar storage must resolve outside the document root.'];
+    }
+    $directory=$path;
+    while (!is_dir($directory)) {
+        $parent=dirname($directory);
+        if ($parent===$directory) return ['ATTACHLINK_AVATAR_STORAGE'=>'The avatar storage directory or its parent must exist.'];
+        $directory=$parent;
+    }
+    if (!is_writable($directory)) return ['ATTACHLINK_AVATAR_STORAGE'=>'Avatar storage must be writable.'];
+    if (is_dir($path) && PHP_OS_FAMILY!=='Windows') {
+        $permissions=@fileperms($path);
+        if ($permissions===false || ($permissions&0077)!==0) {
+            return ['ATTACHLINK_AVATAR_STORAGE'=>'Avatar storage must not be accessible to group or other users.'];
         }
     }
     return [];
@@ -252,8 +283,10 @@ function backup_setting_issues(?string $documentRoot=null): array {
         $resolved=realpath($directory);
         $root=resolved_path_for_validation($documentRoot??document_root_path());
         $application=realpath(dirname(__DIR__));
+        $storagePaths=[application_storage(),avatar_storage()];
         if ($resolved===false || $root===null || path_is_within_directory($resolved,$root)
-            || ($application!==false && path_is_within_directory($resolved,$application))) {
+            || ($application!==false && path_is_within_directory($resolved,$application))
+            || array_filter($storagePaths,static fn(string $storage): bool=>path_is_within_directory((string)$resolved,$storage))) {
             $issues['ATTACHLINK_BACKUP_DIR']='Backup storage must be outside the application and document roots.';
         } elseif (PHP_OS_FAMILY!=='Windows') {
             $permissions=@fileperms($directory);

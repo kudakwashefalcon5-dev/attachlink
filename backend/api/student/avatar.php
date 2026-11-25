@@ -2,7 +2,7 @@
 require_once __DIR__.'/../../bootstrap.php';
 $student = user('student');
 method('GET','POST','DELETE');
-$directory = __DIR__.'/../../storage/avatars';
+$directory = avatar_storage();
 $path = $directory.'/'.$student['id'].'.jpg';
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (empty($_GET['image'])) out(['ok'=>true,'has_photo'=>is_file($path)]);
