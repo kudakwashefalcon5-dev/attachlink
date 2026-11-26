@@ -40,7 +40,7 @@
 /designs/admin/.htaccess
 /database/schema.sql
 /database/upgrade-*.sql
-/backend/.env.example
+/backend/env.example
 /backend/.htaccess
 /backend/admin-login.html
 /backend/check-config.php

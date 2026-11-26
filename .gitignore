@@ -2,13 +2,11 @@
 /vendor/
 /test-results/
 /playwright-report/
-/backend/.env
 /dist/
 
 # Local configuration, secrets, and runtime data
 .env
 .env.*
-!backend/.env.example
 /backend/storage/**
 !/backend/storage/.htaccess
 *.age

@@ -46,7 +46,7 @@ def excluded(name):
         or any(part in {"debug.log", "dashboard1.html"} or "backup" in part
                and lower not in {"backend/jobs/backup.php", "backend/lib/backupmanifest.php"}
                for part in parts)
-        or any(part.startswith(".env") and lower != "backend/.env.example" for part in parts)
+        or any(part.startswith(".env") for part in parts)
     )
 
 

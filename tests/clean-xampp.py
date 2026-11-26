@@ -48,7 +48,7 @@ with tempfile.TemporaryDirectory(prefix="attachlink-clean-xampp-") as folder:
     backend = site / "backend"
     shutil.copytree(root / "backend", backend, ignore=shutil.ignore_patterns(".env", "storage"))
     shutil.copyfile(root / ".htaccess", site / ".htaccess")
-    dotenv = (backend / ".env.example").read_text()
+    dotenv = (backend / "env.example").read_text()
     dotenv = dotenv.replace("ATTACHLINK_DB_PORT=3306", "ATTACHLINK_DB_PORT=" + str(args.db_port))
     dotenv = dotenv.replace("ATTACHLINK_DB_NAME=attachlink_db", "ATTACHLINK_DB_NAME=" + args.db_name)
     (backend / ".env").write_text(dotenv)

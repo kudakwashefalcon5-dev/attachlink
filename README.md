@@ -4,7 +4,7 @@ AttachLink connects Zimbabwean students seeking industrial attachments with empl
 
 ## Local development setup
 
-Install XAMPP with Apache, PHP and MariaDB. Place the checkout in the Apache web root. Import database/schema.sql for a fresh database. For an existing installation, back up the database and run php backend/jobs/migrate.php. Copy backend/.env.example to backend/.env if local settings differ from the defaults. Run php backend/check-config.php, create the first administrator with php backend/create-admin.php, and run php backend/jobs/send-emails.php for a development mail check. [Local setup and browser tests](docs/DEPLOYMENT.md)
+Install XAMPP with Apache, PHP and MariaDB. Place the checkout in the Apache web root. Import database/schema.sql for a fresh database. For an existing installation, back up the database and run php backend/jobs/migrate.php. Copy backend/env.example to backend/.env if local settings differ from the defaults. Run php backend/check-config.php, create the first administrator with php backend/create-admin.php, and run php backend/jobs/send-emails.php for a development mail check. [Local setup and browser tests](docs/DEPLOYMENT.md)
 
 ## Production configuration
 
